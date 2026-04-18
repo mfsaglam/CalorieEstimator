@@ -7,7 +7,39 @@ public struct CalorieEstimation: Sendable {
     public let calories: Int
     /// A brief explanation of how the estimate was derived.
     public let explanation: String?
+    /// The estimated weight in grams (populated only when using amount-based estimation).
+    public let estimatedGrams: Int?
+
+    public init(calories: Int, explanation: String?, estimatedGrams: Int? = nil) {
+        self.calories = calories
+        self.explanation = explanation
+        self.estimatedGrams = estimatedGrams
+    }
 }
+
+// MARK: - Generable Response Types
+
+/// Model response for grams-based estimation.
+@Generable
+struct NutritionResponse {
+    @Guide(description: "Approximate calories per 100 grams of this food")
+    var caloriesPer100g: Int
+    @Guide(description: "The name of the food item")
+    var foodName: String
+}
+
+/// Model response for amount-based estimation.
+@Generable
+struct AmountNutritionResponse {
+    @Guide(description: "Approximate calories per 100 grams of this food")
+    var caloriesPer100g: Int
+    @Guide(description: "Estimated total weight in grams for the given amount")
+    var estimatedGrams: Int
+    @Guide(description: "The name of the food item")
+    var foodName: String
+}
+
+// MARK: - CalorieEstimator
 
 /// Estimates calories for a given meal using on-device Apple Intelligence.
 public struct CalorieEstimator: Sendable {
@@ -20,60 +52,57 @@ public struct CalorieEstimator: Sendable {
     ///   - grams: The weight in grams.
     /// - Returns: A ``CalorieEstimation`` with the calorie count and explanation.
     public func estimate(meal: String, grams: Int) async throws -> CalorieEstimation {
-        let model = SystemLanguageModel(guardrails: .permissiveContentTransformations)
         let session = LanguageModelSession(
-            model: model,
-            instructions: """
-                You are a food nutrition reference. \
-                Given a food item, provide the approximate calories per 100 grams. \
-                Reply with ONLY a number on the first line, nothing else. \
-                On the second line, the name of the food item.
-                """
+            model: SystemLanguageModel(guardrails: .permissiveContentTransformations),
+            instructions: "You are a food nutrition reference."
         )
 
         let prompt = "Calories per 100 grams of \(meal)."
-        let options = GenerationOptions(sampling: .greedy)
-        let response = try await session.respond(to: prompt, options: options)
+        let response = try await session.respond(
+            to: prompt,
+            generating: NutritionResponse.self
+        )
 
-        return try Self.parseResponse(response.content, meal: meal, grams: grams)
+        return Self.makeEstimation(from: response.content, grams: grams)
     }
 
-    /// Parse the model's text response and compute the calorie estimate.
-    ///
-    /// Exposed as `internal` so unit tests (via `@testable import`) can exercise
-    /// the parsing and arithmetic without calling the language model.
-    static func parseResponse(_ content: String, meal: String, grams: Int) throws -> CalorieEstimation {
-        let lines = content.split(separator: "\n", maxSplits: 1)
-        let firstLine = String(lines.first ?? "")
-        let digits = firstLine.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+    /// Estimate the calories in a meal using a count-based amount.
+    /// - Parameters:
+    ///   - meal: The name of the meal or food item.
+    ///   - amount: The number of items (e.g. 2 for "2 eggs").
+    /// - Returns: A ``CalorieEstimation`` with the calorie count, explanation, and estimated grams.
+    public func estimate(meal: String, amount: Int) async throws -> CalorieEstimation {
+        let session = LanguageModelSession(
+            model: SystemLanguageModel(guardrails: .permissiveContentTransformations),
+            instructions: "You are a food nutrition reference."
+        )
 
-        guard let caloriesPer100g = Int(digits), !digits.isEmpty else {
-            throw CalorieEstimatorError.parsingFailed(response: content)
-        }
+        let prompt = "\(amount) of \(meal)."
+        let response = try await session.respond(
+            to: prompt,
+            generating: AmountNutritionResponse.self
+        )
 
-        // Calculate actual calories based on weight — math done in code, not by the model.
-        let calories = caloriesPer100g * grams / 100
+        return Self.makeEstimation(from: response.content)
+    }
 
-        let foodName = if lines.count > 1 {
-            String(lines[1]).trimmingCharacters(in: .whitespaces)
-        } else {
-            meal
-        }
+    // MARK: - Internal Conversion (testable)
 
-        let explanation = "\(foodName) has ~\(caloriesPer100g) kcal per 100g."
-
+    /// Convert a ``NutritionResponse`` to a ``CalorieEstimation``.
+    static func makeEstimation(from response: NutritionResponse, grams: Int) -> CalorieEstimation {
+        let calories = response.caloriesPer100g * grams / 100
+        let explanation = "\(response.foodName) has ~\(response.caloriesPer100g) kcal per 100g."
         return CalorieEstimation(calories: calories, explanation: explanation)
     }
-}
 
-/// Errors that can occur during calorie estimation.
-public enum CalorieEstimatorError: LocalizedError {
-    case parsingFailed(response: String)
-
-    public var errorDescription: String? {
-        switch self {
-        case .parsingFailed(let response):
-            "Could not parse calorie value from model response: \(response)"
-        }
+    /// Convert an ``AmountNutritionResponse`` to a ``CalorieEstimation``.
+    static func makeEstimation(from response: AmountNutritionResponse) -> CalorieEstimation {
+        let calories = response.caloriesPer100g * response.estimatedGrams / 100
+        let explanation = "\(response.foodName) has ~\(response.caloriesPer100g) kcal per 100g."
+        return CalorieEstimation(
+            calories: calories,
+            explanation: explanation,
+            estimatedGrams: response.estimatedGrams
+        )
     }
 }
