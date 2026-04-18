@@ -35,12 +35,20 @@ public struct CalorieEstimator: Sendable {
         let options = GenerationOptions(sampling: .greedy)
         let response = try await session.respond(to: prompt, options: options)
 
-        let lines = response.content.split(separator: "\n", maxSplits: 1)
+        return try Self.parseResponse(response.content, meal: meal, grams: grams)
+    }
+
+    /// Parse the model's text response and compute the calorie estimate.
+    ///
+    /// Exposed as `internal` so unit tests (via `@testable import`) can exercise
+    /// the parsing and arithmetic without calling the language model.
+    static func parseResponse(_ content: String, meal: String, grams: Int) throws -> CalorieEstimation {
+        let lines = content.split(separator: "\n", maxSplits: 1)
         let firstLine = String(lines.first ?? "")
         let digits = firstLine.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
 
         guard let caloriesPer100g = Int(digits), !digits.isEmpty else {
-            throw CalorieEstimatorError.parsingFailed(response: response.content)
+            throw CalorieEstimatorError.parsingFailed(response: content)
         }
 
         // Calculate actual calories based on weight — math done in code, not by the model.

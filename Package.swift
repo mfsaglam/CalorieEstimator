@@ -18,6 +18,10 @@ let package = Package(
         )
     ],
     targets: [
-        .target(name: "CalorieEstimator")
+        .target(name: "CalorieEstimator"),
+        .testTarget(
+            name: "CalorieEstimatorTests",
+            dependencies: ["CalorieEstimator"]
+        )
     ]
 )
