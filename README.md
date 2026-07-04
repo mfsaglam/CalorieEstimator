@@ -51,6 +51,30 @@ print(result.calories)    // 247
 print(result.explanation) // "Chicken breast has ~165 kcal per 100g."
 ```
 
+### From a natural-language phrase
+
+When you have a single spoken/typed phrase and don't want to parse the food and
+quantity yourself, use `estimate(phrase:)`. It extracts the food, converts the
+amount — weight, volume, or count — into an approximate gram weight, and estimates
+the calories, all in one on-device inference call.
+
+```swift
+import CalorieEstimator
+
+let estimator = CalorieEstimator()
+
+let a = try await estimator.estimate(phrase: "200 grams of grilled chicken")
+print(a.foodName, a.grams, a.calories) // "grilled chicken", 200, 330
+
+let b = try await estimator.estimate(phrase: "eight ounces of salmon") // word-numbers work
+let c = try await estimator.estimate(phrase: "250 ml orange juice")    // volume → grams
+let d = try await estimator.estimate(phrase: "two eggs")               // counts → grams
+let e = try await estimator.estimate(phrase: "banana")                 // no amount → 1 serving
+```
+
+The returned `foodName` is normalised and contains no quantity or units. If no
+amount is stated, a single typical serving is assumed.
+
 ### SwiftUI
 
 ```swift
@@ -107,6 +131,19 @@ do {
 public struct CalorieEstimator: Sendable {
     public init()
     public func estimate(meal: String, grams: Int) async throws -> CalorieEstimation
+    public func estimate(phrase: String) async throws -> MealEstimate
+}
+```
+
+### `MealEstimate`
+
+Returned by `estimate(phrase:)`.
+
+```swift
+public struct MealEstimate: Sendable, Equatable {
+    public let foodName: String // cleaned food, without the quantity (e.g. "grilled chicken")
+    public let grams: Int        // approximate mass in grams for the described amount
+    public let calories: Int     // estimated calories (kcal) for that amount
 }
 ```
 
@@ -123,7 +160,8 @@ public struct CalorieEstimation: Sendable {
 
 ```swift
 public enum CalorieEstimatorError: LocalizedError {
-    case parsingFailed(response: String)
+    case parsingFailed(response: String)    // model returned unusable output
+    case modelUnavailable(reason: String)   // Apple Intelligence off / still downloading
 }
 ```
 
