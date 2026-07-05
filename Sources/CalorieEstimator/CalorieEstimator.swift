@@ -41,6 +41,8 @@ public enum CalorieEstimatorError: LocalizedError {
     case parsingFailed(response: String)
     /// The on-device model is unavailable (e.g. Apple Intelligence disabled or still downloading).
     case modelUnavailable(reason: String)
+    /// The image classifier found no food to estimate.
+    case noFoodDetected
 
     public var errorDescription: String? {
         switch self {
@@ -48,6 +50,8 @@ public enum CalorieEstimatorError: LocalizedError {
             return "The model returned an unusable estimate: \(response)"
         case .modelUnavailable(let reason):
             return "The on-device model is unavailable: \(reason)"
+        case .noFoodDetected:
+            return "No food could be detected in the image."
         }
     }
 }
