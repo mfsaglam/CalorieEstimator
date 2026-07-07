@@ -2,10 +2,10 @@ import FoundationModels
 
 // MARK: - Internal Conversion (testable)
 //
-// The pure logic that turns model responses into public estimates: table resolution,
-// dish summation, confidence scoring, and ensemble combination. Kept separate from the
-// inference-driving methods in ``CalorieEstimator`` so it can be unit-tested without the
-// on-device model.
+// The pure logic that turns model responses (and table hits) into ``MealEstimate``s:
+// table resolution, single-food and dish building, confidence scoring, ensemble
+// combination, and weight scaling. Kept separate from the inference-driving methods in
+// ``CalorieEstimator`` so it can be unit-tested without the on-device model.
 
 extension CalorieEstimator {
 
@@ -30,85 +30,67 @@ extension CalorieEstimator {
         return (modelValue, false)
     }
 
-    /// Convert a ``NutritionResponse`` to a ``CalorieEstimation``.
+    /// Build an estimate straight from a nutrition-table hit — no model involved.
     ///
-    /// The calories-per-100g figure is resolved from `table` (looked up by the food's
-    /// English name) first, falling back to the model's figure only when the food isn't
-    /// found. Confidence is ``Confidence/high`` for a database hit and
-    /// ``Confidence/medium`` for a model guess.
-    static func makeEstimation(from response: NutritionResponse, grams: Int, using table: NutritionTable) -> CalorieEstimation {
-        let resolved = resolveCaloriesPer100g(
-            table: table,
-            englishName: response.foodNameEnglish,
-            displayName: response.foodName,
-            modelValue: response.caloriesPer100g
-        )
-        let calories = resolved.value * grams / 100
-        let explanation = "\(response.foodName) has ~\(resolved.value) kcal per 100g."
-        return CalorieEstimation(
-            calories: calories,
-            explanation: explanation,
-            confidence: resolved.fromTable ? .high : .medium
+    /// Used by the text-field short-circuit: the calories are computed in code and the
+    /// result is marked ``MealEstimate/Source/database`` with ``Confidence/high``.
+    static func makeTableEstimate(foodName: String, grams: Int, caloriesPer100g: Int) -> MealEstimate {
+        MealEstimate(
+            foodName: foodName.trimmingCharacters(in: .whitespacesAndNewlines),
+            grams: grams,
+            calories: caloriesPer100g * grams / 100,
+            source: .database,
+            confidence: .high,
+            ingredients: nil
         )
     }
 
-    /// Convert an ``AmountNutritionResponse`` to a ``CalorieEstimation``.
+    /// Build a single-food estimate, resolving the per-100g figure from the table first
+    /// and falling back to the model's figure only on a miss.
     ///
-    /// The calories-per-100g figure is resolved from `table` first, falling back to the
-    /// model's figure only when the food isn't found. Confidence is ``Confidence/high``
-    /// for a database hit and ``Confidence/medium`` for a model guess.
-    static func makeEstimation(from response: AmountNutritionResponse, using table: NutritionTable) -> CalorieEstimation {
-        let resolved = resolveCaloriesPer100g(
-            table: table,
-            englishName: response.foodNameEnglish,
-            displayName: response.foodName,
-            modelValue: response.caloriesPer100g
-        )
-        let calories = resolved.value * response.estimatedGrams / 100
-        let explanation = "\(response.foodName) has ~\(resolved.value) kcal per 100g."
-        return CalorieEstimation(
-            calories: calories,
-            explanation: explanation,
-            estimatedGrams: response.estimatedGrams,
-            confidence: resolved.fromTable ? .high : .medium
-        )
-    }
-
-    /// Validate a ``PhraseNutritionResponse`` and convert it to a ``MealEstimate``.
-    ///
-    /// The calories-per-100g figure is resolved from `table` first, falling back to the
-    /// model's recalled figure only when the food isn't found — real data beats a
-    /// memorized guess. The total calories are then computed here
-    /// (`caloriesPer100g * grams / 100`) rather than trusting a total emitted by the
-    /// model, so the (error-prone) multiplication happens deterministically in code and
-    /// the calories are always consistent with the grams.
+    /// The calories are computed in code (`caloriesPer100g * grams / 100`) so the
+    /// arithmetic is always consistent with the grams. Source is
+    /// ``MealEstimate/Source/database`` (with ``Confidence/high``) on a table hit and
+    /// ``MealEstimate/Source/model`` (with ``Confidence/medium``) otherwise.
     ///
     /// Throws ``CalorieEstimatorError/parsingFailed(response:)`` rather than returning a
-    /// zero/garbage estimate when the food name is empty or the numbers are non-positive.
-    static func makeMealEstimate(from response: PhraseNutritionResponse, using table: NutritionTable) throws -> MealEstimate {
-        let foodName = response.foodName.trimmingCharacters(in: .whitespacesAndNewlines)
+    /// zero/garbage estimate when the name is empty or the numbers are non-positive.
+    static func makeSingleFoodEstimate(
+        foodName: String,
+        englishName: String,
+        modelCaloriesPer100g: Int,
+        grams: Int,
+        table: NutritionTable
+    ) throws -> MealEstimate {
+        let name = foodName.trimmingCharacters(in: .whitespacesAndNewlines)
         let resolved = resolveCaloriesPer100g(
             table: table,
-            englishName: response.foodNameEnglish,
-            displayName: foodName,
-            modelValue: response.caloriesPer100g
+            englishName: englishName,
+            displayName: name,
+            modelValue: modelCaloriesPer100g
         )
-        guard !foodName.isEmpty, response.grams > 0, resolved.value > 0 else {
+        guard !name.isEmpty, grams > 0, resolved.value > 0 else {
             throw CalorieEstimatorError.parsingFailed(
-                response: "foodName=\"\(response.foodName)\", grams=\(response.grams), caloriesPer100g=\(resolved.value)"
+                response: "foodName=\"\(foodName)\", grams=\(grams), caloriesPer100g=\(resolved.value)"
             )
         }
-        let calories = resolved.value * response.grams / 100
-        let source: MealEstimate.Source = resolved.fromTable ? .database : .modelEstimate
-        return MealEstimate(foodName: foodName, grams: response.grams, calories: calories, source: source)
+        return MealEstimate(
+            foodName: name,
+            grams: grams,
+            calories: resolved.value * grams / 100,
+            source: resolved.fromTable ? .database : .model,
+            confidence: resolved.fromTable ? .high : .medium,
+            ingredients: nil
+        )
     }
 
-    /// Build a ``DishEstimate`` from one decomposition, resolving each ingredient through
-    /// the table and deriving confidence from coverage, self-consistency, and plausibility.
+    /// Build a decomposed dish estimate from one breakdown, resolving each ingredient
+    /// through the table and deriving confidence from coverage, self-consistency, and
+    /// plausibility.
     ///
     /// Returns `nil` when the breakdown has no usable ingredients (empty, or all
     /// non-positive), so the caller can treat it as a failed attempt.
-    static func makeDishEstimate(from response: RecipeResponse, using table: NutritionTable) -> DishEstimate? {
+    static func makeDecomposedEstimate(from response: RecipeResponse, using table: NutritionTable) -> MealEstimate? {
         let dishName = response.dishName.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let ingredients: [IngredientEstimate] = response.ingredients.compactMap { item in
@@ -125,7 +107,7 @@ extension CalorieEstimator {
                 name: name,
                 grams: item.grams,
                 calories: resolved.value * item.grams / 100,
-                source: resolved.fromTable ? .database : .modelEstimate
+                source: resolved.fromTable ? .database : .model
             )
         }
 
@@ -142,12 +124,40 @@ extension CalorieEstimator {
             holisticCalories: response.holisticCalories
         )
 
-        return DishEstimate(
-            dishName: dishName,
+        return MealEstimate(
+            foodName: dishName,
             grams: totalGrams,
             calories: totalCalories,
-            ingredients: ingredients,
-            confidence: confidence
+            source: .decomposed,
+            confidence: confidence,
+            ingredients: ingredients
+        )
+    }
+
+    /// Scale a decomposed estimate's energy density to a target weight.
+    ///
+    /// The dish is decomposed at one typical serving; on the text-field path the user
+    /// states an explicit weight, so grams, calories, and every ingredient are scaled
+    /// proportionally to it. Source and confidence are preserved. A non-positive current
+    /// or target weight is returned unchanged.
+    static func scale(_ estimate: MealEstimate, toGrams target: Int) -> MealEstimate {
+        guard estimate.grams > 0, target > 0, target != estimate.grams else { return estimate }
+        let factor = Double(target) / Double(estimate.grams)
+        let scaledIngredients = estimate.ingredients?.map { ingredient in
+            IngredientEstimate(
+                name: ingredient.name,
+                grams: Int((Double(ingredient.grams) * factor).rounded()),
+                calories: Int((Double(ingredient.calories) * factor).rounded()),
+                source: ingredient.source
+            )
+        }
+        return MealEstimate(
+            foodName: estimate.foodName,
+            grams: target,
+            calories: Int((Double(estimate.calories) * factor).rounded()),
+            source: estimate.source,
+            confidence: estimate.confidence,
+            ingredients: scaledIngredients
         )
     }
 
@@ -187,14 +197,14 @@ extension CalorieEstimator {
         return .low
     }
 
-    /// Combine several independent breakdowns into one estimate.
+    /// Combine several independent decomposed breakdowns into one estimate.
     ///
     /// The breakdown whose total is the median is returned as the representative result;
     /// the spread across attempts then adjusts confidence — tight agreement can't raise a
     /// weak breakdown, but wide scatter downgrades an otherwise confident one, since a
     /// model that keeps changing its mind shouldn't be trusted. Returns `nil` for an empty
     /// input.
-    static func combineDishEstimates(_ estimates: [DishEstimate]) -> DishEstimate? {
+    static func combineEstimates(_ estimates: [MealEstimate]) -> MealEstimate? {
         guard !estimates.isEmpty else { return nil }
         guard estimates.count > 1 else { return estimates[0] }
 
@@ -206,13 +216,14 @@ extension CalorieEstimator {
         let variance = totals.reduce(0) { $0 + ($1 - mean) * ($1 - mean) } / Double(totals.count)
         let spread = mean > 0 ? variance.squareRoot() / mean : 0  // coefficient of variation
 
-        let adjusted = downgrade(representative.confidence, forSpread: spread)
-        return DishEstimate(
-            dishName: representative.dishName,
+        let adjusted = representative.confidence.map { downgrade($0, forSpread: spread) }
+        return MealEstimate(
+            foodName: representative.foodName,
             grams: representative.grams,
             calories: representative.calories,
-            ingredients: representative.ingredients,
-            confidence: adjusted
+            source: representative.source,
+            confidence: adjusted,
+            ingredients: representative.ingredients
         )
     }
 

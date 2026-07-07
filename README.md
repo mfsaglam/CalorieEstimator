@@ -1,79 +1,45 @@
 # CalorieEstimator
 
-A lightweight Swift package that estimates calories for any food item using on-device Apple Intelligence via the [FoundationModels](https://developer.apple.com/documentation/foundationmodels) framework.
+A lightweight Swift package that estimates calories for a meal using on-device Apple Intelligence via the [FoundationModels](https://developer.apple.com/documentation/foundationmodels) framework.
 
 All processing happens on-device. No network requests, no API keys, no third-party services.
 
-Calorie figures for common foods come from a **bundled nutrition table** rather than the model's memory, so they're accurate and reproducible. When a food isn't in the table, the model supplies an estimate instead — and every result carries a **confidence** level so you know which is which. Non-English descriptions are supported: the model translates the food name for the lookup while the result keeps the food name in the user's language.
+Calorie figures for common foods come from a **bundled nutrition table** rather than the model's memory, so they're accurate and reproducible — and for the text-field path, a table hit returns **without ever calling the model** (instant, offline). When a food isn't in the table, the model supplies a figure instead. Composite dishes ("lasagna", "kremalı mantarlı makarna") are detected and **broken into ingredients automatically**. Non-English input is supported: the food name is kept in the user's language while an English translation is used for the lookup.
 
 ## Requirements
 
 - iOS 26+ / macOS 26+ / tvOS 26+ / watchOS 26+ / visionOS 26+
 - Swift 6.2+
-- A device with Apple Intelligence enabled
+- A device with Apple Intelligence enabled (for anything not resolved from the table)
 
 ## Installation
 
 ### Swift Package Manager
 
-Add the following to your `Package.swift`:
-
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "1.0.0")
+    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "2.0.0")
 ]
 ```
 
 Then add `CalorieEstimator` to your target's dependencies:
 
 ```swift
-.target(
-    name: "YourTarget",
-    dependencies: ["CalorieEstimator"]
-)
+.target(name: "YourTarget", dependencies: ["CalorieEstimator"])
 ```
 
 ### Xcode
 
-1. Go to **File > Add Package Dependencies...**
+1. **File > Add Package Dependencies...**
 2. Enter the repository URL
 3. Add **CalorieEstimator** to your target
 
 ## Usage
 
-### Basic
+There are exactly two entry points, matching how a meal gets logged. Both return the
+same `MealEstimate`, so you render the result the same way regardless of source.
 
-```swift
-import CalorieEstimator
-
-let estimator = CalorieEstimator()
-let result = try await estimator.estimate(meal: "chicken breast", grams: 150)
-
-print(result.calories)    // 247
-print(result.explanation) // "Chicken breast has ~165 kcal per 100g."
-print(result.confidence)  // .high  (resolved from the nutrition table)
-```
-
-### By count / amount
-
-When you know the number of items rather than a weight, use `estimate(meal:amount:)`.
-The model estimates a typical mass for that many items, and the calories are computed
-from it. The result's `estimatedGrams` tells you the mass it assumed.
-
-```swift
-let result = try await estimator.estimate(meal: "eggs", amount: 2)
-
-print(result.calories)       // 155
-print(result.estimatedGrams) // 100
-print(result.confidence)     // .high
-```
-
-### From a natural-language phrase
-
-When you have a single spoken/typed phrase and don't want to parse the food and
-quantity yourself, use `estimate(phrase:)`. It extracts the food, converts the
-amount — weight, volume, or count — into an approximate gram weight, and estimates
-the calories, all in one on-device inference call.
+### 1. Natural-language phrase (Siri intent)
 
 ```swift
 import CalorieEstimator
@@ -83,84 +49,82 @@ let estimator = CalorieEstimator()
 let a = try await estimator.estimate(phrase: "200 grams of grilled chicken")
 print(a.foodName, a.grams, a.calories) // "grilled chicken", 200, 330
 
-let b = try await estimator.estimate(phrase: "eight ounces of salmon") // word-numbers work
-let c = try await estimator.estimate(phrase: "250 ml orange juice")    // volume → grams
-let d = try await estimator.estimate(phrase: "two eggs")               // counts → grams
-let e = try await estimator.estimate(phrase: "banana")                 // no amount → 1 serving
+_ = try await estimator.estimate(phrase: "eight ounces of salmon") // word-numbers
+_ = try await estimator.estimate(phrase: "250 ml orange juice")    // volume → grams
+_ = try await estimator.estimate(phrase: "two eggs")               // counts → grams
+_ = try await estimator.estimate(phrase: "banana")                 // no amount → 1 serving
+_ = try await estimator.estimate(phrase: "iki yumurta")            // any language
 ```
 
-The returned `foodName` is normalised and contains no quantity or units. If no
-amount is stated, a single typical serving is assumed. Inspect `source`
-(`.database` / `.modelEstimate`) or `confidence` (`.high` / `.medium`) to see how
-the calories were resolved.
+### 2. Food name + weight (text field)
 
-### Other languages
-
-Descriptions in any language work. The food name comes back in the user's
-language, while an English translation is used internally for the nutrition
-lookup — so common foods still resolve from the table with `.high` confidence.
+The weight is any `Measurement<UnitMass>` — grams, ounces, pounds, kilograms — and is
+converted to grams **in code**; the model never parses units on this path.
 
 ```swift
-let tr = try await estimator.estimate(phrase: "iki yumurta") // Turkish: "two eggs"
-print(tr.foodName)    // "yumurta"   (kept in the user's language)
-print(tr.calories)    // 155         (from the nutrition table)
-print(tr.confidence)  // .high
+let a = try await estimator.estimate(meal: "chicken breast",
+                                     weight: Measurement(value: 8, unit: .ounces))
+print(a.grams, a.calories) // 227, 374  (165 kcal/100g × 227 g)
+
+// Convenience overload when you already have grams:
+let b = try await estimator.estimate(meal: "white rice", grams: 250)
+print(b.calories, b.source) // 325, .database  (resolved from the table — no model call)
 ```
 
-### SwiftUI
+### Composite dishes (automatic)
+
+You never choose "single food" vs "dish". When the input names a composite dish, both
+methods break it into ingredients and sum them:
 
 ```swift
-import SwiftUI
-import CalorieEstimator
-
-struct ContentView: View {
-    @State private var calories: Int?
-
-    var body: some View {
-        VStack {
-            if let calories {
-                Text("\(calories) kcal")
-            }
-
-            Button("Estimate") {
-                Task {
-                    let estimator = CalorieEstimator()
-                    let result = try await estimator.estimate(meal: "rice", grams: 200)
-                    calories = result.calories
-                }
-            }
-        }
-    }
+let dish = try await estimator.estimate(phrase: "kremalı mantarlı makarna")
+print(dish.calories)          // e.g. 337
+print(dish.source)            // .decomposed
+for i in dish.ingredients ?? [] {
+    print(i.name, i.grams, i.calories) // makarna 120 188, krema 40 136, mantar 60 13
 }
 ```
 
-### Error Handling
+On the text-field path, the decomposed serving is scaled to the weight you pass in.
+
+### Reading the result
+
+```swift
+let e = try await estimator.estimate(phrase: "two eggs")
+e.foodName      // "eggs"        — in the user's language
+e.grams         // 100
+e.calories      // 155
+e.source        // .database / .model / .decomposed
+e.confidence    // .high / .medium / .low  (optional)
+e.ingredients   // nil for a single food; the breakdown for a decomposed dish
+```
+
+### Error handling
 
 ```swift
 do {
     let result = try await estimator.estimate(meal: "pizza", grams: 300)
     print("\(result.calories) kcal")
 } catch let error as CalorieEstimatorError {
-    // The model response couldn't be parsed into a calorie value
-    print(error.localizedDescription)
-} catch {
-    // FoundationModels errors (model unavailable, guardrail violation, etc.)
-    print(error.localizedDescription)
+    print(error.localizedDescription) // unusable output, or model unavailable
 }
 ```
 
+Note: a table hit on `estimate(meal:weight:)` never touches the model, so it never
+throws `modelUnavailable`.
+
 ## How It Works
 
-1. The on-device model parses the request into a **food name** (kept in the user's language), an **English name** for lookup, an approximate **mass in grams**, and a fallback **calories-per-100g** figure.
-2. The calories-per-100g is resolved from the **bundled nutrition table** using the English name. Real data beats a memorized guess; the model's own figure is used only when the food isn't in the table.
-3. The calorie count is **calculated in code** (`caloriesPer100g * grams / 100`), ensuring consistent, proportional results regardless of portion size — and never a model arithmetic error.
-4. **Greedy sampling** is used, so the same input always returns the same result.
-5. Each result reports **confidence**: `.high` when the figure came from the table, `.medium` when it came from the model.
+1. **Text-field path — table first.** The food is looked up in the `NutritionTable` *before any model session is created*. On a hit, calories are computed in code (`caloriesPer100g × grams / 100`) and returned immediately — zero model calls, works offline, `.high` confidence.
+2. **On a miss (or for phrases), one model call.** The model returns the per-100g figure (resolved against the table by English name, so non-English input still benefits from real data), an approximate mass for phrases, and an `isCompositeDish` flag — so routing costs no extra inference.
+3. **Composite dishes are decomposed.** The model lists the main ingredients with masses; each ingredient's per-100g is resolved through the same table (falling back to the model) and summed in code. The total is cross-checked against an independent holistic estimate.
+4. **Calories are always computed in code**, never trusted from model arithmetic, so they stay consistent with the grams.
+5. **Greedy sampling** for single-shot calls makes results reproducible; the internal multi-attempt dish decomposition uses seeded random sampling and reports lower confidence when the attempts disagree.
 
 ### Customising the nutrition source
 
-The nutrition table is pluggable via the `NutritionTable` protocol. Pass your own
-implementation (or `EmptyNutritionTable` to rely solely on the model):
+The table is pluggable via the `NutritionTable` protocol (default `LocalNutritionTable`;
+`EmptyNutritionTable` defers everything to the model):
 
 ```swift
 let estimator = CalorieEstimator(nutritionTable: MyNutritionTable())
@@ -173,60 +137,57 @@ let estimator = CalorieEstimator(nutritionTable: MyNutritionTable())
 ```swift
 public struct CalorieEstimator: Sendable {
     public init(nutritionTable: NutritionTable = LocalNutritionTable())
-    public func estimate(meal: String, grams: Int) async throws -> CalorieEstimation
-    public func estimate(meal: String, amount: Int) async throws -> CalorieEstimation
+
+    // Siri-intent path.
     public func estimate(phrase: String) async throws -> MealEstimate
-}
-```
 
-### `Confidence`
-
-How much to trust an estimate, based on where its calories-per-100g figure came from.
-
-```swift
-public enum Confidence: Sendable, Equatable {
-    case high    // resolved from the nutrition table
-    case medium  // supplied by the model (food not in the table)
+    // Text-field path (units converted to grams in code).
+    public func estimate(meal: String, weight: Measurement<UnitMass>) async throws -> MealEstimate
+    public func estimate(meal: String, grams: Int) async throws -> MealEstimate // convenience
 }
 ```
 
 ### `MealEstimate`
 
-Returned by `estimate(phrase:)`.
+The unified result of both methods.
 
 ```swift
 public struct MealEstimate: Sendable, Equatable {
-    public let foodName: String  // cleaned food, in the user's language, without the quantity
-    public let grams: Int         // approximate mass in grams for the described amount
-    public let calories: Int      // estimated calories (kcal) for that amount
-    public let source: Source     // .database or .modelEstimate
-    public var confidence: Confidence  // .high for .database, .medium for .modelEstimate
+    public let foodName: String            // in the user's language
+    public let grams: Int
+    public let calories: Int
+    public let source: Source              // .database / .model / .decomposed
+    public let confidence: Confidence?     // .high / .medium / .low, where available
+    public let ingredients: [IngredientEstimate]?  // non-nil only for decomposed dishes
 
-    public enum Source: Sendable, Equatable {
-        case database      // figure came from the nutrition table
-        case modelEstimate // figure came from the model
-    }
+    public enum Source: Sendable, Equatable { case database, model, decomposed }
 }
 ```
 
-### `CalorieEstimation`
-
-Returned by `estimate(meal:grams:)` and `estimate(meal:amount:)`.
+### `IngredientEstimate`
 
 ```swift
-public struct CalorieEstimation: Sendable {
-    public let calories: Int         // total estimated calories (kcal)
-    public let explanation: String?   // e.g. "Chicken breast has ~165 kcal per 100g."
-    public let estimatedGrams: Int?   // assumed mass (populated by estimate(meal:amount:))
-    public let confidence: Confidence // .high (table) or .medium (model)
+public struct IngredientEstimate: Sendable, Equatable {
+    public let name: String
+    public let grams: Int
+    public let calories: Int
+    public let source: Source // .database or .model
+
+    public enum Source: Sendable, Equatable { case database, model }
+}
+```
+
+### `Confidence`
+
+```swift
+public enum Confidence: Sendable, Equatable {
+    case high    // from the table, or a well-covered, self-consistent breakdown
+    case medium  // a model figure, or a partially-covered breakdown
+    case low     // implausible, or a breakdown that didn't hold together
 }
 ```
 
 ### `NutritionTable`
-
-The pluggable source of calories-per-100g figures. `LocalNutritionTable` (the
-default) is a bundled, offline table of common foods; `EmptyNutritionTable` always
-misses, deferring to the model.
 
 ```swift
 public protocol NutritionTable: Sendable {
@@ -234,11 +195,13 @@ public protocol NutritionTable: Sendable {
 }
 ```
 
+`LocalNutritionTable` is the bundled, offline default; `EmptyNutritionTable` always misses.
+
 ### `CalorieEstimatorError`
 
 ```swift
 public enum CalorieEstimatorError: LocalizedError {
-    case parsingFailed(response: String)    // model returned unusable output
+    case parsingFailed(response: String)    // unusable model output / non-positive weight
     case modelUnavailable(reason: String)   // Apple Intelligence off / still downloading
 }
 ```

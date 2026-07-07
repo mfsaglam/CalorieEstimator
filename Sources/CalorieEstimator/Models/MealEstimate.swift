@@ -1,34 +1,48 @@
-/// The result of estimating a meal from a single natural-language phrase.
+/// The unified result of any calorie estimate, returned by both public entry points
+/// (``CalorieEstimator/estimate(phrase:)`` and ``CalorieEstimator/estimate(meal:weight:)``).
 ///
-/// Returned by ``CalorieEstimator/estimate(phrase:)``.
+/// The app renders every estimate the same way regardless of how it was produced. A
+/// single food carries a `nil` ``ingredients`` list; a composite dish carries the
+/// breakdown it was summed from.
 public struct MealEstimate: Sendable, Equatable {
-    /// Where the calories-per-100g figure behind an estimate came from.
+    /// How the estimate's calories were arrived at.
     public enum Source: Sendable, Equatable {
-        /// Resolved from the bundled nutrition table — the more reliable case.
+        /// Resolved directly from the nutrition table — computed in code, no model call.
         case database
-        /// The food wasn't in the table, so the model's recalled figure was used.
-        case modelEstimate
+        /// A single calories-per-100g figure supplied by the model (not in the table).
+        case model
+        /// A composite dish summed from an ingredient breakdown produced by the model.
+        case decomposed
     }
 
-    /// The cleaned food name, without the quantity (e.g. "grilled chicken").
+    /// The food or dish name, in the user's language (e.g. "yumurta", "lasagna").
     public let foodName: String
-    /// The approximate mass in grams for the described amount.
+    /// The approximate mass in grams the calories are for.
     public let grams: Int
-    /// The estimated calories (kcal) for that amount.
+    /// The estimated total calories (kcal).
     public let calories: Int
-    /// Where the underlying calories-per-100g figure came from.
+    /// How the calories were arrived at.
     public let source: Source
+    /// How much to trust the estimate, when a meaningful signal is available:
+    /// ``Confidence/high`` for a database hit, ``Confidence/medium`` for a model figure,
+    /// and a computed level for a decomposed dish.
+    public let confidence: Confidence?
+    /// The ingredient breakdown — non-`nil` only when ``source`` is ``Source/decomposed``.
+    public let ingredients: [IngredientEstimate]?
 
-    /// How much to trust this estimate: ``Confidence/high`` for a database hit,
-    /// ``Confidence/medium`` for a model guess.
-    public var confidence: Confidence {
-        source == .database ? .high : .medium
-    }
-
-    public init(foodName: String, grams: Int, calories: Int, source: Source = .modelEstimate) {
+    public init(
+        foodName: String,
+        grams: Int,
+        calories: Int,
+        source: Source,
+        confidence: Confidence? = nil,
+        ingredients: [IngredientEstimate]? = nil
+    ) {
         self.foodName = foodName
         self.grams = grams
         self.calories = calories
         self.source = source
+        self.confidence = confidence
+        self.ingredients = ingredients
     }
 }
