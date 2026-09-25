@@ -7,8 +7,6 @@ let package = Package(
     platforms: [
         .iOS(.v26),
         .macOS(.v26),
-        .tvOS(.v26),
-        .watchOS(.v26),
         .visionOS(.v26)
     ],
     products: [
@@ -18,10 +16,15 @@ let package = Package(
         )
     ],
     targets: [
-        .target(name: "CalorieEstimator"),
+        .target(
+            name: "CalorieEstimator",
+            resources: [.process("Resources")],
+            linkerSettings: [.linkedLibrary("sqlite3")]
+        ),
         .testTarget(
             name: "CalorieEstimatorTests",
-            dependencies: ["CalorieEstimator"]
+            dependencies: ["CalorieEstimator"],
+            resources: [.process("Resources")]
         )
     ]
 )

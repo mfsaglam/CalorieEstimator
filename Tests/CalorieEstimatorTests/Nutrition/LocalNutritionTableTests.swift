@@ -40,4 +40,10 @@ struct LocalNutritionTableTests {
     func unknownMisses() {
         #expect(table.caloriesPer100g(for: "grandma's mystery stew") == nil)
     }
+
+    @Test("Composite phrases do not resolve as individual ingredients")
+    func compositeDoesNotSubstringMatch() {
+        #expect(table.caloriesPer100g(for: "chicken rice") == nil)
+        #expect(table.caloriesPer100g(for: "rice chicken") == nil)
+    }
 }

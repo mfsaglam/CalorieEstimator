@@ -19,11 +19,20 @@ public struct IngredientEstimate: Sendable, Equatable {
     public let calories: Int
     /// Whether this ingredient's calories-per-100g came from the database or the model.
     public let source: Source
+    /// Stable ingredient identity when the ingredient came from canonical local data.
+    public let ingredientID: IngredientID?
 
-    public init(name: String, grams: Int, calories: Int, source: Source) {
+    public init(
+        name: String,
+        grams: Int,
+        calories: Int,
+        source: Source,
+        ingredientID: IngredientID? = nil
+    ) {
         self.name = name
         self.grams = grams
         self.calories = calories
         self.source = source
+        self.ingredientID = ingredientID
     }
 }

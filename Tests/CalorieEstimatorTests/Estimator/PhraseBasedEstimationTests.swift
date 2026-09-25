@@ -9,7 +9,10 @@ import Foundation
 // in the name, sane gram range, positive calories) rather than exact values.
 // They require a device with Apple Intelligence available.
 
-@Suite("Phrase-Based Estimation")
+@Suite(
+    "Phrase-Based Estimation",
+    .enabled(if: ProcessInfo.processInfo.environment["CALORIE_ESTIMATOR_RUN_MODEL_TESTS"] == "1")
+)
 struct PhraseBasedEstimationTests {
 
     private let estimator = CalorieEstimator()
