@@ -21,7 +21,7 @@ so those platforms are not declared by this package.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "2.0.0")
+    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "3.0.0")
 ]
 ```
 
