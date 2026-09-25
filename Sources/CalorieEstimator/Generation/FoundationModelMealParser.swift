@@ -12,12 +12,29 @@ struct FoundationModelMealParser: MealRequestParsing {
             containedIn: RecipeQuery(name: input)
         )
         if let trustedCandidate {
-            let generated = try await Self.respondForKnownRecipe(
+            let quantity = try await Self.respond(input: input, model: model, tools: [])
+            let translation = try await Self.translatePreservingModifiers(input: input, model: model)
+            let existingModifications = try await Self.respondForKnownExistingIngredientChanges(
                 input: input,
+                englishDescription: translation.englishDescription,
                 recipe: trustedCandidate,
                 model: model
             )
-            return Self.makeRequest(from: generated, trustedRecipe: trustedCandidate)
+            let modifications = try await Self.respondForKnownRecipeModifications(
+                input: input,
+                englishDescription: translation.englishDescription,
+                recipe: trustedCandidate,
+                quantity: quantity,
+                model: model
+            )
+            return Self.makeRequest(
+                quantity: quantity,
+                existingModifications: existingModifications,
+                modifications: modifications,
+                trustedRecipe: trustedCandidate,
+                sourceDescriptions: [input, translation.englishDescription],
+                explicitMassesGrams: translation.explicitMassesGrams
+            )
         }
 
         let generated: ParsedMealResponse
@@ -55,22 +72,142 @@ struct FoundationModelMealParser: MealRequestParsing {
         ).content
     }
 
-    private static func respondForKnownRecipe(
+    private static func translatePreservingModifiers(
         input: String,
-        recipe: Recipe,
         model: SystemLanguageModel
-    ) async throws -> ParsedKnownRecipeResponse {
-        let baseIngredients = recipe.ingredients.map(\.canonicalName).joined(separator: ", ")
-        let session = LanguageModelSession(model: model, instructions: knownRecipeInstructions)
+    ) async throws -> GeneratedModifierPreservingTranslation {
+        let session = LanguageModelSession(model: model, instructions: modifierTranslationInstructions)
         return try await session.respond(
-            to: """
-            Food description: \(input)
-            Trusted base recipe: \(recipe.canonicalName)
-            Existing base ingredients: \(baseIngredients)
-            """,
-            generating: ParsedKnownRecipeResponse.self,
+            to: "Food description: \(input)",
+            generating: GeneratedModifierPreservingTranslation.self,
             options: GenerationOptions(samplingMode: .greedy)
         ).content
+    }
+
+    private static func respondForKnownRecipeModifications(
+        input: String,
+        englishDescription: String,
+        recipe: Recipe,
+        quantity: ParsedMealResponse,
+        model: SystemLanguageModel
+    ) async throws -> ParsedKnownRecipeModificationsResponse {
+        let baseIngredients = recipe.ingredients.enumerated().map { index, ingredient in
+            "\(index + 1). \(ingredient.canonicalName) [nutrition name: \(ingredient.nutritionLookupName)]"
+        }.joined(separator: ", ")
+        let mealUnit = unit(from: quantity.unit).rawValue
+        let session = LanguageModelSession(model: model, instructions: knownRecipeModificationInstructions)
+        return try await session.respond(
+            to: """
+            Original food description: \(input)
+            Faithful English description: \(englishDescription)
+            Trusted base recipe: \(recipe.canonicalName)
+            Existing base ingredients: \(baseIngredients)
+            Protected whole-meal quantity: \(quantity.amount) \(mealUnit)
+            """,
+            generating: ParsedKnownRecipeModificationsResponse.self,
+            options: GenerationOptions(samplingMode: .greedy)
+        ).content
+    }
+
+    private static func respondForKnownExistingIngredientChanges(
+        input: String,
+        englishDescription: String,
+        recipe: Recipe,
+        model: SystemLanguageModel
+    ) async throws -> [MealModification] {
+        let numberedIngredients = recipe.ingredients.enumerated().map { index, ingredient in
+            "\(index + 1). \(ingredient.canonicalName) [nutrition name: \(ingredient.nutritionLookupName)]"
+        }.joined(separator: ", ")
+        var modifications: [MealModification] = []
+        for ingredient in recipe.ingredients {
+            let session = LanguageModelSession(model: model, instructions: existingIngredientChangeInstructions)
+            let decision = try await session.respond(
+                to: """
+                Original food description: \(input)
+                English rendering (which may be imperfect): \(englishDescription)
+                Trusted base recipe: \(recipe.canonicalName)
+                All existing base ingredients: \(numberedIngredients)
+                Target ingredient to decide: \(ingredient.canonicalName) [nutrition name: \(ingredient.nutritionLookupName)]
+                """,
+                generating: GeneratedExistingIngredientChangeDecision.self,
+                options: GenerationOptions(samplingMode: .greedy)
+            ).content
+            let normalizedEvidence = FoodNameNormalizer.normalize(decision.evidenceText)
+            let protectedTokens = Set(
+                ([recipe.canonicalName] + recipe.ingredients.flatMap {
+                    [$0.canonicalName, $0.nutritionLookupName]
+                })
+                .flatMap { FoodNameNormalizer.normalize($0).split(separator: " ") }
+                .map(String.init)
+            )
+            let evidenceLetterTokens = normalizedEvidence
+                .split(separator: " ")
+                .map(String.init)
+                .filter { token in
+                    token.unicodeScalars.contains { CharacterSet.letters.contains($0) }
+                }
+            guard decision.hasExplicitChange,
+                  normalizedEvidence.split(separator: " ").count >= 2,
+                  exactEvidenceIsGrounded(decision.evidenceText, in: [input]),
+                  evidenceLetterTokens.contains(where: { !protectedTokens.contains($0) }) else {
+                continue
+            }
+            let interpretation = try await interpretChangeEvidence(
+                decision.evidenceText,
+                model: model
+            )
+            guard translatedEvidence(
+                interpretation.englishTranslation,
+                names: ingredient
+            ) else { continue }
+            let kind: MealModificationKind = switch interpretation.direction {
+            case .useMore: .increase
+            case .useLess: .decrease
+            case .removeEntirely: .remove
+            }
+            modifications.append(
+                MealModification(
+                    kind: kind,
+                    ingredientName: ingredient.canonicalName,
+                    ingredientNameEnglish: ingredient.nutritionLookupName,
+                    estimatedGrams: interpretation.hasExplicitGrams && interpretation.explicitGrams > 0
+                        ? interpretation.explicitGrams
+                        : nil
+                )
+            )
+        }
+        return modifications
+    }
+
+    private static func interpretChangeEvidence(
+        _ evidence: String,
+        model: SystemLanguageModel
+    ) async throws -> GeneratedChangeEvidenceInterpretation {
+        let session = LanguageModelSession(model: model, instructions: changeEvidenceInterpretationInstructions)
+        return try await session.respond(
+            to: "Evidence phrase: \(evidence)",
+            generating: GeneratedChangeEvidenceInterpretation.self,
+            options: GenerationOptions(samplingMode: .greedy)
+        ).content
+    }
+
+    private static func translatedEvidence(
+        _ englishEvidence: String,
+        names ingredient: RecipeIngredient
+    ) -> Bool {
+        let evidenceTokens = Set(
+            FoodNameNormalizer.normalize(englishEvidence)
+                .split(separator: " ")
+                .map(String.init)
+        )
+        guard !evidenceTokens.isEmpty else { return false }
+        return [ingredient.canonicalName, ingredient.nutritionLookupName].contains { name in
+            FoodNameNormalizer.normalize(name)
+                .split(separator: " ")
+                .map(String.init)
+                .filter { $0.count >= 3 }
+                .contains(where: evidenceTokens.contains)
+        }
     }
 
     static func makeRequest(from generated: ParsedMealResponse) -> MealRequest {
@@ -90,6 +227,7 @@ struct FoundationModelMealParser: MealRequestParsing {
                 unit: unit(from: generated.unit),
                 estimatedGrams: generated.estimatedGrams > 0 ? generated.estimatedGrams : nil
             ),
+            quantityScope: .finalMeal,
             modifications: generated.modifications.map {
                 MealModification(
                     kind: modificationKind(from: $0.kind),
@@ -107,26 +245,94 @@ struct FoundationModelMealParser: MealRequestParsing {
     }
 
     static func makeRequest(
-        from generated: ParsedKnownRecipeResponse,
-        trustedRecipe: Recipe
+        quantity: ParsedMealResponse,
+        existingModifications: [MealModification] = [],
+        modifications generatedModifications: ParsedKnownRecipeModificationsResponse,
+        trustedRecipe: Recipe,
+        sourceDescriptions: [String] = [],
+        explicitMassesGrams: [Int] = []
     ) -> MealRequest {
-        let modifications = generated.modifications.compactMap {
-            validatedModification(from: $0, trustedRecipe: trustedRecipe)
+        let parsedQuantity = MealQuantity(
+            amount: quantity.amount,
+            unit: unit(from: quantity.unit),
+            estimatedGrams: quantity.estimatedGrams > 0 ? quantity.estimatedGrams : nil
+        )
+        let parsedGrams = grams(from: parsedQuantity)
+        var resolvedQuantity: MealQuantity
+        if (quantity.hasExplicitTotalMass || generatedModifications.hasExplicitWholeMealGrams),
+           let parsedGrams {
+            resolvedQuantity = .grams(parsedGrams)
+        } else {
+            resolvedQuantity = parsedQuantity
+        }
+
+        var modifications = existingModifications
+        let additions = generatedModifications.addedNewIngredients.compactMap {
+            validatedAddedIngredient(
+                from: $0,
+                trustedRecipe: trustedRecipe,
+                sourceDescriptions: sourceDescriptions
+            )
+        }
+        for addition in additions {
+            let normalized = FoodNameNormalizer.normalize(addition.ingredientNameEnglish)
+            if let index = modifications.firstIndex(where: {
+                FoodNameNormalizer.normalize($0.ingredientNameEnglish) == normalized
+            }) {
+                if modifications[index].estimatedGrams == nil, addition.estimatedGrams != nil {
+                    modifications[index] = addition
+                }
+            } else {
+                modifications.append(addition)
+            }
+        }
+        let statedMasses = explicitMassesGrams.filter { $0 > 0 }
+        if statedMasses.count == 1, let mass = statedMasses.first {
+            resolvedQuantity = .grams(mass)
+        } else if statedMasses.count > 1 {
+            var remainingMasses = statedMasses
+            for explicit in modifications.compactMap(\.estimatedGrams) {
+                if let index = remainingMasses.firstIndex(of: explicit) {
+                    remainingMasses.remove(at: index)
+                }
+            }
+            if remainingMasses.count == 1, let mealMass = remainingMasses.first {
+                resolvedQuantity = .grams(mealMass)
+            }
+        }
+        let statedGrams = grams(from: resolvedQuantity)
+        let hasDistinctExplicitAddition = modifications.contains { modification in
+            guard modification.kind == .add || modification.kind == .increase,
+                  let explicit = modification.estimatedGrams,
+                  explicit > 0 else { return false }
+            return explicit != statedGrams
+        }
+        let quantityScope: MealQuantityScope = generatedModifications.quantityExcludesModifierMass
+            && hasDistinctExplicitAddition ? .baseRecipe : .finalMeal
+        if quantityScope == .finalMeal, let statedGrams {
+            modifications = modifications.map { modification in
+                guard let explicit = modification.estimatedGrams, explicit >= statedGrams else {
+                    return modification
+                }
+                return MealModification(
+                    kind: modification.kind,
+                    ingredientName: modification.ingredientName,
+                    ingredientNameEnglish: modification.ingredientNameEnglish,
+                    estimatedGrams: nil
+                )
+            }
         }
         return MealRequest(
-            displayName: generated.foodName.trimmingCharacters(in: .whitespacesAndNewlines),
-            lookupName: generated.foodNameEnglish.trimmingCharacters(in: .whitespacesAndNewlines),
+            displayName: quantity.foodName.trimmingCharacters(in: .whitespacesAndNewlines),
+            lookupName: quantity.foodNameEnglish.trimmingCharacters(in: .whitespacesAndNewlines),
             baseDisplayName: trustedRecipe.canonicalName,
             baseLookupName: trustedRecipe.canonicalName,
             recipeID: trustedRecipe.id,
             languageCode: nil,
             localeIdentifier: nil,
             cuisine: trustedRecipe.cuisine,
-            quantity: MealQuantity(
-                amount: generated.amount,
-                unit: unit(from: generated.unit),
-                estimatedGrams: generated.estimatedGrams > 0 ? generated.estimatedGrams : nil
-            ),
+            quantity: resolvedQuantity,
+            quantityScope: quantityScope,
             modifications: modifications,
             isCompositeDish: true,
             proposedIngredients: [],
@@ -134,30 +340,112 @@ struct FoundationModelMealParser: MealRequestParsing {
         )
     }
 
-    private static func validatedModification(
-        from generated: GeneratedMealModification,
-        trustedRecipe: Recipe
+    private static func validatedAddedIngredient(
+        from generated: GeneratedNewIngredientAddition,
+        trustedRecipe: Recipe,
+        sourceDescriptions: [String]
     ) -> MealModification? {
-        let modification = MealModification(
-            kind: modificationKind(from: generated.kind),
+        guard sourceDescriptions.isEmpty || evidenceIsGrounded(
+            generated.evidenceText,
+            in: sourceDescriptions
+        ) else { return nil }
+
+        let explicitGrams = generated.hasExplicitGrams && generated.explicitGrams > 0
+            ? generated.explicitGrams
+            : nil
+        return canonicalizedAddition(
             ingredientName: generated.ingredientName,
             ingredientNameEnglish: generated.ingredientNameEnglish,
-            estimatedGrams: generated.estimatedGrams > 0 ? generated.estimatedGrams : nil
+            explicitGrams: explicitGrams,
+            trustedRecipe: trustedRecipe
         )
-        guard modification.kind == .add else { return modification }
+    }
 
+    private static func canonicalizedAddition(
+        ingredientName: String,
+        ingredientNameEnglish: String,
+        explicitGrams: Int?,
+        trustedRecipe: Recipe
+    ) -> MealModification {
+        let modification = MealModification(
+            kind: .add,
+            ingredientName: ingredientName,
+            ingredientNameEnglish: ingredientNameEnglish,
+            estimatedGrams: explicitGrams
+        )
         let names = [modification.ingredientName, modification.ingredientNameEnglish]
             .map(FoodNameNormalizer.normalize)
             .filter { !$0.isEmpty }
-        let isExistingBaseIngredient = trustedRecipe.ingredients.contains { ingredient in
+        guard let existingIndex = matchingBaseIngredientIndex(for: names, in: trustedRecipe) else {
+            return modification
+        }
+        let existingIngredient = trustedRecipe.ingredients[existingIndex]
+        return MealModification(
+            kind: .increase,
+            ingredientName: existingIngredient.canonicalName,
+            ingredientNameEnglish: existingIngredient.nutritionLookupName,
+            estimatedGrams: explicitGrams
+        )
+    }
+
+    private static func matchingBaseIngredientIndex(
+        for names: [String],
+        in recipe: Recipe
+    ) -> Int? {
+        let candidates = names.map(FoodNameNormalizer.normalize).filter { !$0.isEmpty }
+        let matches = recipe.ingredients.indices.filter { index in
+            let ingredient = recipe.ingredients[index]
             let baseNames = [ingredient.canonicalName, ingredient.nutritionLookupName]
                 .map(FoodNameNormalizer.normalize)
-            return names.contains { baseNames.contains($0) }
+            return candidates.contains { candidate in
+                let candidateTokens = Set(candidate.split(separator: " ").map(String.init))
+                return baseNames.contains { baseName in
+                    let baseTokens = Set(baseName.split(separator: " ").map(String.init))
+                    return candidateTokens.isSubset(of: baseTokens)
+                        || baseTokens.isSubset(of: candidateTokens)
+                }
+            }
         }
-        // Existing ingredients must be expressed as increase/decrease/remove.
-        // Rejecting a redundant `add` prevents the model from restating the
-        // trusted recipe's normal composition as user-requested additions.
-        return isExistingBaseIngredient ? nil : modification
+        return matches.count == 1 ? matches[0] : nil
+    }
+
+    private static func evidenceIsGrounded(_ evidence: String, in sources: [String]) -> Bool {
+        let evidenceTokens = FoodNameNormalizer.normalize(evidence).split(separator: " ")
+        guard evidenceTokens.contains(where: { token in
+            token.unicodeScalars.allSatisfy(CharacterSet.letters.contains)
+        }) else { return false }
+
+        let sourceTokens = Set(
+            sources
+                .flatMap { FoodNameNormalizer.normalize($0).split(separator: " ") }
+                .map(String.init)
+        )
+        return evidenceTokens.allSatisfy { sourceTokens.contains(String($0)) }
+    }
+
+    private static func exactEvidenceIsGrounded(_ evidence: String, in sources: [String]) -> Bool {
+        let normalizedEvidence = FoodNameNormalizer.normalize(evidence)
+        guard !normalizedEvidence.isEmpty else { return false }
+        let paddedEvidence = " \(normalizedEvidence) "
+        return sources.contains { source in
+            let paddedSource = " \(FoodNameNormalizer.normalize(source)) "
+            return paddedSource.contains(paddedEvidence)
+        }
+    }
+
+    private static func grams(from quantity: MealQuantity) -> Int? {
+        let value: Double
+        switch quantity.unit {
+        case .gram: value = quantity.amount
+        case .kilogram: value = quantity.amount * 1_000
+        case .ounce: value = quantity.amount * 28.349_523_125
+        case .pound: value = quantity.amount * 453.592_37
+        case .milliliter, .liter, .serving, .bowl, .cup, .slice, .piece, .item:
+            guard let estimatedGrams = quantity.estimatedGrams, estimatedGrams > 0 else { return nil }
+            value = Double(estimatedGrams)
+        }
+        let grams = Int(value.rounded())
+        return grams > 0 ? grams : nil
     }
 
     private static func nonempty(_ value: String) -> String? {
@@ -201,17 +489,60 @@ struct FoundationModelMealParser: MealRequestParsing {
     For ambiguous portions, provide a reasonable estimated total gram weight. For an unknown
     composite dish only, propose a compact ingredient-ratio breakdown. The whole-food calorie
     density is a last-resort estimate and will be ignored whenever local knowledge resolves.
+    Set hasExplicitTotalMass only when a stated mass describes the whole requested food or meal,
+    not when it describes a single ingredient modifier.
     """
 
-    private static let knownRecipeInstructions = """
-    A trusted local base recipe has already been identified. It is authoritative and cannot be
-    replaced or decomposed by you. Parse the requested quantity and identify every explicit
-    ingredient addition, removal, increase, or decrease relative to that base. Do not repeat
-    ingredients merely because they are part of the base dish's name or normal composition.
+    private static let knownRecipeModificationInstructions = """
+    A trusted local base recipe and its whole-meal quantity have already been identified. They are
+    authoritative and cannot be replaced. Existing-ingredient directions are handled separately.
+    Put only genuinely new ingredients in addedNewIngredients. For each new ingredient, copy into
+    evidenceText the exact words from the original or faithful English description that request the
+    addition. Normal base ingredients are not additions. Every change identifies one ingredient,
+    never the base dish.
+
     Words can express a modifier before or after the base name, with a preposition, or through
     an adjectival or inflected form in any language; word order does not change the meaning.
-    Keep an explicitly requested change even when that ingredient already exists in the base.
-    Return food names without quantity text. Never perform calorie arithmetic.
+    For a new ingredient, hasExplicitGrams is true only when a separate number directly quantifies
+    that ingredient change. The protected whole-meal quantity is not an ingredient quantity. Treat
+    the stated meal mass as final unless the user clearly says the modifier is additional outside
+    the base quantity.
+    Set hasExplicitWholeMealGrams only when a gram mass quantifies the whole base dish or final meal.
+    Do not treat an ingredient-only quantity as the whole-meal mass. When multiple masses exist,
+    keep their semantic roles distinct.
+    Never perform calorie arithmetic.
+    """
+
+    private static let existingIngredientChangeInstructions = """
+    A trusted recipe, all of its existing ingredients, and one target ingredient are supplied.
+    Understand the original description in its own language; use the English rendering only as a
+    secondary aid because it can omit a modifier. Decide only whether the user explicitly asks to
+    increase, decrease, or completely remove the target. Merely naming the target as part of the
+    dish is unchanged. In a dish whose name contains ingredients A and B, "A B with extra B" changes
+    only B, not A; "A B with less B" changes only B; and "A B" changes neither. Never mark another
+    ingredient as a compensating change. Requests for extra, more, plenty, less, or none can be
+    expressed through adjectival or inflected forms in any language. When changed, copy the shortest
+    exact contiguous phrase from the original description that expresses both the change and its
+    target into evidenceText. Do not translate, invent, reorder, or copy the whole-meal weight into
+    that phrase. Otherwise set hasExplicitChange false and evidenceText empty. Do not determine
+    quantities or perform calorie arithmetic.
+    """
+
+    private static let changeEvidenceInterpretationInstructions = """
+    Interpret only the supplied evidence phrase, without information about a recipe or expected
+    target. Translate the complete phrase faithfully into English, preserving the ingredient and
+    whether it requests more, less, or complete removal. Choose the matching direction. A separate
+    gram amount belongs to the ingredient only when it occurs in this evidence phrase. Never infer
+    other ingredients, compensating changes, or a whole-meal quantity.
+    """
+
+    private static let modifierTranslationInstructions = """
+    Translate the food description faithfully into English without interpreting its recipe or
+    calculating nutrition. Preserve every explicit ingredient modifier and its direction or
+    intensity: additions, removals, requests for more, requests for less, and exact quantities.
+    Preserve all numbers and units. Do not omit repeated ingredient wording, because it may carry
+    the modifier meaning. Include every explicitly stated mass in explicitMassesGrams after
+    converting it to grams; do not add estimated or inferred masses.
     """
 
     static func description(for availability: SystemLanguageModel.Availability) -> String {

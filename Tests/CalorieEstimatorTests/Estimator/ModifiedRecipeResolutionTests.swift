@@ -102,6 +102,7 @@ struct ModifiedRecipeResolutionTests {
                 localeIdentifier: nil,
                 cuisine: nil,
                 quantity: .grams(200),
+                quantityScope: .finalMeal,
                 modifications: [testCase.modification],
                 isCompositeDish: true,
                 proposedIngredients: [
@@ -164,6 +165,7 @@ struct ModifiedRecipeResolutionTests {
             amount: 200,
             unit: .gram,
             estimatedGrams: 0,
+            hasExplicitTotalMass: true,
             modifications: [
                 GeneratedMealModification(
                     kind: .add,
@@ -189,42 +191,108 @@ struct ModifiedRecipeResolutionTests {
         #expect(request.modifications == [Self.addition("mantar", english: "mushroom")])
     }
 
-    @Test("Known-recipe parser boundary rejects restated base ingredients")
+    @Test("Known-recipe parser boundary canonicalizes restated base ingredients")
     func knownRecipeModificationValidation() async throws {
         let recipe = try #require(await LocalRecipeDatabase().recipe(id: "tr.tavuklu_pilav.default"))
-        let generated = ParsedKnownRecipeResponse(
+        let quantity = ParsedMealResponse(
             foodName: "mantarlı tavuklu pilav",
             foodNameEnglish: "Turkish chicken rice with mushroom",
+            recipeID: "",
+            languageCode: "tr",
+            localeIdentifier: "tr-TR",
+            cuisine: "Turkish",
             amount: 200,
             unit: .gram,
             estimatedGrams: 0,
-            modifications: [
-                GeneratedMealModification(
-                    kind: .add,
+            hasExplicitTotalMass: true,
+            modifications: [],
+            isCompositeDish: true,
+            proposedIngredients: [],
+            fallbackCaloriesPer100g: 200
+        )
+        let generatedModifications = ParsedKnownRecipeModificationsResponse(
+            hasExplicitWholeMealGrams: true,
+            quantityExcludesModifierMass: false,
+            addedNewIngredients: [
+                GeneratedNewIngredientAddition(
+                    evidenceText: "mantarlı",
                     ingredientName: "mantar",
                     ingredientNameEnglish: "mushroom",
-                    estimatedGrams: 0
+                    hasExplicitGrams: false,
+                    explicitGrams: 0
                 ),
-                GeneratedMealModification(
-                    kind: .add,
-                    ingredientName: "tavuk",
+                GeneratedNewIngredientAddition(
+                    evidenceText: "extra chicken",
+                    ingredientName: "chicken",
                     ingredientNameEnglish: "chicken",
-                    estimatedGrams: 0
-                ),
-                GeneratedMealModification(
-                    kind: .increase,
-                    ingredientName: "tavuk",
-                    ingredientNameEnglish: "chicken",
-                    estimatedGrams: 0
+                    hasExplicitGrams: false,
+                    explicitGrams: 0
                 )
             ]
         )
-
-        let request = FoundationModelMealParser.makeRequest(from: generated, trustedRecipe: recipe)
+        let request = FoundationModelMealParser.makeRequest(
+            quantity: quantity,
+            existingModifications: [Self.increase("Chicken", english: "chicken")],
+            modifications: generatedModifications,
+            trustedRecipe: recipe,
+            sourceDescriptions: ["mantarlı tavuklu pilav extra chicken 200g"]
+        )
 
         #expect(request.modifications == [
-            Self.addition("mantar", english: "mushroom"),
-            Self.increase("tavuk", english: "chicken")
+            Self.increase("Chicken", english: "chicken"),
+            Self.addition("mantar", english: "mushroom")
+        ])
+    }
+
+    @Test("Explicit whole-meal mass cannot be duplicated as additive modifier mass")
+    func wholeMealMassIsNotDoubleCounted() async throws {
+        let recipe = try #require(await LocalRecipeDatabase().recipe(id: "it.spaghetti_carbonara.roman"))
+        let quantity = ParsedMealResponse(
+            foodName: "spaghetti carbonara",
+            foodNameEnglish: "spaghetti carbonara",
+            recipeID: "",
+            languageCode: "en",
+            localeIdentifier: "",
+            cuisine: "Italian",
+            amount: 1,
+            unit: .serving,
+            estimatedGrams: 150,
+            hasExplicitTotalMass: true,
+            modifications: [],
+            isCompositeDish: true,
+            proposedIngredients: [],
+            fallbackCaloriesPer100g: 1
+        )
+        let details = ParsedKnownRecipeModificationsResponse(
+            hasExplicitWholeMealGrams: false,
+            quantityExcludesModifierMass: true,
+            addedNewIngredients: []
+        )
+
+        let request = FoundationModelMealParser.makeRequest(
+            quantity: quantity,
+            existingModifications: [
+                MealModification(
+                    kind: .increase,
+                    ingredientName: "Pancetta or bacon",
+                    ingredientNameEnglish: "bacon",
+                    estimatedGrams: 150
+                )
+            ],
+            modifications: details,
+            trustedRecipe: recipe,
+            sourceDescriptions: ["spaghetti carbonara with 150g extra pancetta"]
+        )
+
+        #expect(request.quantity == .grams(150))
+        #expect(request.quantityScope == .finalMeal)
+        #expect(request.modifications == [
+            MealModification(
+                kind: .increase,
+                ingredientName: "Pancetta or bacon",
+                ingredientNameEnglish: "bacon",
+                estimatedGrams: nil
+            )
         ])
     }
 
@@ -240,6 +308,7 @@ struct ModifiedRecipeResolutionTests {
             localeIdentifier: "tr-TR",
             cuisine: "Turkish",
             quantity: .grams(200),
+            quantityScope: .finalMeal,
             modifications: [],
             isCompositeDish: true,
             proposedIngredients: [],

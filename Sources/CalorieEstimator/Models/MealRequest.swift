@@ -23,6 +23,13 @@ struct MealQuantity: Sendable, Equatable {
     }
 }
 
+enum MealQuantityScope: String, Sendable, Equatable {
+    /// The stated quantity is the final mass after all modifiers are applied.
+    case finalMeal
+    /// The stated quantity is the base recipe mass; explicit additions are extra.
+    case baseRecipe
+}
+
 enum MealModificationKind: String, Sendable, Equatable {
     case add
     case remove
@@ -55,6 +62,7 @@ struct MealRequest: Sendable, Equatable {
     let localeIdentifier: String?
     let cuisine: String?
     let quantity: MealQuantity
+    let quantityScope: MealQuantityScope
     let modifications: [MealModification]
     let isCompositeDish: Bool
     let proposedIngredients: [ModelIngredientProposal]

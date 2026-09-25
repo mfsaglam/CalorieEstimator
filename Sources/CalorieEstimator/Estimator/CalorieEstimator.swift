@@ -21,6 +21,7 @@ public struct CalorieEstimator: Sendable {
     let nutritionTable: any NutritionTable
     let recipeDatabase: any RecipeDatabase
     private let mealParser: any MealRequestParsing
+    private let modelTimeout: Duration
 
     /// Create an estimator.
     /// - Parameters:
@@ -33,16 +34,19 @@ public struct CalorieEstimator: Sendable {
         self.nutritionTable = nutritionTable
         self.recipeDatabase = recipeDatabase
         self.mealParser = FoundationModelMealParser()
+        self.modelTimeout = .seconds(60)
     }
 
     init(
         nutritionTable: any NutritionTable,
         recipeDatabase: any RecipeDatabase,
-        mealParser: any MealRequestParsing
+        mealParser: any MealRequestParsing,
+        modelTimeout: Duration = .seconds(60)
     ) {
         self.nutritionTable = nutritionTable
         self.recipeDatabase = recipeDatabase
         self.mealParser = mealParser
+        self.modelTimeout = modelTimeout
     }
 
     // MARK: - Public API
@@ -63,7 +67,7 @@ public struct CalorieEstimator: Sendable {
     ///   model can't be used, or ``CalorieEstimatorError/parsingFailed(response:)`` when
     ///   the model returns unusable output.
     public func estimate(phrase: String) async throws -> MealEstimate {
-        let request = try await mealParser.parse(phrase, recipeDatabase: recipeDatabase)
+        let request = try await parse(phrase)
         return try await MealResolver(
             nutritionTable: nutritionTable,
             recipeDatabase: recipeDatabase
@@ -103,7 +107,7 @@ public struct CalorieEstimator: Sendable {
             return known
         }
 
-        let request = try await mealParser.parse(meal, recipeDatabase: recipeDatabase)
+        let request = try await parse(meal)
         return try await resolver.resolve(request, overridingGrams: grams)
     }
 
@@ -114,6 +118,14 @@ public struct CalorieEstimator: Sendable {
     ///   - grams: The weight in grams.
     public func estimate(meal: String, grams: Int) async throws -> MealEstimate {
         try await estimate(meal: meal, weight: Measurement(value: Double(grams), unit: .grams))
+    }
+
+    private func parse(_ input: String) async throws -> MealRequest {
+        let parser = mealParser
+        let database = recipeDatabase
+        return try await AsyncTimeout.run(after: modelTimeout) {
+            try await parser.parse(input, recipeDatabase: database)
+        }
     }
 
     /// The on-device model, or a throw describing why it's unavailable.

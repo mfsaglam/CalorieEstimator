@@ -130,6 +130,7 @@ struct ResolverTrustHierarchyTests {
             localeIdentifier: nil,
             cuisine: nil,
             quantity: quantity,
+            quantityScope: .finalMeal,
             modifications: modifications,
             isCompositeDish: composite,
             proposedIngredients: proposals,

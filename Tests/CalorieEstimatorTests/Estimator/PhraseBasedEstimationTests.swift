@@ -11,7 +11,8 @@ import Foundation
 
 @Suite(
     "Phrase-Based Estimation",
-    .enabled(if: ProcessInfo.processInfo.environment["CALORIE_ESTIMATOR_RUN_MODEL_TESTS"] == "1")
+    .enabled(if: ProcessInfo.processInfo.environment["CALORIE_ESTIMATOR_RUN_MODEL_TESTS"] == "1"),
+    .serialized
 )
 struct PhraseBasedEstimationTests {
 
@@ -101,5 +102,155 @@ struct PhraseBasedEstimationTests {
         #expect(rows[2].0 == "butter" && rows[2].1 == 7 && rows[2].2 == 50)
         #expect(rows[3].0 == "olive oil" && rows[3].1 == 4 && rows[3].2 == 35)
         #expect((rows[4].0 == "mantar" || rows[4].0 == "mushroom") && rows[4].1 == 18 && rows[4].2 == 4)
+    }
+
+    @Test("Known-recipe increase and decrease modifiers survive live semantic parsing")
+    func qualitativeModifierRegressions() async throws {
+        let baseline = try await estimator.estimate(phrase: "tavuklu pilav 200g")
+        report(baseline, phrase: "tavuklu pilav 200g", requestedGrams: 200)
+        let baselineChicken = try #require(ingredient(named: "chicken", in: baseline)?.grams)
+        #expect(baselineChicken == 74)
+
+        let increaseCases: [(phrase: String, recipeID: RecipeID)] = [
+            ("tavuklu pilav ekstra tavuklu 200g", "tr.tavuklu_pilav.default"),
+            ("tavuklu pilav bol tavuklu 200g", "tr.tavuklu_pilav.default"),
+            ("200g chicken rice with extra chicken", "global.chicken_rice.default")
+        ]
+        for (phrase, recipeID) in increaseCases {
+            let estimate = try await estimator.estimate(phrase: phrase)
+            report(estimate, phrase: phrase, requestedGrams: 200)
+            let chicken = try #require(ingredient(named: "chicken", in: estimate)?.grams)
+            #expect(chicken > baselineChicken, Comment(rawValue: phrase))
+            assertTrustedRecipe(estimate, recipeID: recipeID, requestedGrams: 200)
+        }
+
+        let decreased = try await estimator.estimate(phrase: "200g chicken rice with less chicken")
+        report(decreased, phrase: "200g chicken rice with less chicken", requestedGrams: 200)
+        let decreasedChicken = try #require(ingredient(named: "chicken", in: decreased)?.grams)
+        #expect(decreasedChicken < baselineChicken)
+        assertTrustedRecipe(decreased, recipeID: "global.chicken_rice.default", requestedGrams: 200)
+
+        let carbonara = try await estimator.estimate(
+            phrase: "spaghetti carbonara with extra pancetta 150g"
+        )
+        report(
+            carbonara,
+            phrase: "spaghetti carbonara with extra pancetta 150g",
+            requestedGrams: 150
+        )
+        let carbonaraRecipe = try #require(
+            await LocalRecipeDatabase().recipe(id: "it.spaghetti_carbonara.roman")
+        )
+        let carbonaraBaseline = try #require(RecipeDecomposer.estimate(
+            recipe: carbonaraRecipe,
+            grams: 150,
+            displayName: "spaghetti carbonara",
+            nutritionTable: LocalNutritionTable()
+        ))
+        let pancetta = try #require(ingredient(named: "pancetta or bacon", in: carbonara)?.grams)
+        let baselinePancetta = try #require(
+            ingredient(named: "pancetta or bacon", in: carbonaraBaseline)?.grams
+        )
+        #expect(pancetta > baselinePancetta)
+        assertTrustedRecipe(carbonara, recipeID: "it.spaghetti_carbonara.roman", requestedGrams: 150)
+    }
+
+    @Test("Explicit modifier grams and combined modifiers survive live semantic parsing")
+    func quantitativeAndCombinedModifierRegressions() async throws {
+        let explicit = try await estimator.estimate(
+            phrase: "tavuklu pilav 30g ekstra mantar 200g"
+        )
+        report(
+            explicit,
+            phrase: "tavuklu pilav 30g ekstra mantar 200g",
+            requestedGrams: 200
+        )
+        let mushroom = try #require(explicit.ingredients?.first {
+            let name = FoodNameNormalizer.normalize($0.name)
+            return name == "mantar" || name == "mushroom"
+        })
+        #expect(mushroom.grams == 30)
+        #expect(explicit.ingredients?.filter { $0 != mushroom }.reduce(0) { $0 + $1.grams } == 170)
+        assertTrustedRecipe(explicit, recipeID: "tr.tavuklu_pilav.default", requestedGrams: 200)
+
+        let combined = try await estimator.estimate(
+            phrase: "tavuklu pilav tereyağsız mantarlı 200g"
+        )
+        report(
+            combined,
+            phrase: "tavuklu pilav tereyağsız mantarlı 200g",
+            requestedGrams: 200
+        )
+        let names = Set(try #require(combined.ingredients).map {
+            FoodNameNormalizer.normalize($0.name)
+        })
+        #expect(!names.contains("butter"))
+        #expect(names.contains("mantar") || names.contains("mushroom"))
+        assertTrustedRecipe(combined, recipeID: "tr.tavuklu_pilav.default", requestedGrams: 200)
+    }
+
+    @Test("Unknown global food terminates through a bounded fallback")
+    func unknownFoodTerminates() async {
+        let phrase = "beef stroganoff 200g"
+        let clock = ContinuousClock()
+        let started = clock.now
+
+        do {
+            let estimate = try await estimator.estimate(phrase: phrase)
+            let elapsed = started.duration(to: clock.now)
+            report(estimate, phrase: phrase, requestedGrams: 200)
+            print("elapsed: \(elapsed)")
+            #expect(estimate.grams == 200)
+            #expect(estimate.provenance == .modelAssistedRecipe || estimate.provenance == .modelNutrition)
+            #expect(elapsed < .seconds(65))
+        } catch let error as CalorieEstimatorError {
+            let elapsed = started.duration(to: clock.now)
+            print("""
+            LIVE RESULT | \(phrase)
+            requested grams: 200
+            sum of ingredient grams: unavailable (controlled error)
+            provenance: unavailable (controlled error)
+            confidence: unavailable (controlled error)
+            recipe ID: none
+            error: \(error.localizedDescription)
+            elapsed: \(elapsed)
+            """)
+            #expect(elapsed < .seconds(65))
+        } catch {
+            Issue.record("Unexpected unknown-food error: \(error)")
+        }
+    }
+
+    private func assertTrustedRecipe(
+        _ estimate: MealEstimate,
+        recipeID: RecipeID,
+        requestedGrams: Int
+    ) {
+        #expect(estimate.grams == requestedGrams)
+        #expect(estimate.ingredients?.reduce(0) { $0 + $1.grams } == requestedGrams)
+        #expect(estimate.recipeID == recipeID)
+        #expect(estimate.provenance == .localRecipe)
+    }
+
+    private func ingredient(named name: String, in estimate: MealEstimate) -> IngredientEstimate? {
+        let normalized = FoodNameNormalizer.normalize(name)
+        return estimate.ingredients?.first { FoodNameNormalizer.normalize($0.name) == normalized }
+    }
+
+    private func report(_ estimate: MealEstimate, phrase: String, requestedGrams: Int) {
+        let componentMass = estimate.ingredients?.reduce(0) { $0 + $1.grams } ?? estimate.grams
+        let ingredientLines = estimate.ingredients?.map {
+            "\($0.name): \($0.grams)g / \($0.calories) kcal"
+        }.joined(separator: "\n") ?? "whole-food estimate (no ingredient decomposition)"
+        print("""
+        LIVE RESULT | \(phrase)
+        requested grams: \(requestedGrams)
+        sum of ingredient grams: \(componentMass)
+        provenance: \(estimate.provenance)
+        confidence: \(String(describing: estimate.confidence))
+        recipe ID: \(estimate.recipeID?.rawValue ?? "none")
+        calories: \(estimate.calories)
+        \(ingredientLines)
+        """)
     }
 }

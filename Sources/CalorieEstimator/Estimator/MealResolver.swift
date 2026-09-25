@@ -108,11 +108,25 @@ struct MealResolver: Sendable {
         name: String,
         overridingGrams: Int?
     ) throws -> MealEstimate {
-        let grams = try resolveGrams(
+        let statedGrams = try resolveGrams(
             request.quantity,
             defaultServingGrams: recipe.defaultServingGrams,
             override: overridingGrams
         )
+        let explicitAdditionalGrams = request.modifications.reduce(0) { total, modification in
+            guard modification.kind == .add || modification.kind == .increase else { return total }
+            return total + (modification.estimatedGrams ?? 0)
+        }
+        let grams: Int
+        if overridingGrams == nil, request.quantityScope == .baseRecipe {
+            let (total, overflow) = statedGrams.addingReportingOverflow(explicitAdditionalGrams)
+            guard !overflow else {
+                throw CalorieEstimatorError.parsingFailed(response: "resolved recipe weight overflowed")
+            }
+            grams = total
+        } else {
+            grams = statedGrams
+        }
         guard let estimate = RecipeDecomposer.estimate(
             recipe: recipe,
             grams: grams,
