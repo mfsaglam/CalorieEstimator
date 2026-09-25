@@ -46,12 +46,12 @@ public struct LocalNutritionTable: NutritionTable {
         let singular = Self.singularize(normalized)
         if singular != normalized, let value = Self.table[singular] { return value }
 
-        // 3. Longest whole-word key contained in the phrase, e.g.
-        //    "grilled chicken" → "chicken". Longest wins so a more specific
-        //    key ("chicken breast") beats a broader one ("chicken").
+        // 3. A known preparation adjective may precede a known food. Arbitrary
+        //    substring matches are deliberately forbidden: "chicken rice" must
+        //    not silently become either chicken or rice.
         var best: (key: String, value: Int)?
-        for (key, value) in Self.table where Self.phrase(normalized, containsKey: key) {
-            if best == nil || key.count > best!.key.count {
+        for (key, value) in Self.table where Self.hasOnlyPreparationModifiers(normalized, before: key) {
+            if best == nil || key.count > best!.key.count || (key.count == best!.key.count && key < best!.key) {
                 best = (key, value)
             }
         }
@@ -85,10 +85,12 @@ public struct LocalNutritionTable: NutritionTable {
         return word
     }
 
-    /// Whether `key` appears as a whole word (or word run) inside `phrase`.
-    /// Padding with spaces prevents "egg" from matching "eggplant".
-    static func phrase(_ phrase: String, containsKey key: String) -> Bool {
-        " \(phrase) ".contains(" \(key) ")
+    static func hasOnlyPreparationModifiers(_ phrase: String, before key: String) -> Bool {
+        guard phrase.hasSuffix(" \(key)") else { return false }
+        let prefix = phrase.dropLast(key.count).trimmingCharacters(in: .whitespaces)
+        guard !prefix.isEmpty else { return false }
+        let allowed = Set(["baked", "boiled", "cooked", "fresh", "fried", "grilled", "raw", "roasted", "smoked", "steamed"])
+        return prefix.split(separator: " ").allSatisfy { allowed.contains(String($0)) }
     }
 
     // MARK: - Bundled data
@@ -147,6 +149,12 @@ public struct LocalNutritionTable: NutritionTable {
         "almond": 579, "walnut": 654, "peanut": 567, "peanut butter": 588,
         "cashew": 553, "pistachio": 560, "hazelnut": 628, "chia seed": 486,
         "olive oil": 884, "oil": 884, "honey": 304, "sugar": 387, "jam": 278,
+        "tahini": 595,
+
+        // Seasonings, sauces & recipe staples
+        "black pepper": 251, "soy sauce": 53, "garlic": 149, "flour": 364,
+        "broth": 15, "green onion": 32, "bean sprout": 30, "herbs": 30,
+        "spice": 250,
 
         // Beverages
         "orange juice": 45, "apple juice": 46, "juice": 45, "soda": 41,

@@ -9,9 +9,9 @@ public struct MealEstimate: Sendable, Equatable {
     public enum Source: Sendable, Equatable {
         /// Resolved directly from the nutrition table — computed in code, no model call.
         case database
-        /// A single calories-per-100g figure supplied by the model (not in the table).
+        /// A last-resort calories-per-100g figure supplied by the model.
         case model
-        /// A composite dish summed from an ingredient breakdown produced by the model.
+        /// A composite dish summed from a trusted recipe or a validated model proposal.
         case decomposed
     }
 
@@ -23,9 +23,13 @@ public struct MealEstimate: Sendable, Equatable {
     public let calories: Int
     /// How the calories were arrived at.
     public let source: Source
+    /// The trust boundary that produced this result.
+    public let provenance: EstimateProvenance
+    /// The stable local recipe identifier, when a trusted local recipe was used.
+    public let recipeID: RecipeID?
     /// How much to trust the estimate, when a meaningful signal is available:
-    /// ``Confidence/high`` for a database hit, ``Confidence/medium`` for a model figure,
-    /// and a computed level for a decomposed dish.
+    /// ``Confidence/high`` for trusted local data, ``Confidence/medium`` for a model-assisted
+    /// composition resolved through local nutrition, and ``Confidence/low`` for model nutrition.
     public let confidence: Confidence?
     /// The ingredient breakdown — non-`nil` only when ``source`` is ``Source/decomposed``.
     public let ingredients: [IngredientEstimate]?
@@ -36,13 +40,25 @@ public struct MealEstimate: Sendable, Equatable {
         calories: Int,
         source: Source,
         confidence: Confidence? = nil,
-        ingredients: [IngredientEstimate]? = nil
+        ingredients: [IngredientEstimate]? = nil,
+        provenance: EstimateProvenance? = nil,
+        recipeID: RecipeID? = nil
     ) {
         self.foodName = foodName
         self.grams = grams
         self.calories = calories
         self.source = source
+        self.provenance = provenance ?? Self.defaultProvenance(for: source)
+        self.recipeID = recipeID
         self.confidence = confidence
         self.ingredients = ingredients
+    }
+
+    private static func defaultProvenance(for source: Source) -> EstimateProvenance {
+        switch source {
+        case .database: .localNutrition
+        case .model: .modelNutrition
+        case .decomposed: .modelAssistedRecipe
+        }
     }
 }

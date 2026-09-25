@@ -1,8 +1,8 @@
 /// How much to trust a calorie estimate.
 ///
 /// For single foods this reflects where the calories-per-100g figure came from
-/// (database vs model). For decomposed dishes it also reflects how well the
-/// ingredient breakdown held together — see ``CalorieEstimator/estimate(dish:attempts:)``.
+/// (database vs model). For decomposed dishes it reflects whether composition
+/// came from trusted local data or a model proposal resolved through local nutrition.
 public enum Confidence: Sendable, Equatable {
     /// Strong: resolved from the database, or a well-covered, self-consistent breakdown.
     case high

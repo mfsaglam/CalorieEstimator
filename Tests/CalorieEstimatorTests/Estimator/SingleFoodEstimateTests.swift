@@ -19,7 +19,8 @@ struct SingleFoodEstimateTests {
         #expect(estimate.grams == 200)
         #expect(estimate.calories == 330)
         #expect(estimate.source == .model)
-        #expect(estimate.confidence == .medium)
+        #expect(estimate.confidence == .low)
+        #expect(estimate.provenance == .modelNutrition)
         #expect(estimate.ingredients == nil)
     }
 

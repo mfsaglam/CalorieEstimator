@@ -1,0 +1,37 @@
+[
+  {
+    "input": "200 gram tavuklu pilav",
+    "lookupName": "tavuklu pilav",
+    "expectedRecipeID": "tr.tavuklu_pilav.default",
+    "grams": 200,
+    "forbiddenIngredients": ["mushroom"]
+  },
+  {
+    "input": "150g spaghetti carbonara",
+    "lookupName": "spaghetti carbonara",
+    "expectedRecipeID": "it.spaghetti_carbonara.roman",
+    "grams": 150,
+    "forbiddenIngredients": ["mushroom", "cream"]
+  },
+  {
+    "input": "one bowl of shoyu ramen",
+    "lookupName": "shoyu ramen",
+    "expectedRecipeID": "jp.ramen.shoyu",
+    "grams": 550,
+    "forbiddenIngredients": ["cheddar"]
+  },
+  {
+    "input": "200g chicken biryani",
+    "lookupName": "chicken biryani",
+    "expectedRecipeID": "in.chicken_biryani.default",
+    "grams": 200,
+    "forbiddenIngredients": ["bacon"]
+  },
+  {
+    "input": "one serving bibimbap",
+    "lookupName": "bibimbap",
+    "expectedRecipeID": "kr.bibimbap.default",
+    "grams": 450,
+    "forbiddenIngredients": ["parmesan"]
+  }
+]

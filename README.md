@@ -1,20 +1,23 @@
 # CalorieEstimator
 
-A lightweight Swift package that estimates calories for a meal using on-device Apple Intelligence via the [FoundationModels](https://developer.apple.com/documentation/foundationmodels) framework.
+CalorieEstimator is a cuisine-agnostic Swift package for estimating meal calories with
+on-device Apple Intelligence and trusted local data. It is offline, privacy-friendly,
+and designed for food names, dishes, and languages from around the world.
 
-All processing happens on-device. No network requests, no API keys, no third-party services.
-
-Calorie figures for common foods come from a **bundled nutrition table** rather than the model's memory, so they're accurate and reproducible — and for the text-field path, a table hit returns **without ever calling the model** (instant, offline). When a food isn't in the table, the model supplies a figure instead. Composite dishes ("lasagna", "kremalı mantarlı makarna") are detected and **broken into ingredients automatically**. Non-English input is supported: the food name is kept in the user's language while an English translation is used for the lookup.
+The Foundation Model understands language. A local recipe database supplies known dish
+composition, a nutrition table supplies energy density, and Swift performs every weight
+and calorie calculation.
 
 ## Requirements
 
-- iOS 26+ / macOS 26+ / tvOS 26+ / watchOS 26+ / visionOS 26+
+- iOS 26+, macOS 26+, or visionOS 26+
 - Swift 6.2+
-- A device with Apple Intelligence enabled (for anything not resolved from the table)
+- Apple Intelligence enabled for inputs that local data cannot resolve directly
+
+FoundationModels' on-device `SystemLanguageModel` is unavailable on tvOS and watchOS,
+so those platforms are not declared by this package.
 
 ## Installation
-
-### Swift Package Manager
 
 ```swift
 dependencies: [
@@ -22,172 +25,158 @@ dependencies: [
 ]
 ```
 
-Then add `CalorieEstimator` to your target's dependencies:
-
-```swift
-.target(name: "YourTarget", dependencies: ["CalorieEstimator"])
-```
-
-### Xcode
-
-1. **File > Add Package Dependencies...**
-2. Enter the repository URL
-3. Add **CalorieEstimator** to your target
+Add `CalorieEstimator` to the consuming target's dependencies.
 
 ## Usage
 
-There are exactly two entry points, matching how a meal gets logged. Both return the
-same `MealEstimate`, so you render the result the same way regardless of source.
-
-### 1. Natural-language phrase (Siri intent)
+### Natural-language input
 
 ```swift
 import CalorieEstimator
 
 let estimator = CalorieEstimator()
+let result = try await estimator.estimate(phrase: "200 gram tavuklu pilav")
 
-let a = try await estimator.estimate(phrase: "200 grams of grilled chicken")
-print(a.foodName, a.grams, a.calories) // "grilled chicken", 200, 330
-
-_ = try await estimator.estimate(phrase: "eight ounces of salmon") // word-numbers
-_ = try await estimator.estimate(phrase: "250 ml orange juice")    // volume → grams
-_ = try await estimator.estimate(phrase: "two eggs")               // counts → grams
-_ = try await estimator.estimate(phrase: "banana")                 // no amount → 1 serving
-_ = try await estimator.estimate(phrase: "iki yumurta")            // any language
+print(result.foodName)
+print(result.grams)       // 200
+print(result.calories)
+print(result.provenance)  // .localRecipe when the bundled recipe matched
 ```
 
-### 2. Food name + weight (text field)
+The structured parser supports mass, volume, serving, bowl, cup, slice, piece, and item
+semantics. Explicit mass units are converted in Swift. A known recipe's default serving
+weight is preferred for serving-like quantities; ambiguous long-tail portions can use an
+on-device model estimate.
 
-The weight is any `Measurement<UnitMass>` — grams, ounces, pounds, kilograms — and is
-converted to grams **in code**; the model never parses units on this path.
+### Food name plus explicit weight
 
 ```swift
-let a = try await estimator.estimate(meal: "chicken breast",
-                                     weight: Measurement(value: 8, unit: .ounces))
-print(a.grams, a.calories) // 227, 374  (165 kcal/100g × 227 g)
+let salmon = try await estimator.estimate(
+    meal: "salmon",
+    weight: Measurement(value: 8, unit: .ounces)
+)
 
-// Convenience overload when you already have grams:
-let b = try await estimator.estimate(meal: "white rice", grams: 250)
-print(b.calories, b.source) // 325, .database  (resolved from the table — no model call)
+let carbonara = try await estimator.estimate(meal: "spaghetti carbonara", grams: 150)
 ```
 
-### Composite dishes (automatic)
+This path checks the local recipe database first, then the nutrition table. A confident
+local hit never creates a model session.
 
-You never choose "single food" vs "dish". When the input names a composite dish, both
-methods break it into ingredients and sum them:
+## Architecture
+
+```text
+User input
+   |
+   v
+Typed FoundationModels semantic parser
+   |  name, language/locale hints, quantity, explicit modifiers
+   v
+Canonical recipe resolver  <---->  local SQLite RecipeDatabase tool
+   |
+   +-- known recipe --------> deterministic ratio scaling
+   |                              |
+   +-- known food ---------------+--> local NutritionTable
+   |                              |
+   +-- unknown composite ----> model ratios, locally resolved ingredients
+   |                              |
+   +-- unresolved food ------> lowest-trust model kcal/100 g
+                                  |
+                                  v
+                         Swift arithmetic --> MealEstimate
+```
+
+The model can propose meaning, a recipe identity, an unknown-dish composition, or a final
+nutrition fallback. Swift validates every model-proposed recipe ID. Local recipe and
+nutrition values always win and cannot be overwritten by model output.
+
+## Trust hierarchy
+
+`MealEstimate.provenance` describes the result's trust boundary:
+
+1. `.localRecipe` — trusted composition plus local nutrition, `high` confidence.
+2. `.localNutrition` — a direct local food match, `high` confidence.
+3. `.modelAssistedRecipe` — model-proposed composition for an unknown dish, with every
+   ingredient resolved by local nutrition, `medium` confidence.
+4. `.modelNutrition` — whole-food kcal/100 g from the model after all local paths fail,
+   `low` confidence.
+
+The original `MealEstimate.Source` cases (`database`, `model`, and `decomposed`) remain
+available for source compatibility. `provenance` is the more precise signal.
+
+## Canonical identity and multilingual matching
+
+Recipe IDs are stable and independent of display language, for example:
+
+```text
+tr.tavuklu_pilav.default
+it.spaghetti_carbonara.roman
+jp.ramen.shoyu
+```
+
+Aliases carry optional language and locale metadata. Generic terms do not need to map to
+a single regional recipe: `global.chicken_rice.default` and
+`tr.tavuklu_pilav.default`, for example, remain separate identities. Cuisine and region
+are metadata, never hard-coded branches in domain logic.
+
+The model's supported languages depend on the OS and installed Apple Intelligence model.
+The architecture is multilingual, but this package does not claim that every language or
+regional term is supported equally well by every system release.
+
+## Recipe database
+
+`RecipeDatabase` is public and injectable:
 
 ```swift
-let dish = try await estimator.estimate(phrase: "kremalı mantarlı makarna")
-print(dish.calories)          // e.g. 337
-print(dish.source)            // .decomposed
-for i in dish.ingredients ?? [] {
-    print(i.name, i.grams, i.calories) // makarna 120 188, krema 40 136, mantar 60 13
-}
+let estimator = CalorieEstimator(
+    nutritionTable: MyNutritionTable(),
+    recipeDatabase: MyRecipeDatabase()
+)
 ```
 
-On the text-field path, the decomposed serving is scaled to the weight you pass in.
+The bundled `LocalRecipeDatabase` is read-only SQLite. Its schema separates recipe
+identity and aliases from ingredient composition:
 
-### Reading the result
-
-```swift
-let e = try await estimator.estimate(phrase: "two eggs")
-e.foodName      // "eggs"        — in the user's language
-e.grams         // 100
-e.calories      // 155
-e.source        // .database / .model / .decomposed
-e.confidence    // .high / .medium / .low  (optional)
-e.ingredients   // nil for a single food; the breakdown for a decomposed dish
+```text
+recipes(id, canonical_name, normalized_name, cuisine, region, variant,
+        default_serving_grams)
+recipe_aliases(recipe_id, alias, normalized_alias, language_code, locale_identifier)
+ingredients(id, canonical_name, nutrition_lookup_name)
+recipe_ingredients(recipe_id, ingredient_id, position, ratio)
 ```
 
-### Error handling
+Ingredient ratios must total approximately 1.0. Swift uses a largest-remainder allocation
+so ingredient masses always sum exactly to the requested meal weight.
 
-```swift
-do {
-    let result = try await estimator.estimate(meal: "pizza", grams: 300)
-    print("\(result.calories) kcal")
-} catch let error as CalorieEstimatorError {
-    print(error.localizedDescription) // unusable output, or model unavailable
-}
-```
+### Adding recipes and languages
 
-Note: a table hit on `estimate(meal:weight:)` never touches the model, so it never
-throws `modelUnavailable`.
+1. Add canonical ingredients, recipes, aliases, and ratios to `Data/recipes.sql`.
+2. Keep IDs stable and use separate IDs for nutritionally meaningful regional variants.
+3. Ensure every ingredient's `nutrition_lookup_name` resolves through the nutrition table.
+4. Rebuild the resource:
 
-## How It Works
+   ```sh
+   sh Scripts/build_recipe_database.sh
+   ```
 
-1. **Text-field path — table first.** The food is looked up in the `NutritionTable` *before any model session is created*. On a hit, calories are computed in code (`caloriesPer100g × grams / 100`) and returned immediately — zero model calls, works offline, `.high` confidence.
-2. **On a miss (or for phrases), one model call.** The model returns the per-100g figure (resolved against the table by English name, so non-English input still benefits from real data), an approximate mass for phrases, and an `isCompositeDish` flag — so routing costs no extra inference.
-3. **Composite dishes are decomposed.** The model lists the main ingredients with masses; each ingredient's per-100g is resolved through the same table (falling back to the model) and summed in code. The total is cross-checked against an independent holistic estimate.
-4. **Calories are always computed in code**, never trusted from model arithmetic, so they stay consistent with the grams.
-5. **Greedy sampling** for single-shot calls makes results reproducible; the internal multi-attempt dish decomposition uses seeded random sampling and reports lower confidence when the attempts disagree.
+5. Add multilingual/cuisine evaluation entries to
+   `Tests/CalorieEstimatorTests/Resources/MealEvaluations.json`.
+6. Run `swift test`.
 
-### Customising the nutrition source
+The seed is intentionally small and globally varied. It validates the architecture; it is
+not intended to enumerate world cuisine.
 
-The table is pluggable via the `NutritionTable` protocol (default `LocalNutritionTable`;
-`EmptyNutritionTable` defers everything to the model):
+## FoundationModels tool calling
 
-```swift
-let estimator = CalorieEstimator(nutritionTable: MyNutritionTable())
-```
+The semantic parser installs a typed `RecipeDatabaseTool`. The tool returns a trusted
+recipe ID and identity metadata. It does not let the model edit recipe ratios or local
+nutrition. The resolver re-fetches and validates the ID before using it.
 
-## API Reference
+Explicit user changes such as “without cheese” or “with extra mushroom” are represented
+separately from the base recipe. Only explicit modifiers may alter a known composition.
 
-### `CalorieEstimator`
+## Nutrition source
 
-```swift
-public struct CalorieEstimator: Sendable {
-    public init(nutritionTable: NutritionTable = LocalNutritionTable())
-
-    // Siri-intent path.
-    public func estimate(phrase: String) async throws -> MealEstimate
-
-    // Text-field path (units converted to grams in code).
-    public func estimate(meal: String, weight: Measurement<UnitMass>) async throws -> MealEstimate
-    public func estimate(meal: String, grams: Int) async throws -> MealEstimate // convenience
-}
-```
-
-### `MealEstimate`
-
-The unified result of both methods.
-
-```swift
-public struct MealEstimate: Sendable, Equatable {
-    public let foodName: String            // in the user's language
-    public let grams: Int
-    public let calories: Int
-    public let source: Source              // .database / .model / .decomposed
-    public let confidence: Confidence?     // .high / .medium / .low, where available
-    public let ingredients: [IngredientEstimate]?  // non-nil only for decomposed dishes
-
-    public enum Source: Sendable, Equatable { case database, model, decomposed }
-}
-```
-
-### `IngredientEstimate`
-
-```swift
-public struct IngredientEstimate: Sendable, Equatable {
-    public let name: String
-    public let grams: Int
-    public let calories: Int
-    public let source: Source // .database or .model
-
-    public enum Source: Sendable, Equatable { case database, model }
-}
-```
-
-### `Confidence`
-
-```swift
-public enum Confidence: Sendable, Equatable {
-    case high    // from the table, or a well-covered, self-consistent breakdown
-    case medium  // a model figure, or a partially-covered breakdown
-    case low     // implausible, or a breakdown that didn't hold together
-}
-```
-
-### `NutritionTable`
+`NutritionTable` remains the lightweight public abstraction:
 
 ```swift
 public protocol NutritionTable: Sendable {
@@ -195,17 +184,60 @@ public protocol NutritionTable: Sendable {
 }
 ```
 
-`LocalNutritionTable` is the bundled, offline default; `EmptyNutritionTable` always misses.
+`LocalNutritionTable` contains common food and ingredient values. `EmptyNutritionTable`
+forces misses. Custom implementations can use a larger bundled database without changing
+the estimator API.
 
-### `CalorieEstimatorError`
+The local matcher accepts exact names, singular/plural variants, and a small set of
+preparation modifiers. It deliberately does not match arbitrary substrings, so “chicken
+rice” cannot silently resolve as chicken or rice.
+
+## Result types
 
 ```swift
-public enum CalorieEstimatorError: LocalizedError {
-    case parsingFailed(response: String)    // unusable model output / non-positive weight
-    case modelUnavailable(reason: String)   // Apple Intelligence off / still downloading
+public struct MealEstimate: Sendable, Equatable {
+    public let foodName: String
+    public let grams: Int
+    public let calories: Int
+    public let source: Source
+    public let provenance: EstimateProvenance
+    public let recipeID: RecipeID?
+    public let confidence: Confidence?
+    public let ingredients: [IngredientEstimate]?
 }
 ```
 
+Known and model-assisted composite dishes include their deterministic ingredient calorie
+breakdown. `IngredientEstimate.source` describes the nutrition source for that ingredient.
+
+## Testing
+
+```sh
+swift test
+```
+
+The default suite is deterministic and does not require Apple Intelligence. To opt into
+the real on-device integration tests:
+
+```sh
+CALORIE_ESTIMATOR_RUN_MODEL_TESTS=1 swift test
+```
+
+The JSON evaluation fixtures cover several cuisines, aliases, exact total weights, and
+forbidden-ingredient regressions. They are intentionally lightweight so the corpus can
+grow without creating an ML evaluation framework.
+
+## Limitations
+
+- Recipe entries are representative defaults, not universal culinary truths. Restaurants,
+  regions, households, brands, and preparation methods vary.
+- The bundled seed and nutrition table are deliberately small.
+- Portion units such as slices and bowls remain approximate unless a trusted recipe default
+  or future portion metadata resolves them.
+- Explicit modifier quantities are approximate when the user does not state an amount.
+- The final model nutrition fallback preserves long-tail coverage but is intentionally
+  marked low-confidence.
+
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](LICENSE).
