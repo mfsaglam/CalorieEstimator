@@ -46,6 +46,10 @@ struct ModelIngredientProposal: Sendable, Equatable {
 struct MealRequest: Sendable, Equatable {
     let displayName: String
     let lookupName: String
+    /// The unmodified dish identity used for trusted recipe lookup. This remains
+    /// distinct from `displayName`, which may include explicit modifiers.
+    let baseDisplayName: String
+    let baseLookupName: String
     let recipeID: RecipeID?
     let languageCode: String?
     let localeIdentifier: String?

@@ -63,4 +63,43 @@ struct PhraseBasedEstimationTests {
         assertInvariants(estimate, gramRange: 50...400)
         #expect(estimate.foodName.localizedCaseInsensitiveContains("banana"))
     }
+
+    @Test("Modified known recipe retains its base and modifier in either Turkish word order", arguments: [
+        "200 gram mantarlı tavuklu pilav",
+        "200 gram tavuklu pilav mantarlı"
+    ])
+    func modifiedTurkishRecipe(_ phrase: String) async throws {
+        let database = LocalRecipeDatabase()
+        let request = try await FoundationModelMealParser().parse(phrase, recipeDatabase: database)
+        print("Parsed MealRequest for '\(phrase)': \(request)")
+
+        let estimator = CalorieEstimator(
+            nutritionTable: LocalNutritionTable(),
+            recipeDatabase: database,
+            mealParser: StubMealRequestParser(request: request)
+        )
+        let estimate = try await estimator.estimate(phrase: phrase)
+
+        #expect(FoodNameNormalizer.normalize(request.baseDisplayName) == "tavuklu pilav")
+        #expect(request.modifications.contains {
+            $0.kind == .add && FoodNameNormalizer.normalize($0.ingredientNameEnglish) == "mushroom"
+        })
+        #expect(estimate.recipeID == "tr.tavuklu_pilav.default")
+        #expect(estimate.provenance == .localRecipe)
+        #expect(estimate.ingredients?.contains {
+            FoodNameNormalizer.normalize($0.name) == "mantar" || FoodNameNormalizer.normalize($0.name) == "mushroom"
+        } == true)
+        #expect(estimate.ingredients?.reduce(0) { $0 + $1.grams } == 200)
+        #expect(estimate.calories == 351)
+
+        let rows = try #require(estimate.ingredients).map {
+            (FoodNameNormalizer.normalize($0.name), $0.grams, $0.calories)
+        }
+        #expect(rows.count == 5)
+        #expect(rows[0].0 == "rice" && rows[0].1 == 104 && rows[0].2 == 135)
+        #expect(rows[1].0 == "chicken" && rows[1].1 == 67 && rows[1].2 == 127)
+        #expect(rows[2].0 == "butter" && rows[2].1 == 7 && rows[2].2 == 50)
+        #expect(rows[3].0 == "olive oil" && rows[3].1 == 4 && rows[3].2 == 35)
+        #expect((rows[4].0 == "mantar" || rows[4].0 == "mushroom") && rows[4].1 == 18 && rows[4].2 == 4)
+    }
 }

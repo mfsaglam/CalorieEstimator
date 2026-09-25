@@ -51,6 +51,51 @@ public actor LocalRecipeDatabase: RecipeDatabase {
         }
     }
 
+    public func recipeCandidate(containedIn query: RecipeQuery) async throws -> Recipe? {
+        let normalized = FoodNameNormalizer.normalize(query.name)
+        let queryWords = normalized.split(separator: " ").map(String.init)
+        guard !queryWords.isEmpty else { return nil }
+
+        return try withDatabase { database in
+            let sql = """
+            SELECT r.id, r.cuisine, NULL, NULL, r.normalized_name
+            FROM recipes r
+            UNION ALL
+            SELECT r.id, r.cuisine, a.language_code, a.locale_identifier, a.normalized_alias
+            FROM recipes r
+            JOIN recipe_aliases a ON a.recipe_id = r.id
+            """
+            let statement = try Self.prepare(sql, in: database)
+            defer { sqlite3_finalize(statement) }
+
+            var scores: [String: Int] = [:]
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let candidateWords = Self.text(statement, column: 4).split(separator: " ").map(String.init)
+                guard !candidateWords.isEmpty,
+                      queryWords.count - candidateWords.count <= 8,
+                      Self.contains(candidateWords, in: queryWords) else {
+                    continue
+                }
+
+                let id = Self.text(statement, column: 0)
+                // Prefer the most specific (longest) complete alias. Context
+                // metadata breaks ties but can never make a shorter alias win.
+                var score = candidateWords.count * 100
+                if Self.matches(query.cuisine, Self.optionalText(statement, column: 1)) { score += 2 }
+                if Self.matches(query.languageCode, Self.optionalText(statement, column: 2)) { score += 4 }
+                if Self.matches(query.localeIdentifier, Self.optionalText(statement, column: 3)) { score += 8 }
+                scores[id] = max(scores[id] ?? Int.min, score)
+            }
+
+            guard !scores.isEmpty else { return nil }
+            let ranked = scores.sorted {
+                $0.value == $1.value ? $0.key < $1.key : $0.value > $1.value
+            }
+            if ranked.count > 1, ranked[0].value == ranked[1].value { return nil }
+            return try Self.loadRecipe(id: ranked[0].key, from: database)
+        }
+    }
+
     public func recipe(id: RecipeID) async throws -> Recipe? {
         try withDatabase { try Self.loadRecipe(id: id.rawValue, from: $0) }
     }
@@ -162,5 +207,15 @@ public actor LocalRecipeDatabase: RecipeDatabase {
     private static func matches(_ requested: String?, _ stored: String?) -> Bool {
         guard let requested, let stored else { return false }
         return requested.caseInsensitiveCompare(stored) == .orderedSame
+    }
+
+    private static func contains(_ candidate: [String], in words: [String]) -> Bool {
+        guard candidate.count <= words.count else { return false }
+        for start in 0...(words.count - candidate.count) {
+            if Array(words[start..<(start + candidate.count)]) == candidate {
+                return true
+            }
+        }
+        return false
     }
 }

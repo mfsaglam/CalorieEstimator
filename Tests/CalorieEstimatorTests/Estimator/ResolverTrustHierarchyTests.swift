@@ -110,21 +110,27 @@ struct ResolverTrustHierarchyTests {
 
     private func request(
         name: String,
+        baseName: String? = nil,
+        lookupName: String? = nil,
+        baseLookupName: String? = nil,
         recipeID: RecipeID? = nil,
         quantity: MealQuantity,
+        modifications: [MealModification] = [],
         composite: Bool = false,
         proposals: [ModelIngredientProposal] = [],
         modelCalories: Int? = nil
     ) -> MealRequest {
         MealRequest(
             displayName: name,
-            lookupName: name,
+            lookupName: lookupName ?? name,
+            baseDisplayName: baseName ?? name,
+            baseLookupName: baseLookupName ?? lookupName ?? baseName ?? name,
             recipeID: recipeID,
             languageCode: nil,
             localeIdentifier: nil,
             cuisine: nil,
             quantity: quantity,
-            modifications: [],
+            modifications: modifications,
             isCompositeDish: composite,
             proposedIngredients: proposals,
             modelCaloriesPer100g: modelCalories

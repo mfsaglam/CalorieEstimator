@@ -24,18 +24,25 @@ struct MealResolver: Sendable {
             throw CalorieEstimatorError.parsingFailed(response: "empty normalized food name")
         }
 
-        if let localizedRecipe = try await recipe(matching: request.displayName, request: request) {
-            return try makeRecipeEstimate(localizedRecipe, request: request, name: name, overridingGrams: overridingGrams)
+        // Recipe resolution uses only explicit semantic identities, never arbitrary
+        // substrings. The unmodified base dish is authoritative when modifiers exist.
+        let recipeCandidates = uniqueNames([
+            request.baseDisplayName,
+            request.baseLookupName,
+            request.displayName,
+            request.lookupName
+        ])
+        for candidate in recipeCandidates {
+            if let recipe = try await recipe(matching: candidate, request: request) {
+                return try makeRecipeEstimate(recipe, request: request, name: name, overridingGrams: overridingGrams)
+            }
         }
+
         if let density = nutritionTable.caloriesPer100g(for: request.displayName) {
             let grams = try resolveGrams(request.quantity, defaultServingGrams: nil, override: overridingGrams)
             return CalorieEstimator.makeTableEstimate(foodName: name, grams: grams, caloriesPer100g: density)
         }
         let lookup = request.lookupName.isEmpty ? name : request.lookupName
-        if FoodNameNormalizer.normalize(lookup) != FoodNameNormalizer.normalize(request.displayName),
-           let translatedRecipe = try await recipe(matching: lookup, request: request) {
-            return try makeRecipeEstimate(translatedRecipe, request: request, name: name, overridingGrams: overridingGrams)
-        }
         let grams = try resolveGrams(request.quantity, defaultServingGrams: nil, override: overridingGrams)
         if let density = nutritionTable.caloriesPer100g(for: lookup) {
             return CalorieEstimator.makeTableEstimate(foodName: name, grams: grams, caloriesPer100g: density)
@@ -63,6 +70,16 @@ struct MealResolver: Sendable {
             ingredients: nil,
             provenance: .modelNutrition
         )
+    }
+
+    private func uniqueNames(_ names: [String]) -> [String] {
+        var seen: Set<String> = []
+        return names.compactMap { name in
+            let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            let normalized = FoodNameNormalizer.normalize(trimmed)
+            guard !normalized.isEmpty, seen.insert(normalized).inserted else { return nil }
+            return trimmed
+        }
     }
 
     private func recipe(matching name: String, request: MealRequest) async throws -> Recipe? {

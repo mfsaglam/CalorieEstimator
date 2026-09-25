@@ -2,7 +2,7 @@ import FoundationModels
 
 struct RecipeDatabaseTool: Tool {
     let name = "lookupLocalRecipe"
-    let description = "Find a trusted local recipe identity. Use its returned ID exactly; do not invent IDs."
+    let description = "Find a trusted local recipe identity from an unmodified base-dish name. Use its returned ID exactly; do not invent IDs."
     let database: any RecipeDatabase
 
     func call(arguments: RecipeLookupArguments) async throws -> String {

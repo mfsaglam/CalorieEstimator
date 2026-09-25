@@ -59,4 +59,29 @@ struct LocalRecipeDatabaseTests {
         ))
         #expect(miss == "No confident local recipe match.")
     }
+
+    @Test("Modified phrases find only bounded complete recipe aliases")
+    func boundedRecipeCandidates() async throws {
+        let prefix = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "200 gram mantarlı tavuklu pilav")
+        )
+        let suffix = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "200 gram tavuklu pilav mantarlı")
+        )
+        let carbonara = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "200g mushroom carbonara")
+        )
+        let partialWord = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "200g scarbonara sauce")
+        )
+        let ingredientOnly = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "200g mushroom rice")
+        )
+
+        #expect(prefix?.id == "tr.tavuklu_pilav.default")
+        #expect(suffix?.id == prefix?.id)
+        #expect(carbonara?.id == "it.spaghetti_carbonara.roman")
+        #expect(partialWord == nil)
+        #expect(ingredientOnly == nil)
+    }
 }

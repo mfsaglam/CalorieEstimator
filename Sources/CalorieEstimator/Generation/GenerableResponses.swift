@@ -77,6 +77,23 @@ struct ParsedMealResponse {
     var fallbackCaloriesPer100g: Int
 }
 
+/// A smaller semantic contract used after Swift has already identified a
+/// trusted recipe. The model can only describe presentation, quantity, and
+/// explicit changes; it cannot replace the recipe identity or composition.
+@Generable
+struct ParsedKnownRecipeResponse {
+    @Guide(description: "The complete requested dish including explicit modifiers, without quantity, in the input language")
+    var foodName: String
+    @Guide(description: "Common English name for the complete requested dish including explicit modifiers, without quantity")
+    var foodNameEnglish: String
+    @Guide(description: "Numeric amount stated by the user; use 1 for an unstated single portion", .range(0.01...10000))
+    var amount: Double
+    var unit: GeneratedQuantityUnit
+    @Guide(description: "Estimated total grams for volume/count/portion units; use 0 for mass units", .range(0...5000))
+    var estimatedGrams: Int
+    var modifications: [GeneratedMealModification]
+}
+
 @Generable
 struct RecipeLookupArguments {
     @Guide(description: "Food or dish name without quantity")
