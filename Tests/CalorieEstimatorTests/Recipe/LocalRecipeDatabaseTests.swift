@@ -31,7 +31,8 @@ struct LocalRecipeDatabaseTests {
             "cn.fried_rice.egg", "in.chicken_biryani.default",
             "mx.beef_taco.default", "me.hummus.default", "us.cheeseburger.default",
             "kr.bibimbap.default", "th.pad_thai.shrimp", "vn.pho.beef",
-            "es.paella.seafood", "fr.ratatouille.default", "de.schnitzel.pork"
+            "es.paella.seafood", "ru.borscht.default", "fr.ratatouille.default",
+            "de.schnitzel.pork"
         ]
         let nutrition = LocalNutritionTable()
         for id in ids {
@@ -83,5 +84,61 @@ struct LocalRecipeDatabaseTests {
         #expect(carbonara?.id == "it.spaghetti_carbonara.roman")
         #expect(partialWord == nil)
         #expect(ingredientOnly == nil)
+    }
+
+    @Test("Five-recipe localized aliases resolve to stable recipe identities")
+    func proofOfConceptRecipeAliases() async throws {
+        let cases: [(String, RecipeID)] = [
+            ("200 grammi di spaghetti alla carbonara senza parmigiano", "it.spaghetti_carbonara.roman"),
+            ("200 gramos de paella con extra de gambas", "es.paella.seafood"),
+            ("200 граммов борща без сметаны", "ru.borscht.default"),
+            ("비빔밥 200그램, 계란 빼고", "kr.bibimbap.default"),
+            ("ラーメン200グラム、コーン入り", "jp.ramen.shoyu")
+        ]
+
+        for (phrase, expectedID) in cases {
+            let recipe = try await database.recipeCandidate(containedIn: RecipeQuery(name: phrase))
+            #expect(recipe?.id == expectedID, Comment(rawValue: phrase))
+        }
+    }
+
+    @Test("Localized ingredient aliases resolve exactly to stable identities")
+    func proofOfConceptIngredientAliases() async throws {
+        let cases: [(name: String, language: String, expectedID: IngredientID)] = [
+            ("parmigiano", "it", "parmesan"),
+            ("gambas", "es", "shrimp"),
+            ("сметана", "ru", "sour_cream"),
+            ("сметаны", "ru", "sour_cream"),
+            ("계란", "ko", "egg"),
+            ("コーン", "ja", "corn")
+        ]
+
+        for testCase in cases {
+            let ingredient = try await database.ingredient(
+                matching: IngredientQuery(name: testCase.name, languageCode: testCase.language)
+            )
+            #expect(ingredient?.id == testCase.expectedID, Comment(rawValue: testCase.name))
+        }
+        let partial = try await database.ingredient(
+            matching: IngredientQuery(name: "コーン入り", languageCode: "ja")
+        )
+        #expect(partial == nil)
+    }
+
+    @Test("Compact aliases require non-letter boundaries")
+    func compactAliasBoundaries() async throws {
+        let quantityAdjacent = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "ラーメン200グラム")
+        )
+        let embeddedInLongerWord = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "スーパーラーメン屋")
+        )
+        let latinPartial = try await database.recipeCandidate(
+            containedIn: RecipeQuery(name: "scarbonara")
+        )
+
+        #expect(quantityAdjacent?.id == "jp.ramen.shoyu")
+        #expect(embeddedInLongerWord == nil)
+        #expect(latinPartial == nil)
     }
 }

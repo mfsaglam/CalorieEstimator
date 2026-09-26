@@ -18,6 +18,75 @@ struct PhraseBasedEstimationTests {
 
     private let estimator = CalorieEstimator()
 
+    @Test("Italian Carbonara canonicalizes parmesan removal")
+    func italianCarbonaraCanonicalization() async throws {
+        try await assertCanonicalSemantics(
+            phrase: "200 grammi di spaghetti alla carbonara senza parmigiano",
+            recipeID: "it.spaghetti_carbonara.roman",
+            ingredientID: "parmesan",
+            acceptedKinds: [.remove]
+        )
+    }
+
+    @Test("Spanish Paella canonicalizes extra shrimp")
+    func spanishPaellaCanonicalization() async throws {
+        try await assertCanonicalSemantics(
+            phrase: "200 gramos de paella con extra de gambas",
+            recipeID: "es.paella.seafood",
+            ingredientID: "shrimp",
+            acceptedKinds: [.add, .increase]
+        )
+    }
+
+    @Test("Russian Borscht canonicalizes sour cream removal")
+    func russianBorschtCanonicalization() async throws {
+        try await assertCanonicalSemantics(
+            phrase: "200 граммов борща без сметаны",
+            recipeID: "ru.borscht.default",
+            ingredientID: "sour_cream",
+            acceptedKinds: [.remove]
+        )
+    }
+
+    @Test("Korean Bibimbap canonicalizes egg removal")
+    func koreanBibimbapCanonicalization() async throws {
+        try await assertCanonicalSemantics(
+            phrase: "비빔밥 200그램, 계란 빼고",
+            recipeID: "kr.bibimbap.default",
+            ingredientID: "egg",
+            acceptedKinds: [.remove]
+        )
+    }
+
+    @Test("Japanese Ramen canonicalizes corn addition")
+    func japaneseRamenCanonicalization() async throws {
+        try await assertCanonicalSemantics(
+            phrase: "ラーメン200グラム、コーン入り",
+            recipeID: "jp.ramen.shoyu",
+            ingredientID: "corn",
+            acceptedKinds: [.add]
+        )
+    }
+
+    private func assertCanonicalSemantics(
+        phrase: String,
+        recipeID: RecipeID,
+        ingredientID: IngredientID,
+        acceptedKinds: [MealModificationKind]
+    ) async throws {
+        let request = try await FoundationModelMealParser().parse(
+            phrase,
+            recipeDatabase: LocalRecipeDatabase()
+        )
+        let canonical = try #require(request.canonicalRequest)
+        #expect(canonical.recipeID == recipeID, Comment(rawValue: phrase))
+        let matched = request.modifications.contains { modification in
+            modification.ingredientID == ingredientID
+                && acceptedKinds.contains(modification.kind)
+        }
+        #expect(matched, Comment(rawValue: phrase))
+    }
+
     /// Shared invariants every phrase estimate must satisfy.
     private func assertInvariants(_ estimate: MealEstimate, gramRange: ClosedRange<Int>) {
         let trimmedName = estimate.foodName.trimmingCharacters(in: .whitespaces)

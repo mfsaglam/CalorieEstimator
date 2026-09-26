@@ -12,6 +12,16 @@ public protocol RecipeDatabase: Sendable {
     func recipe(id: RecipeID) async throws -> Recipe?
 }
 
+/// Exact, localized lookup of trusted ingredient identities.
+public protocol IngredientDatabase: Sendable {
+    /// Resolves a canonical name or complete localized alias. Arbitrary substring
+    /// matching is forbidden.
+    func ingredient(matching query: IngredientQuery) async throws -> IngredientIdentity?
+
+    /// Returns the exact canonical ingredient, or `nil` when the ID is absent.
+    func ingredient(id: IngredientID) async throws -> IngredientIdentity?
+}
+
 public extension RecipeDatabase {
     /// Source-compatible default for databases that support exact matching only.
     func recipeCandidate(containedIn query: RecipeQuery) async throws -> Recipe? {

@@ -2,7 +2,7 @@ import Foundation
 import SQLite3
 
 /// The bundled, read-only SQLite recipe knowledge base.
-public actor LocalRecipeDatabase: RecipeDatabase {
+public actor LocalRecipeDatabase: RecipeDatabase, IngredientDatabase {
     private let databasePath: String?
 
     /// Uses the recipe database bundled with this package.
@@ -70,17 +70,18 @@ public actor LocalRecipeDatabase: RecipeDatabase {
 
             var scores: [String: Int] = [:]
             while sqlite3_step(statement) == SQLITE_ROW {
-                let candidateWords = Self.text(statement, column: 4).split(separator: " ").map(String.init)
+                let candidate = Self.text(statement, column: 4)
+                let candidateWords = candidate.split(separator: " ").map(String.init)
                 guard !candidateWords.isEmpty,
-                      queryWords.count - candidateWords.count <= 8,
-                      Self.contains(candidateWords, in: queryWords) else {
+                      max(0, queryWords.count - candidateWords.count) <= 8,
+                      Self.containsAlias(candidate, in: normalized) else {
                     continue
                 }
 
                 let id = Self.text(statement, column: 0)
                 // Prefer the most specific (longest) complete alias. Context
                 // metadata breaks ties but can never make a shorter alias win.
-                var score = candidateWords.count * 100
+                var score = candidateWords.count * 1_000 + min(candidate.count, 999)
                 if Self.matches(query.cuisine, Self.optionalText(statement, column: 1)) { score += 2 }
                 if Self.matches(query.languageCode, Self.optionalText(statement, column: 2)) { score += 4 }
                 if Self.matches(query.localeIdentifier, Self.optionalText(statement, column: 3)) { score += 8 }
@@ -98,6 +99,43 @@ public actor LocalRecipeDatabase: RecipeDatabase {
 
     public func recipe(id: RecipeID) async throws -> Recipe? {
         try withDatabase { try Self.loadRecipe(id: id.rawValue, from: $0) }
+    }
+
+    public func ingredient(matching query: IngredientQuery) async throws -> IngredientIdentity? {
+        let normalized = FoodNameNormalizer.normalize(query.name)
+        guard !normalized.isEmpty else { return nil }
+
+        return try withDatabase { database in
+            let sql = """
+            SELECT i.id, a.language_code, a.locale_identifier
+            FROM ingredient_aliases a
+            JOIN ingredients i ON i.id = a.ingredient_id
+            WHERE a.normalized_alias = ?1
+            """
+            let statement = try Self.prepare(sql, in: database)
+            defer { sqlite3_finalize(statement) }
+            try Self.bind(normalized, at: 1, in: statement, database: database)
+
+            var scores: [String: Int] = [:]
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Self.text(statement, column: 0)
+                var score = 0
+                if Self.matches(query.languageCode, Self.optionalText(statement, column: 1)) { score += 4 }
+                if Self.matches(query.localeIdentifier, Self.optionalText(statement, column: 2)) { score += 8 }
+                scores[id] = max(scores[id] ?? Int.min, score)
+            }
+
+            guard !scores.isEmpty else { return nil }
+            let ranked = scores.sorted {
+                $0.value == $1.value ? $0.key < $1.key : $0.value > $1.value
+            }
+            if ranked.count > 1, ranked[0].value == ranked[1].value { return nil }
+            return try Self.loadIngredient(id: ranked[0].key, from: database)
+        }
+    }
+
+    public func ingredient(id: IngredientID) async throws -> IngredientIdentity? {
+        try withDatabase { try Self.loadIngredient(id: id.rawValue, from: $0) }
     }
 
     private func withDatabase<T>(_ body: (OpaquePointer) throws -> T) throws -> T {
@@ -173,6 +211,24 @@ public actor LocalRecipeDatabase: RecipeDatabase {
         )
     }
 
+    private static func loadIngredient(
+        id: String,
+        from database: OpaquePointer
+    ) throws -> IngredientIdentity? {
+        let statement = try prepare(
+            "SELECT canonical_name, nutrition_lookup_name FROM ingredients WHERE id = ?1",
+            in: database
+        )
+        defer { sqlite3_finalize(statement) }
+        try bind(id, at: 1, in: statement, database: database)
+        guard sqlite3_step(statement) == SQLITE_ROW else { return nil }
+        return IngredientIdentity(
+            id: IngredientID(rawValue: id),
+            canonicalName: text(statement, column: 0),
+            nutritionLookupName: text(statement, column: 1)
+        )
+    }
+
     private static func prepare(_ sql: String, in database: OpaquePointer) throws -> OpaquePointer {
         var statement: OpaquePointer?
         guard sqlite3_prepare_v2(database, sql, -1, &statement, nil) == SQLITE_OK, let statement else {
@@ -215,6 +271,41 @@ public actor LocalRecipeDatabase: RecipeDatabase {
             if Array(words[start..<(start + candidate.count)]) == candidate {
                 return true
             }
+        }
+        return false
+    }
+
+    /// Complete whitespace-delimited aliases use word boundaries. A compact
+    /// non-ASCII alias may additionally sit beside punctuation or quantity
+    /// syntax, but never directly beside another Unicode letter. This admits
+    /// `ラーメン200グラム` without making Latin aliases such as `rice` arbitrary
+    /// substrings or accepting a compact alias inside a longer word.
+    private static func containsAlias(_ alias: String, in normalizedQuery: String) -> Bool {
+        let aliasWords = alias.split(separator: " ").map(String.init)
+        let queryWords = normalizedQuery.split(separator: " ").map(String.init)
+        if contains(aliasWords, in: queryWords) { return true }
+
+        guard !alias.contains(where: \Character.isWhitespace),
+              alias.unicodeScalars.contains(where: { !$0.isASCII && CharacterSet.letters.contains($0) }) else {
+            return false
+        }
+
+        var searchStart = normalizedQuery.startIndex
+        while searchStart < normalizedQuery.endIndex,
+              let range = normalizedQuery.range(
+                of: alias,
+                range: searchStart..<normalizedQuery.endIndex
+              ) {
+            let preceding = range.lowerBound == normalizedQuery.startIndex
+                ? nil
+                : normalizedQuery[normalizedQuery.index(before: range.lowerBound)]
+            let following = range.upperBound == normalizedQuery.endIndex
+                ? nil
+                : normalizedQuery[range.upperBound]
+            if preceding?.isLetter != true, following?.isLetter != true {
+                return true
+            }
+            searchStart = range.upperBound
         }
         return false
     }

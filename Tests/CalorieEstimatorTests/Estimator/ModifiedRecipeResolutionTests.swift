@@ -274,6 +274,7 @@ struct ModifiedRecipeResolutionTests {
             existingModifications: [
                 MealModification(
                     kind: .increase,
+                    ingredientID: "bacon",
                     ingredientName: "Pancetta or bacon",
                     ingredientNameEnglish: "bacon",
                     estimatedGrams: 150
@@ -289,10 +290,14 @@ struct ModifiedRecipeResolutionTests {
         #expect(request.modifications == [
             MealModification(
                 kind: .increase,
+                ingredientID: "bacon",
                 ingredientName: "Pancetta or bacon",
                 ingredientNameEnglish: "bacon",
                 estimatedGrams: nil
             )
+        ])
+        #expect(request.canonicalRequest?.modifications == [
+            .increase(ingredientID: "bacon", grams: nil)
         ])
     }
 

@@ -129,7 +129,7 @@ public struct LocalNutritionTable: NutritionTable {
         "milk": 60, "whole milk": 61, "skim milk": 34, "cheese": 402,
         "cheddar cheese": 402, "cheddar": 402, "mozzarella": 280,
         "parmesan": 431, "feta": 264, "yogurt": 59, "greek yogurt": 73,
-        "butter": 717, "cream": 340, "ice cream": 207,
+        "butter": 717, "cream": 340, "sour cream": 198, "ice cream": 207,
 
         // Fruit
         "apple": 52, "banana": 89, "orange": 47, "grape": 69, "strawberry": 32,

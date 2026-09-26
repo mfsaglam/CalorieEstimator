@@ -18,6 +18,40 @@ public struct RecipeQuery: Sendable, Equatable {
     }
 }
 
+/// A language-aware exact query for a canonical ingredient identity.
+public struct IngredientQuery: Sendable, Equatable {
+    public let name: String
+    public let languageCode: String?
+    public let localeIdentifier: String?
+
+    public init(
+        name: String,
+        languageCode: String? = nil,
+        localeIdentifier: String? = nil
+    ) {
+        self.name = name
+        self.languageCode = languageCode
+        self.localeIdentifier = localeIdentifier
+    }
+}
+
+/// Stable ingredient identity and trusted lookup metadata, independent of any recipe ratio.
+public struct IngredientIdentity: Sendable, Equatable {
+    public let id: IngredientID
+    public let canonicalName: String
+    public let nutritionLookupName: String
+
+    public init(
+        id: IngredientID,
+        canonicalName: String,
+        nutritionLookupName: String
+    ) {
+        self.id = id
+        self.canonicalName = canonicalName
+        self.nutritionLookupName = nutritionLookupName
+    }
+}
+
 /// One ingredient in a canonical recipe, expressed as a fraction of total mass.
 public struct RecipeIngredient: Sendable, Equatable {
     public let id: IngredientID

@@ -157,15 +157,22 @@ enum RecipeDecomposer {
             ModifiedIngredient(ingredient: $0, reservedGrams: 0, decreaseGrams: 0)
         }
         for modification in modifications {
-            let localized = FoodNameNormalizer.normalize(modification.ingredientName)
-            let english = FoodNameNormalizer.normalize(modification.ingredientNameEnglish)
-            let index = result.firstIndex {
-                let names = [
-                    FoodNameNormalizer.normalize($0.ingredient.canonicalName),
-                    FoodNameNormalizer.normalize($0.ingredient.nutritionLookupName),
-                    FoodNameNormalizer.normalize($0.ingredient.id.rawValue)
-                ]
-                return names.contains(localized) || names.contains(english)
+            let index: Int?
+            if let ingredientID = modification.ingredientID {
+                // A canonical modifier's stable ID is its sole authority. Names
+                // remain metadata for display and legacy nutrition lookup only.
+                index = result.firstIndex { $0.ingredient.id == ingredientID }
+            } else {
+                let localized = FoodNameNormalizer.normalize(modification.ingredientName)
+                let english = FoodNameNormalizer.normalize(modification.ingredientNameEnglish)
+                index = result.firstIndex {
+                    let names = [
+                        FoodNameNormalizer.normalize($0.ingredient.canonicalName),
+                        FoodNameNormalizer.normalize($0.ingredient.nutritionLookupName),
+                        FoodNameNormalizer.normalize($0.ingredient.id.rawValue)
+                    ]
+                    return names.contains(localized) || names.contains(english)
+                }
             }
             let explicitGrams = modification.estimatedGrams.flatMap { $0 > 0 ? $0 : nil }
             let qualitativeDelta = min(
@@ -189,7 +196,26 @@ enum RecipeDecomposer {
                             ratio: item.ratio + qualitativeDelta
                         )
                     }
-                } else if modification.kind == .add, !english.isEmpty {
+                } else if modification.kind == .add,
+                          let ingredientID = modification.ingredientID,
+                          !modification.ingredientNameEnglish.isEmpty {
+                    result.append(
+                        ModifiedIngredient(
+                            ingredient: RecipeIngredient(
+                                id: ingredientID,
+                                canonicalName: modification.ingredientName,
+                                nutritionLookupName: modification.ingredientNameEnglish,
+                                ratio: explicitGrams == nil ? qualitativeDelta : 0
+                            ),
+                            reservedGrams: explicitGrams ?? 0,
+                            decreaseGrams: 0
+                        )
+                    )
+                } else if modification.kind == .add {
+                    // Preserve the existing non-canonical long-tail path, but do
+                    // not confuse generated names with trusted IngredientIDs.
+                    let english = FoodNameNormalizer.normalize(modification.ingredientNameEnglish)
+                    guard !english.isEmpty else { continue }
                     result.append(
                         ModifiedIngredient(
                             ingredient: RecipeIngredient(

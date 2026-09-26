@@ -27,10 +27,19 @@ struct FoundationModelMealParser: MealRequestParsing {
                 quantity: quantity,
                 model: model
             )
+            let resolvedAdditions = try await Self.resolveNewIngredientAdditions(
+                modifications.addedNewIngredients,
+                trustedRecipe: trustedCandidate,
+                recipeDatabase: recipeDatabase,
+                languageCode: Self.nonempty(quantity.languageCode),
+                localeIdentifier: Self.nonempty(quantity.localeIdentifier),
+                sourceDescriptions: [input, translation.englishDescription]
+            )
             return Self.makeRequest(
                 quantity: quantity,
                 existingModifications: existingModifications,
                 modifications: modifications,
+                resolvedAdditions: resolvedAdditions,
                 trustedRecipe: trustedCandidate,
                 sourceDescriptions: [input, translation.englishDescription],
                 explicitMassesGrams: translation.explicitMassesGrams
@@ -119,7 +128,7 @@ struct FoundationModelMealParser: MealRequestParsing {
             "\(index + 1). \(ingredient.canonicalName) [nutrition name: \(ingredient.nutritionLookupName)]"
         }.joined(separator: ", ")
         var modifications: [MealModification] = []
-        for ingredient in recipe.ingredients {
+        for (index, ingredient) in recipe.ingredients.enumerated() {
             let session = LanguageModelSession(model: model, instructions: existingIngredientChangeInstructions)
             let decision = try await session.respond(
                 to: """
@@ -165,18 +174,34 @@ struct FoundationModelMealParser: MealRequestParsing {
             case .useLess: .decrease
             case .removeEntirely: .remove
             }
-            modifications.append(
-                MealModification(
-                    kind: kind,
-                    ingredientName: ingredient.canonicalName,
-                    ingredientNameEnglish: ingredient.nutritionLookupName,
-                    estimatedGrams: interpretation.hasExplicitGrams && interpretation.explicitGrams > 0
-                        ? interpretation.explicitGrams
-                        : nil
-                )
+            let selection = TrustedIngredientSelection(
+                kind: kind,
+                candidateNumber: index + 1,
+                grams: interpretation.hasExplicitGrams && interpretation.explicitGrams > 0
+                    ? interpretation.explicitGrams
+                    : nil
             )
+            if let modification = canonicalModification(from: selection, in: recipe) {
+                modifications.append(modification)
+            }
         }
         return modifications
+    }
+
+    static func canonicalModification(
+        from selection: TrustedIngredientSelection,
+        in recipe: Recipe
+    ) -> MealModification? {
+        let index = selection.candidateNumber - 1
+        guard recipe.ingredients.indices.contains(index) else { return nil }
+        let ingredient = recipe.ingredients[index]
+        return MealModification(
+            kind: selection.kind,
+            ingredientID: ingredient.id,
+            ingredientName: ingredient.canonicalName,
+            ingredientNameEnglish: ingredient.nutritionLookupName,
+            estimatedGrams: selection.kind == .remove ? nil : selection.grams
+        )
     }
 
     private static func interpretChangeEvidence(
@@ -248,6 +273,7 @@ struct FoundationModelMealParser: MealRequestParsing {
         quantity: ParsedMealResponse,
         existingModifications: [MealModification] = [],
         modifications generatedModifications: ParsedKnownRecipeModificationsResponse,
+        resolvedAdditions: [MealModification]? = nil,
         trustedRecipe: Recipe,
         sourceDescriptions: [String] = [],
         explicitMassesGrams: [Int] = []
@@ -267,7 +293,7 @@ struct FoundationModelMealParser: MealRequestParsing {
         }
 
         var modifications = existingModifications
-        let additions = generatedModifications.addedNewIngredients.compactMap {
+        let additions = resolvedAdditions ?? generatedModifications.addedNewIngredients.compactMap {
             validatedAddedIngredient(
                 from: $0,
                 trustedRecipe: trustedRecipe,
@@ -277,7 +303,11 @@ struct FoundationModelMealParser: MealRequestParsing {
         for addition in additions {
             let normalized = FoodNameNormalizer.normalize(addition.ingredientNameEnglish)
             if let index = modifications.firstIndex(where: {
-                FoodNameNormalizer.normalize($0.ingredientNameEnglish) == normalized
+                if let additionID = addition.ingredientID,
+                   let existingID = $0.ingredientID {
+                    return additionID == existingID
+                }
+                return FoodNameNormalizer.normalize($0.ingredientNameEnglish) == normalized
             }) {
                 if modifications[index].estimatedGrams == nil, addition.estimatedGrams != nil {
                     modifications[index] = addition
@@ -316,13 +346,14 @@ struct FoundationModelMealParser: MealRequestParsing {
                 }
                 return MealModification(
                     kind: modification.kind,
+                    ingredientID: modification.ingredientID,
                     ingredientName: modification.ingredientName,
                     ingredientNameEnglish: modification.ingredientNameEnglish,
                     estimatedGrams: nil
                 )
             }
         }
-        return MealRequest(
+        var request = MealRequest(
             displayName: quantity.foodName.trimmingCharacters(in: .whitespacesAndNewlines),
             lookupName: quantity.foodNameEnglish.trimmingCharacters(in: .whitespacesAndNewlines),
             baseDisplayName: trustedRecipe.canonicalName,
@@ -337,6 +368,82 @@ struct FoundationModelMealParser: MealRequestParsing {
             isCompositeDish: true,
             proposedIngredients: [],
             modelCaloriesPer100g: nil
+        )
+        request.canonicalRequest = CanonicalMealRequest(
+            recipeID: trustedRecipe.id,
+            quantity: resolvedQuantity,
+            modifications: modifications
+        )
+        return request
+    }
+
+    static func resolveNewIngredientAdditions(
+        _ generatedAdditions: [GeneratedNewIngredientAddition],
+        trustedRecipe: Recipe,
+        recipeDatabase: any RecipeDatabase,
+        languageCode: String?,
+        localeIdentifier: String?,
+        sourceDescriptions: [String]
+    ) async throws -> [MealModification] {
+        guard let ingredientDatabase = recipeDatabase as? any IngredientDatabase else {
+            return generatedAdditions.compactMap {
+                validatedAddedIngredient(
+                    from: $0,
+                    trustedRecipe: trustedRecipe,
+                    sourceDescriptions: sourceDescriptions
+                )
+            }
+        }
+
+        var resolved: [MealModification] = []
+        for generated in generatedAdditions {
+            guard evidenceIsGrounded(generated.evidenceText, in: sourceDescriptions) else { continue }
+            let names = [generated.ingredientName, generated.ingredientNameEnglish]
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+            var identity: IngredientIdentity?
+            for name in names where identity == nil {
+                identity = try await ingredientDatabase.ingredient(
+                    matching: IngredientQuery(
+                        name: name,
+                        languageCode: languageCode,
+                        localeIdentifier: localeIdentifier
+                    )
+                )
+            }
+            let explicitGrams = generated.hasExplicitGrams && generated.explicitGrams > 0
+                ? generated.explicitGrams
+                : nil
+            if let identity {
+                resolved.append(
+                    canonicalAddition(
+                        identity: identity,
+                        explicitGrams: explicitGrams,
+                        trustedRecipe: trustedRecipe
+                    )
+                )
+            } else if let legacy = validatedAddedIngredient(
+                from: generated,
+                trustedRecipe: trustedRecipe,
+                sourceDescriptions: sourceDescriptions
+            ) {
+                resolved.append(legacy)
+            }
+        }
+        return resolved
+    }
+
+    static func canonicalAddition(
+        identity: IngredientIdentity,
+        explicitGrams: Int?,
+        trustedRecipe: Recipe
+    ) -> MealModification {
+        MealModification(
+            kind: trustedRecipe.ingredients.contains { $0.id == identity.id } ? .increase : .add,
+            ingredientID: identity.id,
+            ingredientName: identity.canonicalName,
+            ingredientNameEnglish: identity.nutritionLookupName,
+            estimatedGrams: explicitGrams
         )
     }
 

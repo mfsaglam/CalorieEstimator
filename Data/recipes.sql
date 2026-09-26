@@ -23,6 +23,14 @@ CREATE TABLE ingredients (
     canonical_name TEXT NOT NULL,
     nutrition_lookup_name TEXT NOT NULL
 );
+CREATE TABLE ingredient_aliases (
+    ingredient_id TEXT NOT NULL REFERENCES ingredients(id),
+    alias TEXT NOT NULL,
+    normalized_alias TEXT NOT NULL,
+    language_code TEXT,
+    locale_identifier TEXT
+);
+CREATE INDEX ingredient_alias_lookup ON ingredient_aliases(normalized_alias);
 CREATE TABLE recipe_ingredients (
     recipe_id TEXT NOT NULL REFERENCES recipes(id),
     ingredient_id TEXT NOT NULL REFERENCES ingredients(id),
@@ -40,7 +48,21 @@ INSERT INTO ingredients VALUES
 ('chickpea','Chickpeas','chickpea'),('tahini','Tahini','tahini'),('lemon','Lemon','lemon'),('garlic','Garlic','garlic'),
 ('bread','Bread or bun','bread'),('ketchup','Ketchup','ketchup'),('spinach','Spinach','spinach'),('mushroom','Mushroom','mushroom'),
 ('shrimp','Shrimp','shrimp'),('peanut','Peanuts','peanut'),('bean_sprout','Bean sprouts','bean sprout'),('sugar','Sugar','sugar'),('herbs','Fresh herbs','herbs'),
-('fish','Fish','fish'),('eggplant','Eggplant','eggplant'),('zucchini','Zucchini','zucchini'),('bell_pepper','Bell pepper','bell pepper'),('flour','Flour','flour');
+('fish','Fish','fish'),('eggplant','Eggplant','eggplant'),('zucchini','Zucchini','zucchini'),('bell_pepper','Bell pepper','bell pepper'),('flour','Flour','flour'),
+('corn','Corn','corn'),('beet','Beet','beet'),('cabbage','Cabbage','cabbage'),('sour_cream','Sour cream','sour cream');
+
+INSERT INTO ingredient_aliases VALUES
+('parmesan','parmesan','parmesan','en',NULL),
+('parmesan','parmigiano','parmigiano','it','it-IT'),
+('shrimp','shrimp','shrimp','en',NULL),
+('shrimp','gambas','gambas','es','es-ES'),
+('sour_cream','sour cream','sour cream','en',NULL),
+('sour_cream','сметана','сметана','ru','ru-RU'),
+('sour_cream','сметаны','сметаны','ru','ru-RU'),
+('egg','egg','egg','en',NULL),
+('egg','계란','계란','ko','ko-KR'),
+('corn','corn','corn','en',NULL),
+('corn','コーン','コーン','ja','ja-JP');
 
 INSERT INTO recipes VALUES
 ('global.chicken_rice.default','Chicken Rice','chicken rice',NULL,NULL,'default',300),
@@ -56,6 +78,7 @@ INSERT INTO recipes VALUES
 ('th.pad_thai.shrimp','Shrimp Pad Thai','shrimp pad thai','Thai','Thailand','shrimp',350),
 ('vn.pho.beef','Beef Pho','beef pho','Vietnamese','Vietnam','beef',600),
 ('es.paella.seafood','Seafood Paella','seafood paella','Spanish','Valencia','seafood',400),
+('ru.borscht.default','Borscht','borscht','Russian','Eastern Europe','default',350),
 ('fr.ratatouille.default','Ratatouille','ratatouille','French','Provence','default',300),
 ('de.schnitzel.pork','Pork Schnitzel','pork schnitzel','German','Germany','pork',220);
 
@@ -69,9 +92,11 @@ INSERT INTO recipe_aliases VALUES
 ('tr.tavuklu_pilav.default','Turkish chicken rice','turkish chicken rice','en',NULL),
 ('it.spaghetti_carbonara.roman','spaghetti carbonara','spaghetti carbonara','en',NULL),
 ('it.spaghetti_carbonara.roman','carbonara','carbonara','it','it-IT'),
+('it.spaghetti_carbonara.roman','spaghetti alla carbonara','spaghetti alla carbonara','it','it-IT'),
 ('it.spaghetti_carbonara.roman','carbonara','carbonara','en',NULL),
 ('jp.ramen.shoyu','shoyu ramen','shoyu ramen','en',NULL),
 ('jp.ramen.shoyu','醤油ラーメン','醤油ラーメン','ja','ja-JP'),
+('jp.ramen.shoyu','ラーメン','ラーメン','ja','ja-JP'),
 ('cn.fried_rice.egg','egg fried rice','egg fried rice','en',NULL),
 ('cn.fried_rice.egg','蛋炒饭','蛋炒饭','zh','zh-CN'),
 ('in.chicken_biryani.default','chicken biryani','chicken biryani','en',NULL),
@@ -89,6 +114,10 @@ INSERT INTO recipe_aliases VALUES
 ('vn.pho.beef','phở bò','phở bò','vi','vi-VN'),
 ('es.paella.seafood','seafood paella','seafood paella','en',NULL),
 ('es.paella.seafood','paella de marisco','paella de marisco','es','es-ES'),
+('es.paella.seafood','paella','paella','es','es-ES'),
+('ru.borscht.default','borscht','borscht','en',NULL),
+('ru.borscht.default','борщ','борщ','ru','ru-RU'),
+('ru.borscht.default','борща','борща','ru','ru-RU'),
 ('fr.ratatouille.default','ratatouille','ratatouille','fr','fr-FR'),
 ('de.schnitzel.pork','pork schnitzel','pork schnitzel','en',NULL),
 ('de.schnitzel.pork','Schweineschnitzel','schweineschnitzel','de','de-DE');
@@ -107,6 +136,7 @@ INSERT INTO recipe_ingredients VALUES
 ('th.pad_thai.shrimp','noodle',1,.45),('th.pad_thai.shrimp','shrimp',2,.18),('th.pad_thai.shrimp','egg',3,.12),('th.pad_thai.shrimp','peanut',4,.08),('th.pad_thai.shrimp','bean_sprout',5,.08),('th.pad_thai.shrimp','olive_oil',6,.05),('th.pad_thai.shrimp','sugar',7,.02),('th.pad_thai.shrimp','soy_sauce',8,.02),
 ('vn.pho.beef','broth',1,.45),('vn.pho.beef','noodle',2,.30),('vn.pho.beef','beef',3,.15),('vn.pho.beef','onion',4,.04),('vn.pho.beef','bean_sprout',5,.04),('vn.pho.beef','herbs',6,.02),
 ('es.paella.seafood','rice',1,.50),('es.paella.seafood','shrimp',2,.15),('es.paella.seafood','fish',3,.10),('es.paella.seafood','tomato',4,.08),('es.paella.seafood','pea',5,.06),('es.paella.seafood','olive_oil',6,.05),('es.paella.seafood','onion',7,.04),('es.paella.seafood','spice',8,.02),
+('ru.borscht.default','beet',1,.30),('ru.borscht.default','cabbage',2,.25),('ru.borscht.default','beef',3,.15),('ru.borscht.default','broth',4,.15),('ru.borscht.default','tomato',5,.05),('ru.borscht.default','onion',6,.03),('ru.borscht.default','sour_cream',7,.07),
 ('fr.ratatouille.default','eggplant',1,.25),('fr.ratatouille.default','zucchini',2,.20),('fr.ratatouille.default','tomato',3,.20),('fr.ratatouille.default','bell_pepper',4,.15),('fr.ratatouille.default','onion',5,.10),('fr.ratatouille.default','olive_oil',6,.08),('fr.ratatouille.default','garlic',7,.02),
 ('de.schnitzel.pork','pork',1,.58),('de.schnitzel.pork','bread',2,.15),('de.schnitzel.pork','egg',3,.08),('de.schnitzel.pork','flour',4,.08),('de.schnitzel.pork','olive_oil',5,.10),('de.schnitzel.pork','lemon',6,.01);
 

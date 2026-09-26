@@ -94,7 +94,7 @@ struct MealResolver: Sendable {
         // The recipe database's independent alias match is authoritative. A generated
         // ID is accepted only when the exact row corroborates that alias match.
         if let candidate,
-           let proposedID = request.recipeID,
+           let proposedID = request.canonicalRequest?.recipeID ?? request.recipeID,
            let proposed = try await recipeDatabase.recipe(id: proposedID),
            proposed.id == candidate.id {
             return proposed
@@ -109,7 +109,7 @@ struct MealResolver: Sendable {
         overridingGrams: Int?
     ) throws -> MealEstimate {
         let statedGrams = try resolveGrams(
-            request.quantity,
+            request.canonicalRequest?.quantity ?? request.quantity,
             defaultServingGrams: recipe.defaultServingGrams,
             override: overridingGrams
         )
