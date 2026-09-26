@@ -134,36 +134,45 @@ let estimator = CalorieEstimator(
 ```
 
 The bundled `LocalRecipeDatabase` is read-only SQLite. Its schema separates recipe
-identity and aliases from ingredient composition:
+identity and aliases from ingredient composition, provenance, and canonical nutrition:
 
 ```text
 recipes(id, canonical_name, normalized_name, cuisine, region, variant,
-        default_serving_grams)
-recipe_aliases(recipe_id, alias, normalized_alias, language_code, locale_identifier)
-ingredients(id, canonical_name, nutrition_lookup_name)
-recipe_ingredients(recipe_id, ingredient_id, position, ratio)
+        default_serving_grams, quality_tier)
+recipe_aliases(recipe_id, alias, normalized_alias, language_code, locale_identifier, ...)
+ingredients(id, canonical_name, normalized_name, nutrition_lookup_name, ...)
+recipe_ingredients(recipe_id, ingredient_id, position, ratio, source_grams)
+recipe_provenance(recipe_id, source, source_record_id, source_license, ...)
+ingredient_nutrition(ingredient_id, kcal_per_100g, prepared_state, source, ...)
 ```
 
 Ingredient ratios must total approximately 1.0. Swift uses a largest-remainder allocation
 so ingredient masses always sum exactly to the requested meal weight.
 
-### Adding recipes and languages
+### Rebuilding and extending the database
 
-1. Add canonical ingredients, recipes, aliases, and ratios to `Data/recipes.sql`.
-2. Keep IDs stable and use separate IDs for nutritionally meaningful regional variants.
-3. Ensure every ingredient's `nutrition_lookup_name` resolves through the nutrition table.
-4. Rebuild the resource:
+`Data/recipes.sql` and the bundled SQLite file are generated artifacts. Licensed source
+archives, the original curated seed, source policy, and checksums live under
+`DataSources/`. Source adapters produce a common build-time representation before any
+record is validated or written to SQLite.
+
+1. Add or update a licensed source adapter under `Scripts/fooddb/sources/`.
+2. Normalize quantities to authoritative gram weights and map components to stable
+   IngredientIDs. Quarantine ambiguous mappings instead of guessing.
+3. Keep RecipeIDs stable and use separate IDs for nutritionally meaningful variants.
+4. Rebuild and validate the resource:
 
    ```sh
-   sh Scripts/build_recipe_database.sh
+   Scripts/build_recipe_database.sh
    ```
 
-5. Add multilingual/cuisine evaluation entries to
+5. Review `Data/Reports/food_database_build.json`, then add multilingual/cuisine evaluation entries to
    `Tests/CalorieEstimatorTests/Resources/MealEvaluations.json`.
 6. Run `swift test`.
 
-The seed is intentionally small and globally varied. It validates the architecture; it is
-not intended to enumerate world cuisine.
+The build report includes before/after counts, source-level rejection reasons, nutrition
+coverage, quality tiers, and validation results. See `DataSources/README.md` for licensing
+and prepared-state policy.
 
 ## FoundationModels tool calling
 
@@ -184,9 +193,10 @@ public protocol NutritionTable: Sendable {
 }
 ```
 
-`LocalNutritionTable` contains common food and ingredient values. `EmptyNutritionTable`
-forces misses. Custom implementations can use a larger bundled database without changing
-the estimator API.
+`LocalNutritionTable` contains common food values and resolves imported recipe components
+through the canonical nutrition records in the bundled SQLite database. `EmptyNutritionTable`
+forces misses. Custom implementations can use another bundled database without changing the
+estimator API.
 
 The local matcher accepts exact names, singular/plural variants, and a small set of
 preparation modifiers. It deliberately does not match arbitrary substrings, so “chicken
@@ -231,7 +241,8 @@ grow without creating an ML evaluation framework.
 
 - Recipe entries are representative defaults, not universal culinary truths. Restaurants,
   regions, households, brands, and preparation methods vary.
-- The bundled seed and nutrition table are deliberately small.
+- Coverage is intentionally conservative and currently reflects the licensed USDA FNDDS
+  corpus more strongly than regions that are uncommon in U.S. dietary survey data.
 - Portion units such as slices and bowls remain approximate unless a trusted recipe default
   or future portion metadata resolves them.
 - Explicit modifier quantities are approximate when the user does not state an amount.

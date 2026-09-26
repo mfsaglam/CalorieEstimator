@@ -1,0 +1,117 @@
+{
+  "pipeline_version": 1,
+  "generated_on": "2026-09-26",
+  "baseline": {
+    "recipes": 16,
+    "ingredients": 46,
+    "recipe_aliases": 38,
+    "ingredient_aliases": 11,
+    "database_bytes": 53248
+  },
+  "result": {
+    "recipes": 2794,
+    "ingredients": 1233,
+    "recipe_aliases": 3392,
+    "ingredient_aliases": 11,
+    "languages": 34,
+    "cuisines": [
+      "American",
+      "British / Irish",
+      "Chinese",
+      "Dominican",
+      "Eastern European",
+      "Eastern Mediterranean",
+      "French",
+      "German",
+      "Greek",
+      "Indian",
+      "Italian",
+      "Japanese",
+      "Korean",
+      "Latin American",
+      "Mexican",
+      "Middle Eastern",
+      "Nordic",
+      "North African",
+      "Puerto Rican",
+      "Russian",
+      "Salvadoran",
+      "Spanish",
+      "Thai",
+      "Turkish",
+      "Vietnamese"
+    ],
+    "regions": [
+      "China",
+      "Dominican Republic",
+      "Eastern Europe",
+      "El Salvador",
+      "Germany",
+      "Greece",
+      "India",
+      "Italy",
+      "Japan",
+      "Korea",
+      "Lazio",
+      "Mexico",
+      "Provence",
+      "Puerto Rico",
+      "Spain",
+      "Sweden",
+      "Thailand",
+      "Turkey",
+      "United States",
+      "Valencia",
+      "Vietnam"
+    ],
+    "nutrition_coverage_percent": 100.0,
+    "quality_tiers": {
+      "A": 2716,
+      "B": 78
+    },
+    "database_bytes": 8474624,
+    "sources": {
+      "manual_seed": {
+        "discovered": 16,
+        "accepted": 16,
+        "accepted_aliases": 0,
+        "rejected": 0,
+        "rejection_reasons": {}
+      },
+      "usda_fndds_2021_2023": {
+        "discovered": 5432,
+        "accepted": 2778,
+        "accepted_aliases": 0,
+        "rejected": 2654,
+        "rejection_reasons": {
+          "category_excluded": 2040,
+          "duplicate_curated_identity": 1,
+          "fewer_than_two_components": 595,
+          "missing_canonical_ingredient": 18
+        }
+      },
+      "wikidata_cc0_aliases": {
+        "discovered": 7,
+        "accepted": 0,
+        "accepted_aliases": 485,
+        "rejected": 0,
+        "rejection_reasons": {}
+      }
+    }
+  },
+  "validation": {
+    "foreign_keys": 0,
+    "invalid_ratios": 0,
+    "recipes_without_components": 0,
+    "recipes_without_provenance": 0,
+    "ingredients_without_nutrition": 0,
+    "empty_aliases": 0,
+    "ambiguous_recipe_aliases": 0,
+    "invalid_kcal": 0,
+    "duplicate_canonical_ingredient_names": 0
+  },
+  "commands": [
+    "Scripts/build_recipe_database.sh",
+    "swift test"
+  ]
+}

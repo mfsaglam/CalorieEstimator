@@ -119,6 +119,8 @@ struct LocalRecipeDatabaseTests {
             )
             #expect(ingredient?.id == testCase.expectedID, Comment(rawValue: testCase.name))
         }
+        let canonical = try await database.ingredient(matching: IngredientQuery(name: "Olive oil"))
+        #expect(canonical?.id == "olive_oil")
         let partial = try await database.ingredient(
             matching: IngredientQuery(name: "コーン入り", languageCode: "ja")
         )
@@ -140,5 +142,38 @@ struct LocalRecipeDatabaseTests {
         #expect(quantityAdjacent?.id == "jp.ramen.shoyu")
         #expect(embeddedInLongerWord == nil)
         #expect(latinPartial == nil)
+    }
+
+    @Test("Imported FNDDS recipes resolve with canonical nutrition")
+    func importedFNDDSRecipe() async throws {
+        let recipe = try #require(await database.recipe(
+            id: "global.pad_thai_with_chicken.fndds_58137230"
+        ))
+        #expect(recipe.canonicalName == "Pad Thai with chicken")
+        #expect(recipe.defaultServingGrams == 200)
+        #expect(recipe.ingredients.count >= 2)
+        #expect(abs(recipe.ingredients.reduce(0) { $0 + $1.ratio } - 1) < 0.000001)
+
+        let nutrition = LocalNutritionTable()
+        #expect(recipe.ingredients.allSatisfy {
+            nutrition.caloriesPer100g(for: $0.nutritionLookupName) != nil
+        })
+        let estimate = try #require(RecipeDecomposer.estimate(
+            recipe: recipe,
+            grams: 200,
+            displayName: recipe.canonicalName,
+            nutritionTable: nutrition
+        ))
+        #expect(estimate.ingredients?.reduce(0) { $0 + $1.grams } == 200)
+        #expect(estimate.provenance == .localRecipe)
+    }
+
+    @Test("Imported variants remain distinct stable identities")
+    func importedVariants() async throws {
+        let chicken = try await database.recipe(matching: RecipeQuery(name: "Pad Thai with chicken"))
+        let seafood = try await database.recipe(matching: RecipeQuery(name: "Pad Thai with seafood"))
+        #expect(chicken?.id == "global.pad_thai_with_chicken.fndds_58137230")
+        #expect(seafood?.id == "global.pad_thai_with_seafood.fndds_58137240")
+        #expect(chicken?.id != seafood?.id)
     }
 }

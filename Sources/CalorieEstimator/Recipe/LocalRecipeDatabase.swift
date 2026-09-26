@@ -22,11 +22,14 @@ public actor LocalRecipeDatabase: RecipeDatabase, IngredientDatabase {
 
         return try withDatabase { database in
             let sql = """
-            SELECT r.id, r.cuisine, a.language_code, a.locale_identifier,
-                   CASE WHEN r.normalized_name = ?1 THEN 1 ELSE 0 END
+            SELECT r.id, r.cuisine, NULL, NULL, 1
             FROM recipes r
-            LEFT JOIN recipe_aliases a ON a.recipe_id = r.id
-            WHERE r.normalized_name = ?1 OR a.normalized_alias = ?1
+            WHERE r.normalized_name = ?1
+            UNION ALL
+            SELECT r.id, r.cuisine, a.language_code, a.locale_identifier, 0
+            FROM recipe_aliases a
+            JOIN recipes r ON r.id = a.recipe_id
+            WHERE a.normalized_alias = ?1
             """
             let statement = try Self.prepare(sql, in: database)
             defer { sqlite3_finalize(statement) }
@@ -57,16 +60,23 @@ public actor LocalRecipeDatabase: RecipeDatabase, IngredientDatabase {
         guard !queryWords.isEmpty else { return nil }
 
         return try withDatabase { database in
+            let tokens = Array(Set(queryWords)).sorted().prefix(64)
+            let placeholders = tokens.indices.map { "?\($0 + 1)" }.joined(separator: ", ")
             let sql = """
             SELECT r.id, r.cuisine, NULL, NULL, r.normalized_name
             FROM recipes r
+            WHERE r.first_token IN (\(placeholders)) OR r.compact_script = 1
             UNION ALL
             SELECT r.id, r.cuisine, a.language_code, a.locale_identifier, a.normalized_alias
             FROM recipes r
             JOIN recipe_aliases a ON a.recipe_id = r.id
+            WHERE a.first_token IN (\(placeholders)) OR a.compact_script = 1
             """
             let statement = try Self.prepare(sql, in: database)
             defer { sqlite3_finalize(statement) }
+            for (offset, token) in tokens.enumerated() {
+                try Self.bind(token, at: Int32(offset + 1), in: statement, database: database)
+            }
 
             var scores: [String: Int] = [:]
             while sqlite3_step(statement) == SQLITE_ROW {
@@ -107,7 +117,11 @@ public actor LocalRecipeDatabase: RecipeDatabase, IngredientDatabase {
 
         return try withDatabase { database in
             let sql = """
-            SELECT i.id, a.language_code, a.locale_identifier
+            SELECT i.id, NULL, NULL, 1
+            FROM ingredients i
+            WHERE i.normalized_name = ?1
+            UNION ALL
+            SELECT i.id, a.language_code, a.locale_identifier, 0
             FROM ingredient_aliases a
             JOIN ingredients i ON i.id = a.ingredient_id
             WHERE a.normalized_alias = ?1
@@ -119,7 +133,7 @@ public actor LocalRecipeDatabase: RecipeDatabase, IngredientDatabase {
             var scores: [String: Int] = [:]
             while sqlite3_step(statement) == SQLITE_ROW {
                 let id = Self.text(statement, column: 0)
-                var score = 0
+                var score = sqlite3_column_int(statement, 3) == 1 ? 1 : 0
                 if Self.matches(query.languageCode, Self.optionalText(statement, column: 1)) { score += 4 }
                 if Self.matches(query.localeIdentifier, Self.optionalText(statement, column: 2)) { score += 8 }
                 scores[id] = max(scores[id] ?? Int.min, score)

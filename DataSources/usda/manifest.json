@@ -1,0 +1,19 @@
+{
+  "license": "CC0-1.0 / U.S. public domain",
+  "license_url": "https://fdc.nal.usda.gov/api-guide/",
+  "download_page": "https://fdc.nal.usda.gov/download-datasets/",
+  "sources": [
+    {
+      "name": "FNDDS 2021-2023",
+      "release_date": "2024-10-31",
+      "url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_survey_food_json_2024-10-31.zip",
+      "sha256": "dfb06ae7ddc397ccd570b91c14b75438ab2ba39f64f22d321f61d4a52a77f3eb"
+    },
+    {
+      "name": "SR Legacy",
+      "release_date": "2018-04",
+      "url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_json_2018-04.zip",
+      "sha256": "0fe8ae486a2c8eb42cb96413f058deb51863a46c8fb8eeb4b1fb45006dd338ef"
+    }
+  ]
+}

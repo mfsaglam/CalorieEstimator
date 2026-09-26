@@ -1,4 +1,5 @@
 import Foundation
+import SQLite3
 
 /// Supplies a food's typical calories per 100 grams from a known data source,
 /// independent of any language model.
@@ -41,6 +42,12 @@ public struct LocalNutritionTable: NutritionTable {
 
         // 1. Exact match on the normalised name.
         if let value = Self.table[normalized] { return value }
+
+        // Canonical USDA keys (for example `usda_sr_05064`) are resolved from
+        // the same offline SQLite bundle as recipes. This keeps prepared-state
+        // nutrition attached to IngredientID-backed records without changing
+        // the public NutritionTable API.
+        if let value = Self.canonicalTable[normalized] { return value }
 
         // 2. Singular/plural variant of the whole name.
         let singular = Self.singularize(normalized)
@@ -92,6 +99,38 @@ public struct LocalNutritionTable: NutritionTable {
         let allowed = Set(["baked", "boiled", "cooked", "fresh", "fried", "grilled", "raw", "roasted", "smoked", "steamed"])
         return prefix.split(separator: " ").allSatisfy { allowed.contains(String($0)) }
     }
+
+    private static let canonicalTable: [String: Int] = {
+        guard let path = Bundle.module.url(forResource: "Recipes", withExtension: "sqlite3")?.path else {
+            return [:]
+        }
+        var database: OpaquePointer?
+        guard sqlite3_open_v2(path, &database, SQLITE_OPEN_READONLY | SQLITE_OPEN_FULLMUTEX, nil) == SQLITE_OK,
+              let database else {
+            if let database { sqlite3_close(database) }
+            return [:]
+        }
+        defer { sqlite3_close(database) }
+
+        let sql = """
+        SELECT i.normalized_nutrition_lookup_name, n.kcal_per_100g
+        FROM ingredients i
+        JOIN ingredient_nutrition n ON n.ingredient_id = i.id
+        """
+        var statement: OpaquePointer?
+        guard sqlite3_prepare_v2(database, sql, -1, &statement, nil) == SQLITE_OK,
+              let statement else {
+            return [:]
+        }
+        defer { sqlite3_finalize(statement) }
+
+        var result: [String: Int] = [:]
+        while sqlite3_step(statement) == SQLITE_ROW,
+              let keyBytes = sqlite3_column_text(statement, 0) {
+            result[String(cString: keyBytes)] = Int(sqlite3_column_double(statement, 1).rounded())
+        }
+        return result
+    }()
 
     // MARK: - Bundled data
     //
