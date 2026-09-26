@@ -656,9 +656,11 @@ struct FoundationModelMealParser: MealRequestParsing {
     user, selecting each target by its one-based candidate number. Merely naming an ingredient as
     part of the dish is unchanged. Never mark another ingredient as a compensating change.
 
-    REMOVE means the selected ingredient must be completely absent from the final dish.
-    DECREASE means the selected ingredient remains present, but in a smaller amount.
-    INCREASE means the selected ingredient remains present, but in a larger amount.
+    Classify each operation from the selected ingredient's requested final state:
+    INCREASE means it remains present with an additional or larger amount.
+    DECREASE means it remains present with a smaller amount.
+    REMOVE means it must be completely absent from the final dish. Use REMOVE only for requested
+    absence, never when the user requests an additional amount of an existing ingredient.
 
     Copy the shortest exact contiguous phrase from the original description that expresses both
     the change and its target into evidenceText. Do not translate, invent, or reorder that evidence.

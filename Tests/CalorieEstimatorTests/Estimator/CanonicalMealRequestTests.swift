@@ -66,6 +66,62 @@ struct CanonicalMealRequestTests {
         }
     }
 
+    @Test("Trusted Paella shrimp increase survives the deterministic recipe path")
+    func paellaShrimpIncrease() async throws {
+        let phrase = "200 gramos de paella con extra de gambas"
+        let recipe = try #require(await database.recipe(id: "es.paella.seafood"))
+        let shrimpIndex = try #require(recipe.ingredients.firstIndex { $0.id == "shrimp" })
+        let generated = GeneratedKnownIngredientModificationsResponse(
+            modifications: [
+                GeneratedKnownIngredientModification(
+                    kind: .increase,
+                    ingredientCandidateNumber: shrimpIndex + 1,
+                    evidenceText: "con extra de gambas",
+                    hasExplicitGrams: false,
+                    explicitGrams: 0
+                )
+            ]
+        )
+        let mapped = FoundationModelMealParser.canonicalModifications(
+            from: generated,
+            in: recipe,
+            originalDescription: phrase,
+            explicitModifierMasses: []
+        )
+        let request = FoundationModelMealParser.makeRequest(
+            quantity: quantityResponse(for: recipe, grams: 200),
+            existingModifications: mapped,
+            modifications: noNewIngredients,
+            trustedRecipe: recipe,
+            explicitMassesGrams: [200]
+        )
+        let baseline = try #require(RecipeDecomposer.estimate(
+            recipe: recipe,
+            grams: 200,
+            displayName: recipe.canonicalName,
+            nutritionTable: LocalNutritionTable()
+        ))
+        let increased = try await MealResolver(
+            nutritionTable: LocalNutritionTable(),
+            recipeDatabase: database
+        ).resolve(request)
+        let baselineShrimp = try #require(
+            baseline.ingredients?.first { $0.ingredientID == "shrimp" }
+        )
+        let increasedShrimp = try #require(
+            increased.ingredients?.first { $0.ingredientID == "shrimp" }
+        )
+
+        #expect(mapped.first?.ingredientID == "shrimp")
+        #expect(request.canonicalRequest?.modifications == [
+            .increase(ingredientID: "shrimp", grams: nil)
+        ])
+        #expect(baselineShrimp.grams == 30)
+        #expect(increasedShrimp.grams == 45)
+        #expect(increasedShrimp.grams > baselineShrimp.grams)
+        #expect(increased.ingredients?.reduce(0) { $0 + $1.grams } == 200)
+    }
+
     @Test("Trusted ingredient selections become stable IngredientID operations")
     func trustedSelections() async throws {
         let cases: [(

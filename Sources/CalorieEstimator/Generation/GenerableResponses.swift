@@ -49,7 +49,7 @@ enum GeneratedExistingIngredientModificationKind {
 /// Swift validates the number and maps it to IngredientID.
 @Generable
 struct GeneratedKnownIngredientModification {
-    @Guide(description: "Semantic operation: remove means the selected ingredient is completely absent from the final dish; decrease means it remains present in a smaller amount; increase means it remains present in a larger amount.")
+    @Guide(description: "Choose by the selected ingredient's requested final state: increase when it remains present with an additional or larger amount; decrease when it remains present with a smaller amount; remove only when it should be completely absent.")
     var kind: GeneratedExistingIngredientModificationKind
     @Guide(description: "One-based number of the selected trusted ingredient candidate", .range(1...100))
     var ingredientCandidateNumber: Int
