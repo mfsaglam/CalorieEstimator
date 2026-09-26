@@ -4,3 +4,4 @@
 xcuserdata/
 DerivedData/
 *.xcodeproj
+Data/Reports/database_evaluation_live_raw.json
