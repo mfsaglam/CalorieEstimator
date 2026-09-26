@@ -28,7 +28,7 @@ enum GeneratedModificationKind {
 
 @Generable
 struct GeneratedMealModification {
-    @Guide(description: "Use add/remove for an ingredient absent from or removed from the recipe. Use increase/decrease for changing the amount of an ingredient already in the recipe.")
+    @Guide(description: "Semantic operation: remove means the ingredient is completely absent from the final dish; decrease means it remains present in a smaller amount; increase means an existing ingredient becomes more abundant; add means an ingredient not normally present is introduced.")
     var kind: GeneratedModificationKind
     @Guide(description: "One ingredient only, without quantity; never return the dish name")
     var ingredientName: String
@@ -36,6 +36,35 @@ struct GeneratedMealModification {
     var ingredientNameEnglish: String
     @Guide(description: "Grams explicitly attached to this ingredient change; never copy the whole meal weight here; use 0 for qualitative changes", .range(0...1000))
     var estimatedGrams: Int
+}
+
+@Generable
+enum GeneratedExistingIngredientModificationKind {
+    case remove
+    case decrease
+    case increase
+}
+
+/// A model selection constrained to the numbered ingredients of one trusted recipe.
+/// Swift validates the number and maps it to IngredientID.
+@Generable
+struct GeneratedKnownIngredientModification {
+    @Guide(description: "Semantic operation: remove means the selected ingredient is completely absent from the final dish; decrease means it remains present in a smaller amount; increase means it remains present in a larger amount.")
+    var kind: GeneratedExistingIngredientModificationKind
+    @Guide(description: "One-based number of the selected trusted ingredient candidate", .range(1...100))
+    var ingredientCandidateNumber: Int
+    @Guide(description: "Shortest exact contiguous phrase copied from the original description that expresses both the change and its ingredient")
+    var evidenceText: String
+    @Guide(description: "True only when a separate numeric gram amount in evidenceText directly quantifies this ingredient change")
+    var hasExplicitGrams: Bool
+    @Guide(description: "Explicit modifier grams found in evidenceText; use 0 when hasExplicitGrams is false", .range(0...1000))
+    var explicitGrams: Int
+}
+
+@Generable
+struct GeneratedKnownIngredientModificationsResponse {
+    @Guide(description: "Every explicitly requested change to an existing trusted ingredient; empty when none is requested")
+    var modifications: [GeneratedKnownIngredientModification]
 }
 
 @Generable
@@ -100,32 +129,6 @@ struct GeneratedModifierPreservingTranslation {
     var englishDescription: String
     @Guide(description: "Every explicit mass in the description converted to grams, in source order; empty when no mass is stated")
     var explicitMassesGrams: [Int]
-}
-
-@Generable
-enum GeneratedExistingIngredientChangeDirection {
-    case useMore
-    case useLess
-    case removeEntirely
-}
-
-@Generable
-struct GeneratedExistingIngredientChangeDecision {
-    @Guide(description: "True only when the user explicitly requests a change to the supplied target ingredient beyond naming it as part of the dish")
-    var hasExplicitChange: Bool
-    @Guide(description: "Shortest exact contiguous phrase copied from the original description that expresses both the change and its target; empty when unchanged")
-    var evidenceText: String
-}
-
-@Generable
-struct GeneratedChangeEvidenceInterpretation {
-    @Guide(description: "Faithful English translation of the complete evidence phrase, preserving its ingredient, direction, and any number")
-    var englishTranslation: String
-    var direction: GeneratedExistingIngredientChangeDirection
-    @Guide(description: "True only when the evidence phrase contains a separate gram amount that directly quantifies its ingredient change")
-    var hasExplicitGrams: Bool
-    @Guide(description: "Explicit grams contained in the evidence phrase; use 0 when absent", .range(0...1000))
-    var explicitGrams: Int
 }
 
 @Generable
