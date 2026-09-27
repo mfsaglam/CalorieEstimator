@@ -1,0 +1,4 @@
+{"batch_id":"remaining-09","event":"BATCH_START","model_availability":"available","reason":"5 cases; no retries","timestamp":"2026-09-26T18:34:00Z"}
+{"batch_id":"remaining-09","case_id":"base-44","elapsed_milliseconds":0,"event":"START","timestamp":"2026-09-26T18:34:00Z"}
+{"batch_id":"remaining-09","case_id":"base-44","elapsed_milliseconds":63274,"event":"TIMEOUT","reason":"CalorieEstimator.CalorieEstimatorError.modelTimedOut","result":{"category":"meat dishes","cohort":"intentional_fallback","elapsed_milliseconds":63274,"fallback_stage":"failure","foundationmodels_requests":1,"id":"base-44","input":"200g chicken shawarma plate","language":"en","lookup":"chicken shawarma plate","plausibility_reasons":[],"recipe_hit":false,"route":"phrase","timeout_or_failure":"CalorieEstimator.CalorieEstimatorError.modelTimedOut"},"timestamp":"2026-09-26T18:35:03Z"}
+{"batch_id":"remaining-09","event":"BATCH_DONE","timestamp":"2026-09-26T18:35:03Z"}
