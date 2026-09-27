@@ -1,0 +1,5673 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-09-27",
+  "manual_review_required": [
+    {
+      "ingredient_id": "vegetable_oil_nfs.usda_fndds_82101000",
+      "canonical_name": "Vegetable oil, NFS",
+      "nutrition_lookup_name": "usda_fndds_82101000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beverages_water_tap_drinking.usda_sr_14411",
+      "canonical_name": "Beverages, water, tap, drinking",
+      "nutrition_lookup_name": "usda_sr_14411",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "egg_whole_raw_fresh.usda_sr_01123",
+      "canonical_name": "Egg, whole, raw, fresh",
+      "nutrition_lookup_name": "usda_sr_01123",
+      "wikidata_id": "Q93189",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01123",
+          "wikidata_ids": [
+            "Q93189"
+          ]
+        }
+      ],
+      "reason": "broad egg food concept overlaps the existing curated egg IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q93189",
+          "labels": {
+            "ar": "بيض",
+            "de": "Ei",
+            "en": "egg as food",
+            "es": "huevo",
+            "fr": "œuf",
+            "hi": "अण्डा",
+            "it": "uovo",
+            "ja": "卵",
+            "ko": "알",
+            "pt": "ovo como alimento",
+            "ru": "яйцо",
+            "tr": "yumurta",
+            "zh": "蛋"
+          },
+          "aliases": {
+            "ar": [
+              "بيضة"
+            ],
+            "en": [
+              "eggs",
+              "egg"
+            ],
+            "fr": [
+              "œufs"
+            ],
+            "hi": [
+              "अंडा"
+            ],
+            "it": [
+              "uova"
+            ],
+            "ja": [
+              "玉子",
+              "食用卵"
+            ],
+            "ko": [
+              "새알",
+              "에그",
+              "식란"
+            ],
+            "pt": [
+              "ovo",
+              "ovos",
+              "ovos como alimento"
+            ],
+            "tr": [
+              "Tavuksal fırlatgaç"
+            ],
+            "zh": [
+              "蛋品"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "oil_or_table_fat_nfs.usda_fndds_81200100",
+      "canonical_name": "Oil or table fat, NFS",
+      "nutrition_lookup_name": "usda_fndds_81200100",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "wheat_flour_white_all_purpose_enriched_bleached.usda_sr_20081",
+      "canonical_name": "Wheat flour, white, all-purpose, enriched, bleached",
+      "nutrition_lookup_name": "usda_sr_20081",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "onions_raw.usda_sr_11282",
+      "canonical_name": "Onions, raw",
+      "nutrition_lookup_name": "usda_sr_11282",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "milk_nfs.usda_fndds_11100000",
+      "canonical_name": "Milk, NFS",
+      "nutrition_lookup_name": "usda_fndds_11100000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_as_ingredient_in_sandwiches.usda_fndds_99991400",
+      "canonical_name": "Cheese as ingredient in sandwiches",
+      "nutrition_lookup_name": "usda_fndds_99991400",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rice_white_long_grain_regular_enriched_cooked.usda_sr_20045",
+      "canonical_name": "Rice, white, long-grain, regular, enriched, cooked",
+      "nutrition_lookup_name": "usda_sr_20045",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "garlic_raw.usda_sr_11215",
+      "canonical_name": "Garlic, raw",
+      "nutrition_lookup_name": "usda_sr_11215",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "bread_white_commercially_prepared_includes_soft_bread_cr.usda_sr_18069",
+      "canonical_name": "Bread, white, commercially prepared (includes soft bread crumbs)",
+      "nutrition_lookup_name": "usda_sr_18069",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_ns_as_to_part_rotisserie_skin_not_eaten.usda_fndds_24102070",
+      "canonical_name": "Chicken, NS as to part, rotisserie, skin not eaten",
+      "nutrition_lookup_name": "usda_fndds_24102070",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "onions_cooked_boiled_drained_without_salt.usda_sr_11283",
+      "canonical_name": "Onions, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11283",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beverages_water_tap_municipal.usda_sr_14429",
+      "canonical_name": "Beverages, water, tap, municipal",
+      "nutrition_lookup_name": "usda_sr_14429",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "celery_raw.usda_sr_11143",
+      "canonical_name": "Celery, raw",
+      "nutrition_lookup_name": "usda_sr_11143",
+      "wikidata_id": "Q28298",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "11143",
+          "wikidata_ids": [
+            "Q28298"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "11143",
+          "wikidata_ids": [
+            "Q28298"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents the plant species rather than the edible product",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q28298",
+          "labels": {
+            "ar": "كرفس",
+            "de": "Echter Sellerie",
+            "en": "Apium graveolens",
+            "es": "Apium graveolens",
+            "fr": "céleri",
+            "it": "Apium graveolens",
+            "ja": "セロリ",
+            "ko": "셀러리",
+            "pt": "aipo",
+            "ru": "сельдерей",
+            "tr": "Kereviz",
+            "zh": "旱芹"
+          },
+          "aliases": {
+            "ar": [
+              "الكرفس",
+              "كرفس نبطي",
+              "كرفس (نوع)"
+            ],
+            "de": [
+              "Sellerie",
+              "Staudensellerie",
+              "Apium graveolens"
+            ],
+            "en": [
+              "wild celery",
+              "smallage"
+            ],
+            "es": [
+              "apio"
+            ],
+            "fr": [
+              "Apium graveolens",
+              "Cèleri"
+            ],
+            "it": [
+              "Apium graveolens rapaceum",
+              "sedano rapa",
+              "sedano",
+              "sedano da costa"
+            ],
+            "ja": [
+              "セルリ",
+              "セレリアック",
+              "清正人参",
+              "塘蒿",
+              "オランダミツバ",
+              "セルリー"
+            ],
+            "pt": [
+              "Apium graveolens",
+              "salsa-do-monte"
+            ],
+            "ru": [
+              "апиум",
+              "Apium graveolens",
+              "сельдерей пахучий",
+              "сельдерей душистый",
+              "сельдерей культурный"
+            ],
+            "zh": [
+              "芹菜",
+              "芹菜子",
+              "旱菜",
+              "药芹",
+              "香芹菜"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "tomato_products_canned_sauce.usda_sr_11549",
+      "canonical_name": "Tomato products, canned, sauce",
+      "nutrition_lookup_name": "usda_sr_11549",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pasta_cooked_enriched_without_added_salt.usda_sr_20121",
+      "canonical_name": "Pasta, cooked, enriched, without added salt",
+      "nutrition_lookup_name": "usda_sr_20121",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "butter_salted.usda_sr_01001",
+      "canonical_name": "Butter, salted",
+      "nutrition_lookup_name": "usda_sr_01001",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "breading_or_batter_as_ingredient_in_food.usda_fndds_99995000",
+      "canonical_name": "Breading or batter as ingredient in food",
+      "nutrition_lookup_name": "usda_fndds_99995000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "corn_sweet_yellow_frozen_kernels_cut_off_cob_boiled_drai.usda_sr_11179",
+      "canonical_name": "Corn, sweet, yellow, frozen, kernels cut off cob, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11179",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_cheddar_includes_foods_for_usda_s_food_distributi.usda_sr_01009",
+      "canonical_name": "Cheese, cheddar (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_01009",
+      "wikidata_id": "Q217525",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01009",
+          "wikidata_ids": [
+            "Q217525"
+          ]
+        }
+      ],
+      "reason": "concept overlaps the existing curated cheddar IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q217525",
+          "labels": {
+            "ar": "جبنة تشيدر",
+            "de": "Cheddar",
+            "en": "Cheddar cheese",
+            "es": "queso Cheddar",
+            "fr": "cheddar",
+            "it": "cheddar",
+            "ja": "チェダー・チーズ",
+            "ko": "체다 치즈",
+            "pt": "cheddar",
+            "ru": "Чеддер",
+            "tr": "Cheddar",
+            "zh": "車打芝士"
+          },
+          "aliases": {
+            "ar": [
+              "تشيدر",
+              "التشيدر",
+              "جبن تشدر"
+            ],
+            "de": [
+              "Cheddarkäse"
+            ],
+            "en": [
+              "cheddar"
+            ],
+            "es": [
+              "Cheddar",
+              "West Country Farmhouse Cheddar"
+            ],
+            "fr": [
+              "Cheddar cheese",
+              "fromage Cheddar"
+            ],
+            "it": [
+              "formaggio cheddar"
+            ],
+            "ja": [
+              "チェダーチーズ",
+              "チェダー"
+            ],
+            "ko": [
+              "체더 치즈"
+            ],
+            "ru": [
+              "Чеддар"
+            ],
+            "zh": [
+              "切達乾酪",
+              "切達起司",
+              "切達乳酪"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "beef_round_top_round_steak_separable_lean_and_fat_trimme.usda_sr_13893",
+      "canonical_name": "Beef, round, top round steak, separable lean and fat, trimmed to 1/8\" fat, all grades, cooked, broiled",
+      "nutrition_lookup_name": "usda_sr_13893",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "soy_sauce_made_from_soy_and_wheat_shoyu.usda_sr_16123",
+      "canonical_name": "Soy sauce made from soy and wheat (shoyu)",
+      "nutrition_lookup_name": "usda_sr_16123",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "broccoli_frozen_chopped_cooked_boiled_drained_without_sa.usda_sr_11093",
+      "canonical_name": "Broccoli, frozen, chopped, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11093",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "table_fat_nfs.usda_fndds_81100000",
+      "canonical_name": "Table fat, NFS",
+      "nutrition_lookup_name": "usda_fndds_81100000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "onions_spring_or_scallions_includes_tops_and_bulb_raw.usda_sr_11291",
+      "canonical_name": "Onions, spring or scallions (includes tops and bulb), raw",
+      "nutrition_lookup_name": "usda_sr_11291",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "potatoes_boiled_cooked_without_skin_flesh_without_salt.usda_sr_11367",
+      "canonical_name": "Potatoes, boiled, cooked without skin, flesh, without salt",
+      "nutrition_lookup_name": "usda_sr_11367",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "carrots_frozen_cooked_boiled_drained_without_salt.usda_sr_11131",
+      "canonical_name": "Carrots, frozen, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11131",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rolls_hamburger_or_hotdog_plain.usda_sr_18350",
+      "canonical_name": "Rolls, hamburger or hotdog, plain",
+      "nutrition_lookup_name": "usda_sr_18350",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_and_queso_as_ingredient.usda_fndds_99991410",
+      "canonical_name": "Cheese and Queso as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99991410",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "gravy_chicken_canned_or_bottled_ready_to_serve.usda_sr_06119",
+      "canonical_name": "Gravy, chicken, canned or bottled, ready-to-serve",
+      "nutrition_lookup_name": "usda_sr_06119",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "noodles_egg_enriched_cooked.usda_sr_20110",
+      "canonical_name": "Noodles, egg, enriched, cooked",
+      "nutrition_lookup_name": "usda_sr_20110",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tomatoes_red_ripe_raw_year_round_average.usda_sr_11529",
+      "canonical_name": "Tomatoes, red, ripe, raw, year round average",
+      "nutrition_lookup_name": "usda_sr_11529",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "onions_cooked_as_ingredient.usda_fndds_99997510",
+      "canonical_name": "Onions, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997510",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beans_snap_green_frozen_cooked_boiled_drained_without_sa.usda_sr_11061",
+      "canonical_name": "Beans, snap, green, frozen, cooked, boiled, drained without salt",
+      "nutrition_lookup_name": "usda_sr_11061",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tortillas_ready_to_bake_or_fry_flour_refrigerated.usda_sr_18364",
+      "canonical_name": "Tortillas, ready-to-bake or -fry, flour, refrigerated",
+      "nutrition_lookup_name": "usda_sr_18364",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_parmesan_grated.usda_sr_01032",
+      "canonical_name": "Cheese, parmesan, grated",
+      "nutrition_lookup_name": "usda_sr_01032",
+      "wikidata_id": "Q155922",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01032",
+          "wikidata_ids": [
+            "Q155922"
+          ]
+        }
+      ],
+      "reason": "broad Parmesan concept overlaps the existing curated parmesan IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q155922",
+          "labels": {
+            "ar": "بارميجانو ريجانو",
+            "de": "Parmesan",
+            "en": "Parmesan",
+            "es": "queso parmesano",
+            "fr": "Parmigiano Reggiano",
+            "it": "Parmigiano-Reggiano",
+            "ja": "パルミジャーノ・レッジャーノ",
+            "ko": "파르미자노 레자노",
+            "pt": "Parmesão",
+            "ru": "пармезан",
+            "tr": "Parmesan peyniri",
+            "zh": "帕馬森乾酪"
+          },
+          "aliases": {
+            "ar": [
+              "بارميجيانو ريجيانو",
+              "بارميجانو",
+              "باراميزان"
+            ],
+            "de": [
+              "Parmesankäse",
+              "Parmigiano Reggiano",
+              "Parmigiano-Reggiano",
+              "Parmigiano"
+            ],
+            "en": [
+              "Parmesan cheese",
+              "Parmigiano-Reggiano",
+              "Parmigiano Reggiano",
+              "Parmigiano"
+            ],
+            "es": [
+              "Parmesano",
+              "Parmigiano Reggiano",
+              "Reggiano"
+            ],
+            "fr": [
+              "parmesan",
+              "Parmiggiano Reggiano DOP",
+              "Parmigiano Reggiano DOP",
+              "parmesan reggien"
+            ],
+            "it": [
+              "Parmigiano Reggiano",
+              "Parmigiano"
+            ],
+            "ja": [
+              "パルメザン"
+            ],
+            "ko": [
+              "파마산 치즈"
+            ],
+            "pt": [
+              "Parmigiano Reggiano",
+              "Parmigiano-Reggiano",
+              "Queijo parmesão"
+            ],
+            "ru": [
+              "Parmigiano Reggiano"
+            ],
+            "tr": [
+              "Parmesan",
+              "Parmigiano Reggiano",
+              "Parmigiano-Reggiano"
+            ],
+            "zh": [
+              "巴馬臣芝士",
+              "帕爾梅森乳酪",
+              "巴馬乾酪"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "spices_pepper_black.usda_sr_02030",
+      "canonical_name": "Spices, pepper, black",
+      "nutrition_lookup_name": "usda_sr_02030",
+      "wikidata_id": "Q22915010",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02030",
+          "wikidata_ids": [
+            "Q22915010"
+          ]
+        }
+      ],
+      "reason": "concept overlaps the existing curated black_pepper IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q22915010",
+          "labels": {
+            "de": "schwarzes Pfefferkorn",
+            "en": "black pepper",
+            "es": "pimienta negra",
+            "fr": "poivre noir",
+            "it": "pepe nero",
+            "ja": "黒胡椒",
+            "pt": "pimenta preta",
+            "ru": "черный перец",
+            "tr": "karabiber"
+          },
+          "aliases": {
+            "de": [
+              "schwarze Pfefferkörner",
+              "schwarzer Pfeffer"
+            ],
+            "en": [
+              "black peppercorn"
+            ],
+            "es": [
+              "pimiento negro"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "wheat_bread_as_ingredient_in_sandwiches.usda_fndds_99995130",
+      "canonical_name": "Wheat bread as ingredient in sandwiches",
+      "nutrition_lookup_name": "usda_fndds_99995130",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "ginger_root_raw.usda_sr_11216",
+      "canonical_name": "Ginger root, raw",
+      "nutrition_lookup_name": "usda_sr_11216",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peppers_sweet_green_cooked_boiled_drained_without_salt.usda_sr_11334",
+      "canonical_name": "Peppers, sweet, green, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11334",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pasta_whole_wheat_cooked_includes_foods_for_usda_s_food.usda_sr_20125",
+      "canonical_name": "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_20125",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "breakfast_meat_as_ingredient_in_omelet.usda_fndds_99992230",
+      "canonical_name": "Breakfast meat as ingredient in omelet",
+      "nutrition_lookup_name": "usda_fndds_99992230",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_mozzarella_low_moisture_part_skim.usda_sr_01029",
+      "canonical_name": "Cheese, mozzarella, low moisture, part-skim",
+      "nutrition_lookup_name": "usda_sr_01029",
+      "wikidata_id": "Q14088",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01029",
+          "wikidata_ids": [
+            "Q14088"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than the low-moisture part-skim ingredient",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q14088",
+          "labels": {
+            "ar": "موتزاريلا",
+            "de": "Mozzarella",
+            "en": "mozzarella",
+            "es": "mozzarella",
+            "fr": "mozzarella",
+            "hi": "मोत्सारेल्ला",
+            "it": "mozzarella",
+            "ja": "モッツァレッラ",
+            "ko": "모차렐라",
+            "pt": "mozarela",
+            "ru": "моцарелла",
+            "tr": "Mozzarella",
+            "zh": "莫薩里拉芝士"
+          },
+          "aliases": {
+            "de": [
+              "Fior di latte"
+            ],
+            "en": [
+              "mozzarella cheese",
+              "Cookbook:Mozzarella Cheese"
+            ],
+            "es": [
+              "queso mozzarella",
+              "queso muzzarella",
+              "Artes culinarias/Ingredientes/Queso mozzarella"
+            ],
+            "it": [
+              "Mozzarella Tradizionale STG"
+            ],
+            "ja": [
+              "モッツァレラ",
+              "モッツァレラ・チーズ"
+            ],
+            "ko": [
+              "모짜렐라"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "potatoes_baked_flesh_without_salt.usda_sr_11363",
+      "canonical_name": "Potatoes, baked, flesh, without salt",
+      "nutrition_lookup_name": "usda_sr_11363",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rice_brown_long_grain_cooked_includes_foods_for_usda_s_f.usda_sr_20037",
+      "canonical_name": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_20037",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_as_ingredient_in_recipes.usda_fndds_99992100",
+      "canonical_name": "Beef as ingredient in recipes",
+      "nutrition_lookup_name": "usda_fndds_99992100",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pickle_relish_sweet.usda_sr_11945",
+      "canonical_name": "Pickle relish, sweet",
+      "nutrition_lookup_name": "usda_sr_11945",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_ground_patties_frozen_cooked_broiled.usda_sr_13317",
+      "canonical_name": "Beef, ground, patties, frozen, cooked, broiled",
+      "nutrition_lookup_name": "usda_sr_13317",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "margarine_stick.usda_fndds_81102010",
+      "canonical_name": "Margarine, stick",
+      "nutrition_lookup_name": "usda_fndds_81102010",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "mirepoix_cooked_as_ingredient.usda_fndds_99997805",
+      "canonical_name": "Mirepoix, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997805",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "bread_crumbs_dry_grated_plain.usda_sr_18079",
+      "canonical_name": "Bread, crumbs, dry, grated, plain",
+      "nutrition_lookup_name": "usda_sr_18079",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "broccoli_cooked_as_ingredient.usda_fndds_99997220",
+      "canonical_name": "Broccoli, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997220",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "mushrooms_cooked_as_ingredient.usda_fndds_99997515",
+      "canonical_name": "Mushrooms, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997515",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peppers_sweet_green_raw.usda_sr_11333",
+      "canonical_name": "Peppers, sweet, green, raw",
+      "nutrition_lookup_name": "usda_sr_11333",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_fresh_loin_whole_separable_lean_only_cooked_roasted.usda_sr_10027",
+      "canonical_name": "Pork, fresh, loin, whole, separable lean only, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_10027",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "carrots_cooked_boiled_drained_without_salt.usda_sr_11125",
+      "canonical_name": "Carrots, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11125",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tomatoes_red_ripe_canned_packed_in_tomato_juice.usda_sr_11531",
+      "canonical_name": "Tomatoes, red, ripe, canned, packed in tomato juice",
+      "nutrition_lookup_name": "usda_sr_11531",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pie_crust_standard_type_frozen_ready_to_bake_enriched_ba.usda_sr_18335",
+      "canonical_name": "Pie crust, standard-type, frozen, ready-to-bake, enriched, baked",
+      "nutrition_lookup_name": "usda_sr_18335",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "leavening_agents_baking_powder_double_acting_sodium_alum.usda_sr_18369",
+      "canonical_name": "Leavening agents, baking powder, double-acting, sodium aluminum sulfate",
+      "nutrition_lookup_name": "usda_sr_18369",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "soup_cream_of_mushroom_canned_condensed.usda_sr_06043",
+      "canonical_name": "Soup, cream of mushroom, canned, condensed",
+      "nutrition_lookup_name": "usda_sr_06043",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_as_ingredient_in_recipes.usda_fndds_99992405",
+      "canonical_name": "Chicken as ingredient in recipes",
+      "nutrition_lookup_name": "usda_fndds_99992405",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "potatoes_baked_flesh_and_skin_without_salt.usda_sr_11674",
+      "canonical_name": "Potatoes, baked, flesh and skin, without salt",
+      "nutrition_lookup_name": "usda_sr_11674",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "shortening_vegetable_household_composite.usda_sr_04615",
+      "canonical_name": "Shortening, vegetable, household, composite",
+      "nutrition_lookup_name": "usda_sr_04615",
+      "wikidata_id": "Q1194601",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "04615",
+          "wikidata_ids": [
+            "Q1194601"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than the vegetable household composite",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q1194601",
+          "labels": {
+            "ar": "دهن نباتي",
+            "de": "Shortening",
+            "en": "shortening",
+            "es": "grasa alimentaria",
+            "fr": "graisse alimentaire",
+            "hi": "आहार वसा",
+            "it": "grasso alimentare",
+            "ja": "ショートニング",
+            "ko": "쇼트닝",
+            "ru": "Кондитерский жир",
+            "zh": "起酥油"
+          },
+          "aliases": {
+            "de": [
+              "Ungehärtetes Pflanzenfett"
+            ],
+            "en": [
+              "lard and shortening",
+              "Shortening & Lard"
+            ],
+            "es": [
+              "shortening"
+            ],
+            "fr": [
+              "graisses alimentaires"
+            ],
+            "it": [
+              "grassi alimentari"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "beef_ground.usda_fndds_21500100",
+      "canonical_name": "Beef, ground",
+      "nutrition_lookup_name": "usda_fndds_21500100",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_ricotta_whole_milk.usda_sr_01036",
+      "canonical_name": "Cheese, ricotta, whole milk",
+      "nutrition_lookup_name": "usda_sr_01036",
+      "wikidata_id": "Q216781",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01036",
+          "wikidata_ids": [
+            "Q216781"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than whole-milk ricotta",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q216781",
+          "labels": {
+            "ar": "ريكوتا",
+            "de": "Ricotta",
+            "en": "ricotta",
+            "es": "requesón",
+            "fr": "ricotta",
+            "hi": "रिकोत्ता",
+            "it": "ricotta",
+            "ja": "リコッタ",
+            "ko": "리코타",
+            "pt": "requeijão",
+            "ru": "рикотта",
+            "tr": "ricotta",
+            "zh": "里科塔奶酪"
+          },
+          "aliases": {
+            "ar": [
+              "جبن ريكوتا"
+            ],
+            "es": [
+              "requeson",
+              "ricotta",
+              "ricota"
+            ],
+            "fr": [
+              "ricotta brebis"
+            ],
+            "pt": [
+              "ricotta"
+            ],
+            "tr": [
+              "ricotta peyniri"
+            ],
+            "zh": [
+              "瑞可塔",
+              "瑞可塔起司",
+              "里考塔芝士",
+              "里考塔起司",
+              "瑞可塔芝士",
+              "義大利乳清乾酪"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "carrots_raw.usda_sr_11124",
+      "canonical_name": "Carrots, raw",
+      "nutrition_lookup_name": "usda_sr_11124",
+      "wikidata_id": "Q81",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "11124",
+          "wikidata_ids": [
+            "Q81"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "11124",
+          "wikidata_ids": [
+            "Q81"
+          ]
+        }
+      ],
+      "reason": "concept overlaps the existing curated carrot IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q81",
+          "labels": {
+            "ar": "جَزَر",
+            "de": "Karotte",
+            "en": "carrot",
+            "es": "zanahoria",
+            "fr": "carotte",
+            "hi": "गाजर",
+            "it": "carota",
+            "ja": "ニンジン",
+            "ko": "당근",
+            "pt": "cenoura",
+            "ru": "морковь",
+            "tr": "havuç",
+            "zh": "胡萝卜"
+          },
+          "aliases": {
+            "ar": [
+              "سفنارية"
+            ],
+            "de": [
+              "Karottenwurzel",
+              "Mohrrübe",
+              "Möhre",
+              "Gelbrübe",
+              "Gelbe Rübe",
+              "Rüebli",
+              "Riebli",
+              "Wurzel"
+            ],
+            "en": [
+              "carrot taproot",
+              "domesticated carrot"
+            ],
+            "fr": [
+              "faux chervis",
+              "gironille",
+              "pastenade",
+              "moulette",
+              "carotte cultivée"
+            ],
+            "ja": [
+              "人参",
+              "にんじん"
+            ],
+            "ko": [
+              "홍당무"
+            ],
+            "ru": [
+              "морковь (овощ)"
+            ],
+            "zh": [
+              "红萝卜",
+              "紅蘿蔔",
+              "紅菜頭"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "cheese_sauce_prepared_from_recipe.usda_sr_01164",
+      "canonical_name": "Cheese sauce, prepared from recipe",
+      "nutrition_lookup_name": "usda_sr_01164",
+      "wikidata_id": "Q134970541",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01164",
+          "wikidata_ids": [
+            "Q134970541"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity has no English preferred label in the source snapshot",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q134970541",
+          "labels": {},
+          "aliases": {}
+        }
+      ]
+    },
+    {
+      "ingredient_id": "refried_beans_canned_traditional_reduced_sodium.usda_sr_16403",
+      "canonical_name": "Refried beans, canned, traditional, reduced sodium",
+      "nutrition_lookup_name": "usda_sr_16403",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tomatoes_as_ingredient_in_omelet.usda_fndds_99997802",
+      "canonical_name": "Tomatoes as ingredient in omelet",
+      "nutrition_lookup_name": "usda_fndds_99997802",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vinegar_cider.usda_sr_02048",
+      "canonical_name": "Vinegar, cider",
+      "nutrition_lookup_name": "usda_sr_02048",
+      "wikidata_id": "Q41354",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02048",
+          "wikidata_ids": [
+            "Q41354"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "vinegar_cider.usda_sr_02048",
+        "vinegar_distilled.usda_sr_02053"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q41354",
+          "labels": {
+            "ar": "خل",
+            "de": "Essig",
+            "en": "vinegar",
+            "es": "vinagre",
+            "fr": "vinaigre",
+            "hi": "सिरका",
+            "it": "aceto",
+            "ja": "酢",
+            "ko": "식초",
+            "pt": "vinagre",
+            "ru": "уксус",
+            "tr": "sirke",
+            "zh": "醋"
+          },
+          "aliases": {
+            "ar": [
+              "خلّ",
+              "الخل"
+            ],
+            "de": [
+              "Orleansverfahren",
+              "Acetum",
+              "Orleans-Verfahren",
+              "Orléansverfahren",
+              "Essiggärung",
+              "Speiseessig",
+              "Schnellessigverfahren",
+              "Orléans-Verfahren"
+            ],
+            "en": [
+              "spirit of vinegar",
+              "spirits of vinegar",
+              "acetic acid"
+            ],
+            "es": [
+              "vinagre de vino"
+            ],
+            "fr": [
+              "mère de vinaigre"
+            ],
+            "hi": [
+              "चुक्र"
+            ],
+            "it": [
+              "aceti"
+            ],
+            "ja": [
+              "ヴィネガー",
+              "醸造酢",
+              "お酢",
+              "醋",
+              "ビネガー",
+              "りんご酢",
+              "食酢"
+            ],
+            "ru": [
+              "оцет"
+            ],
+            "zh": [
+              "食醋",
+              "米醋"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "dark_green_vegetables_as_ingredient_in_omelet.usda_fndds_99997800",
+      "canonical_name": "Dark green vegetables as ingredient in omelet",
+      "nutrition_lookup_name": "usda_fndds_99997800",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "ham_sliced_pre_packaged_deli_meat_96_fat_free_water_adde.usda_sr_07028",
+      "canonical_name": "Ham, sliced, pre-packaged, deli meat (96%fat free, water added)",
+      "nutrition_lookup_name": "usda_sr_07028",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_sausage_link_patty_cooked_pan_fried.usda_sr_07064",
+      "canonical_name": "Pork sausage, link/patty, cooked, pan-fried",
+      "nutrition_lookup_name": "usda_sr_07064",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "wheat_bun_as_ingredient_in_sandwiches.usda_fndds_99995135",
+      "canonical_name": "Wheat bun as ingredient in sandwiches",
+      "nutrition_lookup_name": "usda_fndds_99995135",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_cured_bacon_pre_sliced_cooked_pan_fried.usda_sr_10862",
+      "canonical_name": "Pork, cured, bacon, pre-sliced, cooked, pan-fried",
+      "nutrition_lookup_name": "usda_sr_10862",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "raisins_dark_seedless_includes_foods_for_usda_s_food_dis.usda_sr_09298",
+      "canonical_name": "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_09298",
+      "wikidata_id": "Q13186",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "09298",
+          "wikidata_ids": [
+            "Q13186"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than dark seedless raisins",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q13186",
+          "labels": {
+            "ar": "زبيب",
+            "de": "Rosine",
+            "en": "raisin",
+            "es": "pasa",
+            "fr": "raisin sec",
+            "hi": "किशमिश",
+            "it": "uva passa",
+            "ja": "レーズン",
+            "ko": "건포도",
+            "pt": "passa",
+            "ru": "изюм",
+            "tr": "Kuru üzüm",
+            "zh": "葡萄乾"
+          },
+          "aliases": {
+            "ar": [
+              "الزبيب"
+            ],
+            "de": [
+              "Korinthe"
+            ],
+            "en": [
+              "dried raisin",
+              "raisins"
+            ],
+            "es": [
+              "pasas",
+              "uva pasa"
+            ],
+            "fr": [
+              "raisin de Corinthe",
+              "sultanine"
+            ],
+            "hi": [
+              "रसोईपुस्तक:किशमिश"
+            ],
+            "it": [
+              "uvetta"
+            ],
+            "ja": [
+              "干しブドウ",
+              "干し葡萄",
+              "乾しブドウ",
+              "乾し葡萄",
+              "干しぶどう",
+              "レイズン"
+            ],
+            "ru": [
+              "изюм, сушеный виноград"
+            ],
+            "tr": [
+              "kişmiş"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "sauce_pasta_spaghetti_marinara_ready_to_serve.usda_sr_06931",
+      "canonical_name": "Sauce, pasta, spaghetti/marinara, ready-to-serve",
+      "nutrition_lookup_name": "usda_sr_06931",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "crustaceans_shrimp_mixed_species_cooked_moist_heat_may_c.usda_sr_15151",
+      "canonical_name": "Crustaceans, shrimp, mixed species, cooked, moist heat (may contain additives to retain moisture)",
+      "nutrition_lookup_name": "usda_sr_15151",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cucumber_with_peel_raw.usda_sr_11205",
+      "canonical_name": "Cucumber, with peel, raw",
+      "nutrition_lookup_name": "usda_sr_11205",
+      "wikidata_id": "Q2735883",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "11205",
+          "wikidata_ids": [
+            "Q2735883"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "11205",
+          "wikidata_ids": [
+            "Q2735883"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than raw cucumber with peel",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q2735883",
+          "labels": {
+            "ar": "الخيار",
+            "de": "Gurke",
+            "en": "cucumber",
+            "es": "pepino",
+            "fr": "concombre",
+            "it": "cetriolo",
+            "ja": "キュウリ",
+            "ru": "огурец",
+            "zh": "黄瓜"
+          },
+          "aliases": {
+            "en": [
+              "cucumbers",
+              "cuke"
+            ],
+            "ja": [
+              "きゅうり"
+            ],
+            "ru": [
+              "огурцы"
+            ],
+            "zh": [
+              "拍黄瓜"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "egg_yolk_raw_fresh.usda_sr_01125",
+      "canonical_name": "Egg, yolk, raw, fresh",
+      "nutrition_lookup_name": "usda_sr_01125",
+      "wikidata_id": "Q181409",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "1125",
+          "wikidata_ids": [
+            "Q181409"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents a biological egg part rather than a verified food identity",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q181409",
+          "labels": {
+            "ar": "مح",
+            "de": "Dotter",
+            "en": "egg yolk",
+            "es": "yema de huevo",
+            "fr": "jaune d'oeuf",
+            "hi": "अंडे की ज़र्दी",
+            "it": "tuorlo",
+            "ja": "卵黄",
+            "ko": "노른자",
+            "pt": "vitelo",
+            "ru": "желток",
+            "tr": "Yumurta sarısı",
+            "zh": "蛋黃"
+          },
+          "aliases": {
+            "ar": [
+              "المح",
+              "صفار بيض",
+              "Egg yolk"
+            ],
+            "de": [
+              "Eidotter",
+              "Vitellin",
+              "Dottersubstanzen",
+              "Eigelb"
+            ],
+            "en": [
+              "yolk"
+            ],
+            "es": [
+              "Yema del huevo",
+              "Yema de huevo",
+              "yema"
+            ],
+            "fr": [
+              "Jaunes d'œufs",
+              "Jaune d’œuf",
+              "Lécithe",
+              "Jaune d'œuf",
+              "jaune d'œuf",
+              "vitellus"
+            ],
+            "it": [
+              "Deutoplasma",
+              "Deutolecite",
+              "Tuorlo d'uovo",
+              "Tuorli"
+            ],
+            "ja": [
+              "黄身"
+            ],
+            "ko": [
+              "노른자위",
+              "계란노른자",
+              "달걀 노른자",
+              "계란 노른자",
+              "달걀노른자",
+              "난황(卵黃)"
+            ],
+            "ru": [
+              "яичный желток",
+              "яйцо (пищевой продукт)"
+            ],
+            "zh": [
+              "卵黃"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "rice_white_long_grain_regular_raw_enriched.usda_sr_20044",
+      "canonical_name": "Rice, white, long-grain, regular, raw, enriched",
+      "nutrition_lookup_name": "usda_sr_20044",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "soup_beef_broth_or_bouillon_canned_ready_to_serve.usda_sr_06008",
+      "canonical_name": "Soup, beef broth or bouillon canned, ready-to-serve",
+      "nutrition_lookup_name": "usda_sr_06008",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vinegar_distilled.usda_sr_02053",
+      "canonical_name": "Vinegar, distilled",
+      "nutrition_lookup_name": "usda_sr_02053",
+      "wikidata_id": "Q41354",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02053",
+          "wikidata_ids": [
+            "Q41354"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "vinegar_cider.usda_sr_02048",
+        "vinegar_distilled.usda_sr_02053"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q41354",
+          "labels": {
+            "ar": "خل",
+            "de": "Essig",
+            "en": "vinegar",
+            "es": "vinagre",
+            "fr": "vinaigre",
+            "hi": "सिरका",
+            "it": "aceto",
+            "ja": "酢",
+            "ko": "식초",
+            "pt": "vinagre",
+            "ru": "уксус",
+            "tr": "sirke",
+            "zh": "醋"
+          },
+          "aliases": {
+            "ar": [
+              "خلّ",
+              "الخل"
+            ],
+            "de": [
+              "Orleansverfahren",
+              "Acetum",
+              "Orleans-Verfahren",
+              "Orléansverfahren",
+              "Essiggärung",
+              "Speiseessig",
+              "Schnellessigverfahren",
+              "Orléans-Verfahren"
+            ],
+            "en": [
+              "spirit of vinegar",
+              "spirits of vinegar",
+              "acetic acid"
+            ],
+            "es": [
+              "vinagre de vino"
+            ],
+            "fr": [
+              "mère de vinaigre"
+            ],
+            "hi": [
+              "चुक्र"
+            ],
+            "it": [
+              "aceti"
+            ],
+            "ja": [
+              "ヴィネガー",
+              "醸造酢",
+              "お酢",
+              "醋",
+              "ビネガー",
+              "りんご酢",
+              "食酢"
+            ],
+            "ru": [
+              "оцет"
+            ],
+            "zh": [
+              "食醋",
+              "米醋"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "cream_fluid_heavy_whipping.usda_sr_01053",
+      "canonical_name": "Cream, fluid, heavy whipping",
+      "nutrition_lookup_name": "usda_sr_01053",
+      "wikidata_id": "Q13228",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01053",
+          "wikidata_ids": [
+            "Q13228"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "cream_fluid_half_and_half.usda_sr_01049",
+        "cream_fluid_heavy_whipping.usda_sr_01053"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q13228",
+          "labels": {
+            "ar": "قشدة",
+            "de": "Rahm",
+            "en": "cream",
+            "es": "crema de leche",
+            "fr": "crème",
+            "hi": "क्रीम",
+            "it": "panna",
+            "ja": "クリーム",
+            "ko": "크림",
+            "pt": "nata",
+            "ru": "сливки",
+            "tr": "krema",
+            "zh": "鮮奶油"
+          },
+          "aliases": {
+            "ar": [
+              "قشطة"
+            ],
+            "de": [
+              "Obers",
+              "Sahne",
+              "Nidel"
+            ],
+            "en": [
+              "dairy cream",
+              "milk cream",
+              "sweet cream",
+              "heavy cream"
+            ],
+            "es": [
+              "nata"
+            ],
+            "it": [
+              "crema di latte"
+            ],
+            "ja": [
+              "生クリーム"
+            ],
+            "ko": [
+              "유크림",
+              "생크림"
+            ],
+            "pt": [
+              "creme de leite"
+            ],
+            "zh": [
+              "鲜奶油",
+              "奶油",
+              "忌廉"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "green_pepper_cooked_as_ingredient.usda_fndds_99997520",
+      "canonical_name": "Green pepper, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997520",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "sausage_italian_pork_mild_cooked_pan_fried.usda_sr_07089",
+      "canonical_name": "Sausage, Italian, pork, mild, cooked, pan-fried",
+      "nutrition_lookup_name": "usda_sr_07089",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "white_sauce_or_gravy.usda_fndds_13411000",
+      "canonical_name": "White sauce or gravy",
+      "nutrition_lookup_name": "usda_fndds_13411000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "egg_whole_fried_ns_as_to_fat.usda_fndds_31105005",
+      "canonical_name": "Egg, whole, fried, NS as to fat",
+      "nutrition_lookup_name": "usda_fndds_31105005",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "olives_ripe_canned_small_extra_large.usda_sr_09193",
+      "canonical_name": "Olives, ripe, canned (small-extra large)",
+      "nutrition_lookup_name": "usda_sr_09193",
+      "wikidata_id": "Q1621080",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "09193",
+          "wikidata_ids": [
+            "Q1621080"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "olives_pickled_canned_or_bottled_green.usda_sr_09195",
+        "olives_ripe_canned_small_extra_large.usda_sr_09193"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q1621080",
+          "labels": {
+            "ar": "زيتون",
+            "de": "Olive",
+            "en": "olive",
+            "es": "oliva",
+            "fr": "olive",
+            "it": "oliva",
+            "ja": "オリーブ",
+            "ko": "올리브",
+            "pt": "azeitona",
+            "ru": "оливка",
+            "tr": "zeytin",
+            "zh": "橄榄"
+          },
+          "aliases": {
+            "es": [
+              "aceituna"
+            ],
+            "fr": [
+              "olives"
+            ],
+            "it": [
+              "Olive nere",
+              "Olive"
+            ],
+            "ja": [
+              "オリーブの実"
+            ],
+            "pt": [
+              "Azeitonas de Sal"
+            ],
+            "ru": [
+              "оливки",
+              "маслина"
+            ],
+            "zh": [
+              "橄榄果",
+              "齐墩果"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "tomato_products_canned_puree_without_salt_added.usda_sr_11547",
+      "canonical_name": "Tomato products, canned, puree, without salt added",
+      "nutrition_lookup_name": "usda_sr_11547",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cream_sour_cultured.usda_sr_01056",
+      "canonical_name": "Cream, sour, cultured",
+      "nutrition_lookup_name": "usda_sr_01056",
+      "wikidata_id": "Q840171",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01056",
+          "wikidata_ids": [
+            "Q840171"
+          ]
+        }
+      ],
+      "reason": "concept overlaps the existing curated sour_cream IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q840171",
+          "labels": {
+            "ar": "قشدة حامضة",
+            "de": "saure Sahne",
+            "en": "sour cream",
+            "es": "crema agria",
+            "fr": "crème aigre",
+            "it": "panna acida",
+            "ja": "サワークリーム",
+            "ko": "사워크림",
+            "pt": "creme azedo",
+            "ru": "сметана",
+            "tr": "Ekşi krema",
+            "zh": "酸奶油"
+          },
+          "aliases": {
+            "ar": [
+              "كريمة حامضة"
+            ],
+            "de": [
+              "Sauerrahm"
+            ],
+            "es": [
+              "Nata agria",
+              "Crema ácida",
+              "Crema acida"
+            ],
+            "fr": [
+              "Crème sure",
+              "Sour cream"
+            ],
+            "pt": [
+              "sour cream",
+              "natas azedas",
+              "natas ácidas"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "fish_tuna_light_canned_in_water_drained_solids_includes.usda_sr_15121",
+      "canonical_name": "Fish, tuna, light, canned in water, drained solids (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_15121",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "egg_white_raw_fresh.usda_sr_01124",
+      "canonical_name": "Egg, white, raw, fresh",
+      "nutrition_lookup_name": "usda_sr_01124",
+      "wikidata_id": "Q796758",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01124",
+          "wikidata_ids": [
+            "Q796758"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents a biological egg part rather than a verified food identity",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q796758",
+          "labels": {
+            "ar": "بياض البيض",
+            "de": "Eiweiß",
+            "en": "egg white",
+            "es": "clara de huevo",
+            "fr": "blanc d'œuf",
+            "it": "albume",
+            "ja": "卵白",
+            "ko": "흰자",
+            "pt": "clara do ovo",
+            "ru": "яичный белок",
+            "tr": "yumurta akı",
+            "zh": "蛋白"
+          },
+          "aliases": {
+            "ar": [
+              "زلال بيض",
+              "بياض بيض"
+            ],
+            "de": [
+              "Albumen",
+              "Deutolecith",
+              "Weißei",
+              "Eiklar"
+            ],
+            "en": [
+              "albumen"
+            ],
+            "es": [
+              "clara del huevo",
+              "albumen"
+            ],
+            "fr": [
+              "blanc d’œuf",
+              "blanc d’oeuf",
+              "blanc d'oeuf"
+            ],
+            "ko": [
+              "계란 흰자",
+              "달걀 흰자",
+              "흰자위",
+              "난백(卵白)"
+            ],
+            "pt": [
+              "clara de ovo"
+            ],
+            "zh": [
+              "蛋清",
+              "卵白"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "green_beans_cooked_as_ingredient.usda_fndds_99997545",
+      "canonical_name": "Green beans, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997545",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "parsley_fresh.usda_sr_11297",
+      "canonical_name": "Parsley, fresh",
+      "nutrition_lookup_name": "usda_sr_11297",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "soup_chicken_broth_ready_to_serve.usda_sr_06194",
+      "canonical_name": "Soup, chicken broth, ready-to-serve",
+      "nutrition_lookup_name": "usda_sr_06194",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "turkey_breast_sliced_prepackaged.usda_sr_07081",
+      "canonical_name": "Turkey breast, sliced, prepackaged",
+      "nutrition_lookup_name": "usda_sr_07081",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "industrial_oil_as_ingredient_in_food.usda_fndds_99998210",
+      "canonical_name": "Industrial oil as ingredient in food",
+      "nutrition_lookup_name": "usda_fndds_99998210",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vegetables_mixed_frozen_cooked_boiled_drained_without_sa.usda_sr_11584",
+      "canonical_name": "Vegetables, mixed, frozen, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11584",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "butter_without_salt.usda_sr_01145",
+      "canonical_name": "Butter, without salt",
+      "nutrition_lookup_name": "usda_sr_01145",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broiler_rotisserie_bbq_breast_meat_only.usda_sr_05000",
+      "canonical_name": "Chicken, broiler, rotisserie, BBQ, breast, meat only",
+      "nutrition_lookup_name": "usda_sr_05000",
+      "wikidata_id": "Q134970575",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "05000",
+          "wikidata_ids": [
+            "Q134970575"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity has no English preferred label in the source snapshot",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q134970575",
+          "labels": {},
+          "aliases": {}
+        }
+      ]
+    },
+    {
+      "ingredient_id": "leavening_agents_yeast_baker_s_active_dry.usda_sr_18375",
+      "canonical_name": "Leavening agents, yeast, baker's, active dry",
+      "nutrition_lookup_name": "usda_sr_18375",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peas_green_frozen_cooked_boiled_drained_without_salt.usda_sr_11313",
+      "canonical_name": "Peas, green, frozen, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11313",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vanilla_extract_imitation_no_alcohol.usda_sr_02052",
+      "canonical_name": "Vanilla extract, imitation, no alcohol",
+      "nutrition_lookup_name": "usda_sr_02052",
+      "wikidata_id": "Q10749869",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02052",
+          "wikidata_ids": [
+            "Q10749869"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents ethanol-based vanilla extract, not imitation alcohol-free extract",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q10749869",
+          "labels": {
+            "de": "Vanilleextrakt",
+            "en": "vanilla extract",
+            "es": "extracto de vainilla",
+            "fr": "Extrait de vanille",
+            "it": "Estratto di vaniglia",
+            "ja": "バニラエキス",
+            "ko": "바닐라 추출액",
+            "pt": "extrato de baunilha",
+            "ru": "экстракт ванили",
+            "zh": "香草精"
+          },
+          "aliases": {
+            "de": [
+              "Vanille-Extrakt"
+            ],
+            "es": [
+              "esencia de vainilla"
+            ],
+            "ja": [
+              "バニラエッセンス",
+              "バニラエキストラクト"
+            ],
+            "ko": [
+              "바닐라 엑스트랙트"
+            ],
+            "ru": [
+              "ванильный экстракт"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "mixed_salad_greens_raw.usda_fndds_75114000",
+      "canonical_name": "Mixed salad greens, raw",
+      "nutrition_lookup_name": "usda_fndds_75114000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pepperoni_beef_and_pork_sliced.usda_sr_07057",
+      "canonical_name": "Pepperoni, beef and pork, sliced",
+      "nutrition_lookup_name": "usda_sr_07057",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "margarine_regular_80_fat_composite_stick_with_salt.usda_sr_04610",
+      "canonical_name": "Margarine, regular, 80% fat, composite, stick, with salt",
+      "nutrition_lookup_name": "usda_sr_04610",
+      "wikidata_id": "Q4287",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "04610",
+          "wikidata_ids": [
+            "Q4287"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than the salted 80-percent-fat ingredient",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q4287",
+          "labels": {
+            "ar": "سمن نباتي",
+            "de": "Margarine",
+            "en": "margarine",
+            "es": "margarina",
+            "fr": "margarine",
+            "hi": "मार्जरीन",
+            "it": "margarina",
+            "ja": "マーガリン",
+            "ko": "마가린",
+            "pt": "margarina",
+            "ru": "маргарин",
+            "tr": "margarin",
+            "zh": "植物牛油"
+          },
+          "aliases": {
+            "ar": [
+              "السمن النباتي",
+              "مارجرين",
+              "مارغرين",
+              "سمن صناعي"
+            ],
+            "de": [
+              "Butterersatz",
+              "Kunstbutter",
+              "Spezial-Backfett",
+              "Ziehmargarine",
+              "Backstolz"
+            ],
+            "en": [
+              "oleo",
+              "marge",
+              "oleomargarine"
+            ],
+            "fr": [
+              "minarine"
+            ],
+            "ja": [
+              "人造バター"
+            ],
+            "ko": [
+              "마아가린"
+            ],
+            "ru": [
+              "91 4210",
+              "10.42.10.110"
+            ],
+            "zh": [
+              "瑪琪琳",
+              "馬芝蓮",
+              "植物奶油",
+              "人造奶油",
+              "人造黃油",
+              "麦淇淋",
+              "人造牛油",
+              "植物黃油",
+              "馬芝冷"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "crustaceans_shrimp_mixed_species_canned.usda_sr_15152",
+      "canonical_name": "Crustaceans, shrimp, mixed species, canned",
+      "nutrition_lookup_name": "usda_sr_15152",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "coriander_cilantro_leaves_raw.usda_sr_11165",
+      "canonical_name": "Coriander (cilantro) leaves, raw",
+      "nutrition_lookup_name": "usda_sr_11165",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_fresh_shoulder_boston_butt_blade_steaks_separable_l.usda_sr_10081",
+      "canonical_name": "Pork, fresh, shoulder, (Boston butt), blade (steaks), separable lean and fat, cooked, braised",
+      "nutrition_lookup_name": "usda_sr_10081",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vegetables_as_ingredient_in_soups.usda_fndds_99997815",
+      "canonical_name": "Vegetables as ingredient in soups",
+      "nutrition_lookup_name": "usda_fndds_99997815",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_cod_pacific_raw_may_have_been_previously_frozen.usda_sr_15019",
+      "canonical_name": "Fish, cod, Pacific, raw (may have been previously frozen)",
+      "nutrition_lookup_name": "usda_sr_15019",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "olives_pickled_canned_or_bottled_green.usda_sr_09195",
+      "canonical_name": "Olives, pickled, canned or bottled, green",
+      "nutrition_lookup_name": "usda_sr_09195",
+      "wikidata_id": "Q1621080",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "09195",
+          "wikidata_ids": [
+            "Q1621080"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "olives_pickled_canned_or_bottled_green.usda_sr_09195",
+        "olives_ripe_canned_small_extra_large.usda_sr_09193"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q1621080",
+          "labels": {
+            "ar": "زيتون",
+            "de": "Olive",
+            "en": "olive",
+            "es": "oliva",
+            "fr": "olive",
+            "it": "oliva",
+            "ja": "オリーブ",
+            "ko": "올리브",
+            "pt": "azeitona",
+            "ru": "оливка",
+            "tr": "zeytin",
+            "zh": "橄榄"
+          },
+          "aliases": {
+            "es": [
+              "aceituna"
+            ],
+            "fr": [
+              "olives"
+            ],
+            "it": [
+              "Olive nere",
+              "Olive"
+            ],
+            "ja": [
+              "オリーブの実"
+            ],
+            "pt": [
+              "Azeitonas de Sal"
+            ],
+            "ru": [
+              "оливки",
+              "маслина"
+            ],
+            "zh": [
+              "橄榄果",
+              "齐墩果"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "pork_fresh_separable_fat_cooked.usda_sr_10007",
+      "canonical_name": "Pork, fresh, separable fat, cooked",
+      "nutrition_lookup_name": "usda_sr_10007",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tortillas_ready_to_bake_or_fry_corn.usda_sr_18363",
+      "canonical_name": "Tortillas, ready-to-bake or -fry, corn",
+      "nutrition_lookup_name": "usda_sr_18363",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "crustaceans_shrimp_mixed_species_raw_may_contain_additiv.usda_sr_15149",
+      "canonical_name": "Crustaceans, shrimp, mixed species, raw (may contain additives to retain moisture)",
+      "nutrition_lookup_name": "usda_sr_15149",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "mushrooms_raw.usda_fndds_75115000",
+      "canonical_name": "Mushrooms, raw",
+      "nutrition_lookup_name": "usda_fndds_75115000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "red_pepper_cooked_as_ingredient.usda_fndds_99997525",
+      "canonical_name": "Red pepper, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997525",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "salad_dressing_mayonnaise_light.usda_sr_04641",
+      "canonical_name": "Salad dressing, mayonnaise, light",
+      "nutrition_lookup_name": "usda_sr_04641",
+      "wikidata_id": "Q1572278",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "04641",
+          "wikidata_ids": [
+            "Q1572278"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is generic salad dressing, not light mayonnaise",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q1572278",
+          "labels": {
+            "ar": "صلصة سلطة",
+            "de": "Salatsauce",
+            "en": "salad dressing",
+            "es": "aliño",
+            "fr": "sauce salade",
+            "hi": "चटनी",
+            "ja": "サラダドレッシング",
+            "ko": "샐러드 드레싱",
+            "ru": "салатная заправка",
+            "zh": "沙拉醬"
+          },
+          "aliases": {
+            "de": [
+              "Salatsoße",
+              "Salatsosse",
+              "Salatdressing",
+              "Dressing"
+            ],
+            "en": [
+              "Salad dressings"
+            ],
+            "es": [
+              "Alino",
+              "Aliñar"
+            ],
+            "ru": [
+              "салатный соус",
+              "дрессинг"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "tomatoes_cooked_as_ingredient.usda_fndds_99997410",
+      "canonical_name": "Tomatoes, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997410",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "bread_italian.usda_sr_18033",
+      "canonical_name": "Bread, Italian",
+      "nutrition_lookup_name": "usda_sr_18033",
+      "wikidata_id": "Q7457806",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "18033",
+          "wikidata_ids": [
+            "Q7457806"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "18033",
+          "wikidata_ids": [
+            "Q7457806"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is a category rather than a food or ingredient concept",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q7457806",
+          "labels": {
+            "ar": "تصنيف:خبز إيطالي",
+            "en": "Category:Italian breads",
+            "es": "Categoría:Pan de Italia",
+            "fr": "Catégorie:Pain italien",
+            "hi": "श्रेणी:इतालवी रोटियाँ",
+            "it": "Categoria:Pane italiano",
+            "ja": "Category:イタリアのパン",
+            "ko": "분류:이탈리아의 빵",
+            "ru": "Категория:Итальянский хлеб",
+            "tr": "Kategori:İtalyan mutfağındaki ekmekler"
+          },
+          "aliases": {}
+        }
+      ]
+    },
+    {
+      "ingredient_id": "cereals_oats_regular_and_quick_not_fortified_dry.usda_sr_08120",
+      "canonical_name": "Cereals, oats, regular and quick, not fortified, dry",
+      "nutrition_lookup_name": "usda_sr_08120",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_sauce.usda_fndds_14650100",
+      "canonical_name": "Cheese sauce",
+      "nutrition_lookup_name": "usda_fndds_14650100",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fast_food_pizza_chain_14_pizza_cheese_topping_regular_cr.usda_sr_21299",
+      "canonical_name": "Fast Food, Pizza Chain, 14\" pizza, cheese topping, regular crust",
+      "nutrition_lookup_name": "usda_sr_21299",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "potatoes_flesh_and_skin_raw.usda_sr_11352",
+      "canonical_name": "Potatoes, flesh and skin, raw",
+      "nutrition_lookup_name": "usda_sr_11352",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rice_noodles_cooked.usda_sr_20134",
+      "canonical_name": "Rice noodles, cooked",
+      "nutrition_lookup_name": "usda_sr_20134",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rice_white_glutinous_unenriched_cooked.usda_sr_20055",
+      "canonical_name": "Rice, white, glutinous, unenriched, cooked",
+      "nutrition_lookup_name": "usda_sr_20055",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "spices_parsley_dried.usda_sr_02029",
+      "canonical_name": "Spices, parsley, dried",
+      "nutrition_lookup_name": "usda_sr_02029",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02029",
+          "wikidata_ids": [
+            "Q25284",
+            "Q65522500"
+          ]
+        }
+      ],
+      "reason": "direct external identifiers resolve to multiple Wikidata entities",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q25284",
+          "labels": {
+            "ar": "بقدونس",
+            "de": "Petersilie",
+            "en": "parsley",
+            "es": "Petroselinum crispum",
+            "fr": "persil",
+            "hi": "अजमोद",
+            "it": "Petroselinum crispum",
+            "ja": "パセリ",
+            "ko": "파슬리",
+            "pt": "salsa",
+            "ru": "петрушка",
+            "tr": "maydanoz",
+            "zh": "欧芹"
+          },
+          "aliases": {
+            "ar": [
+              "مقدونس",
+              "البقدونس",
+              "معد نوس"
+            ],
+            "de": [
+              "Petersil",
+              "Petroselinum crispum",
+              "Peterling",
+              "Petergrün"
+            ],
+            "en": [
+              "garden parsley",
+              "Petroselinum crispum"
+            ],
+            "es": [
+              "Petroselinum hortense",
+              "perejil",
+              "ligustico peregrino",
+              "apio de piedras",
+              "perejil de hoja crespada",
+              "perexil",
+              "perejil rizo",
+              "prexil",
+              "perejil en rama",
+              "petroselino",
+              "peregil",
+              "prejilo"
+            ],
+            "fr": [
+              "Petroselinum sativum",
+              "Petroselinum crispum",
+              "persil plat",
+              "persil frisé",
+              "persil italien",
+              "persil commun",
+              "grand persil"
+            ],
+            "it": [
+              "Petroselinum hortense",
+              "Prezzemolo"
+            ],
+            "ja": [
+              "和蘭芹",
+              "オランダゼリ",
+              "旱芹菜"
+            ],
+            "pt": [
+              "Petroselinum crispum",
+              "cheiro verde",
+              "ligustico do reino"
+            ],
+            "ru": [
+              "Carum petroselinum",
+              "Apium petroselinum",
+              "Selinum petroselinum",
+              "Петрушка курчавая",
+              "Petroselinum petroselinum",
+              "Petroselinum vulgare",
+              "Петрушка посевная",
+              "Petroselinum crispum",
+              "Petroselinum hortense",
+              "Петрушка обыкновенная",
+              "Petroselinum sativum",
+              "петрушка кудрявая",
+              "петрушка курчавая"
+            ],
+            "tr": [
+              "Petroselinum crispum",
+              "maydonoz"
+            ],
+            "zh": [
+              "巴西利",
+              "荷蘭芹",
+              "和蘭芹",
+              "洋香菜",
+              "洋芫荽",
+              "香芹",
+              "野芹菜子"
+            ]
+          }
+        },
+        {
+          "wikidata_id": "Q65522500",
+          "labels": {
+            "ar": "بقدونس",
+            "de": "Petersilie",
+            "en": "parsley",
+            "es": "perejil",
+            "fr": "persil",
+            "hi": "अजमोद",
+            "it": "prezzemolo",
+            "ja": "パセリ",
+            "pt": "salsa",
+            "ru": "зелень петрушки",
+            "tr": "maydanoz",
+            "zh": "香芹"
+          },
+          "aliases": {
+            "ar": [
+              "مقدونس"
+            ],
+            "es": [
+              "Petroselinum sativum"
+            ],
+            "it": [
+              "foglia di prezzemolo"
+            ],
+            "ru": [
+              "петрушка"
+            ],
+            "zh": [
+              "洋香菜"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "spinach_cooked_as_ingredient.usda_fndds_99997210",
+      "canonical_name": "Spinach, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997210",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broilers_or_fryers_dark_meat_drumstick_meat_only.usda_sr_05073",
+      "canonical_name": "Chicken, broilers or fryers, dark meat, drumstick, meat only, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_05073",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broilers_or_fryers_thigh_meat_only_cooked_roaste.usda_sr_05098",
+      "canonical_name": "Chicken, broilers or fryers, thigh, meat only, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_05098",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_tilapia_raw.usda_sr_15261",
+      "canonical_name": "Fish, tilapia, raw",
+      "nutrition_lookup_name": "usda_sr_15261",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "frostings_vanilla_creamy_ready_to_eat.usda_sr_19230",
+      "canonical_name": "Frostings, vanilla, creamy, ready-to-eat",
+      "nutrition_lookup_name": "usda_sr_19230",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "lentils_mature_seeds_cooked_boiled_without_salt.usda_sr_16070",
+      "canonical_name": "Lentils, mature seeds, cooked, boiled, without salt",
+      "nutrition_lookup_name": "usda_sr_16070",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "lime_juice_raw.usda_sr_09160",
+      "canonical_name": "Lime juice, raw",
+      "nutrition_lookup_name": "usda_sr_09160",
+      "wikidata_id": "Q13195",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "09160",
+          "wikidata_ids": [
+            "Q13195"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents lime fruit, not lime juice",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q13195",
+          "labels": {
+            "ar": "ليم",
+            "de": "Limette",
+            "en": "lime",
+            "es": "lima",
+            "fr": "lime",
+            "hi": "नींबू",
+            "it": "limetta",
+            "ja": "ライム",
+            "ko": "라임",
+            "pt": "lima",
+            "ru": "лайм",
+            "tr": "Misket limonu",
+            "zh": "青檸"
+          },
+          "aliases": {
+            "ar": [
+              "الليم"
+            ],
+            "de": [
+              "Süße Zitrone"
+            ],
+            "en": [
+              "lime fruit",
+              "green lemon",
+              "sour lime"
+            ],
+            "es": [
+              "limón verde",
+              "limón"
+            ],
+            "fr": [
+              "citron vert",
+              "lime acide"
+            ],
+            "it": [
+              "lime",
+              "lima"
+            ],
+            "pt": [
+              "limão verde",
+              "fruto da limeira"
+            ],
+            "zh": [
+              "萊姆"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "mustard_prepared_yellow.usda_sr_02046",
+      "canonical_name": "Mustard, prepared, yellow",
+      "nutrition_lookup_name": "usda_sr_02046",
+      "wikidata_id": "Q131748",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02046",
+          "wikidata_ids": [
+            "Q131748"
+          ]
+        }
+      ],
+      "reason": "Wikidata concept is broader than prepared yellow mustard",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q131748",
+          "labels": {
+            "ar": "صلصة الخردل",
+            "de": "Senf",
+            "en": "mustard",
+            "es": "mostaza",
+            "fr": "moutarde",
+            "hi": "सरसों ( मसाला )",
+            "it": "senape",
+            "ja": "マスタード",
+            "ko": "머스터드",
+            "pt": "mostarda",
+            "ru": "горчица",
+            "tr": "hardal",
+            "zh": "芥菜醬"
+          },
+          "aliases": {
+            "de": [
+              "Mostrich",
+              "Senfkörner"
+            ],
+            "en": [
+              "mustard condiment",
+              "culinary mustard"
+            ],
+            "es": [
+              "Jenabe"
+            ],
+            "ja": [
+              "洋がらし",
+              "ブラックマスタード",
+              "ホワイトマスタード",
+              "洋からし",
+              "マスタードソース"
+            ],
+            "ko": [
+              "겨자 소스",
+              "머스터드 소스"
+            ],
+            "ru": [
+              "91 6971",
+              "10.84.12.170",
+              "15.87.12.132"
+            ],
+            "tr": [
+              "Hint Hardalı"
+            ],
+            "zh": [
+              "芥末"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "pancakes_plain_dry_mix_incomplete_includes_buttermilk.usda_sr_18291",
+      "canonical_name": "Pancakes, plain, dry mix, incomplete (includes buttermilk)",
+      "nutrition_lookup_name": "usda_sr_18291",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peppers_jalapeno_raw.usda_sr_11979",
+      "canonical_name": "Peppers, jalapeno, raw",
+      "nutrition_lookup_name": "usda_sr_11979",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "restaurant_chinese_vegetable_chow_mein_without_meat_or_n.usda_sr_36624",
+      "canonical_name": "Restaurant, Chinese, vegetable chow mein, without meat or noodles",
+      "nutrition_lookup_name": "usda_sr_36624",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beans_black_mature_seeds_cooked_boiled_without_salt.usda_sr_16015",
+      "canonical_name": "Beans, black, mature seeds, cooked, boiled, without salt",
+      "nutrition_lookup_name": "usda_sr_16015",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broilers_or_fryers_drumstick_meat_and_skin_cooke.usda_sr_05069",
+      "canonical_name": "Chicken, broilers or fryers, drumstick, meat and skin, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_05069",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broilers_or_fryers_thigh_meat_and_skin_cooked_ro.usda_sr_05094",
+      "canonical_name": "Chicken, broilers or fryers, thigh, meat and skin, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_05094",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "summer_squash_cooked_as_ingredient.usda_fndds_99997550",
+      "canonical_name": "Summer squash, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997550",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chili_with_meat_canned.usda_fndds_27111407",
+      "canonical_name": "Chili with meat, canned",
+      "nutrition_lookup_name": "usda_fndds_27111407",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cornmeal_degermed_enriched_yellow.usda_sr_20022",
+      "canonical_name": "Cornmeal, degermed, enriched, yellow",
+      "nutrition_lookup_name": "usda_sr_20022",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fast_food_biscuit.usda_sr_21142",
+      "canonical_name": "Fast food, biscuit",
+      "nutrition_lookup_name": "usda_sr_21142",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "margarine_nfs.usda_fndds_81102000",
+      "canonical_name": "Margarine, NFS",
+      "nutrition_lookup_name": "usda_fndds_81102000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "potato_cooked_as_ingredient.usda_fndds_99997100",
+      "canonical_name": "Potato, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997100",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "spices_basil_dried.usda_sr_02003",
+      "canonical_name": "Spices, basil, dried",
+      "nutrition_lookup_name": "usda_sr_02003",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02003",
+          "wikidata_ids": [
+            "Q38859",
+            "Q65522654"
+          ]
+        }
+      ],
+      "reason": "direct external identifiers resolve to multiple Wikidata entities",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q38859",
+          "labels": {
+            "ar": "ريحان",
+            "de": "Basilikum",
+            "en": "basil",
+            "es": "Ocimum basilicum",
+            "fr": "basilic",
+            "it": "Ocimum basilicum",
+            "ja": "バジル",
+            "ko": "바질",
+            "pt": "manjericão de folha-larga",
+            "ru": "базилик душистый",
+            "tr": "Fesleğen",
+            "zh": "羅勒"
+          },
+          "aliases": {
+            "ar": [
+              "الريحان",
+              "الحبق",
+              "الحوك",
+              "الريحان الملكي",
+              "العشبة الملكية",
+              "نبتة القديس يوسف",
+              "ريحان قرنفلي",
+              "فرنجي مسك",
+              "صقر هندي",
+              "شاهسفرم",
+              "ريحان صعتري",
+              "صعتر هندي"
+            ],
+            "de": [
+              "Hirnkraut",
+              "Basilienkraut",
+              "Ocimum basilicum",
+              "Basilie",
+              "Königskraut"
+            ],
+            "en": [
+              "Ocimum basilicum"
+            ],
+            "es": [
+              "Ocimum album",
+              "Ocimum ciliatum",
+              "Ocimum medium",
+              "Ocimum pilosum",
+              "Ocimum bullatum",
+              "Ocimum caryophyllatum",
+              "Ocimum minus",
+              "Ocimum dentatum",
+              "Basilicum polystachion",
+              "Ocimum anisatum",
+              "Ocimum hispidum",
+              "Alfábega",
+              "Ocimum nigrum",
+              "Ocimum integerrimum",
+              "Alfabega",
+              "Ocimum basílicum",
+              "Ocimum odorum",
+              "Alábega",
+              "Ocimum minimum",
+              "Ocimum citriodorum",
+              "Plectranthus barrelieri",
+              "Albaca",
+              "Ocimum scabrum",
+              "Ocimum urticifolium",
+              "Ocimum barrelieri",
+              "Ocimum dichotomum",
+              "Alhabega",
+              "Ocimum simile",
+              "Ocimum ciliare",
+              "Ocimum chevalieri",
+              "Ocimum laxum",
+              "Ocimum lanceolatum",
+              "Ocimum cochleatum",
+              "Albahaca",
+              "Ocimum thyrsiflorum",
+              "Alhábega",
+              "Ocimum majus",
+              "Ocimum citrodorum",
+              "Alabega"
+            ],
+            "fr": [
+              "Ocimum basilicum",
+              "basilic grand vert",
+              "basilic pourpre",
+              "basilic thaï",
+              "basilic citron",
+              "basilic thai doux"
+            ],
+            "it": [
+              "Ocymum basilicum",
+              "basilico"
+            ],
+            "ja": [
+              "メボウキ",
+              "バジリコ"
+            ],
+            "ko": [
+              "나륵풀"
+            ],
+            "pt": [
+              "Efirin",
+              "Ocimum basilicum",
+              "Basílico"
+            ],
+            "ru": [
+              "Базилик благородный",
+              "Ocimum basilicum",
+              "Альбаака",
+              "Базилик камфорный",
+              "Базилик обыкновенный",
+              "Базилик огородный",
+              "Базилик сладкий"
+            ],
+            "tr": [
+              "Ocimum basilicum"
+            ],
+            "zh": [
+              "九層塔根",
+              "羅勒子",
+              "雜冷盤",
+              "金不换",
+              "香花子",
+              "七層塔",
+              "甜羅勒",
+              "金不換",
+              "九層塔",
+              "聖約瑟夫草",
+              "矮糠",
+              "鸭香",
+              "翳子草",
+              "小叶薄荷",
+              "香叶草",
+              "香草头",
+              "九层塔",
+              "省头草",
+              "茹香",
+              "缠头花椒",
+              "陵香",
+              "香荆芥",
+              "罗勒",
+              "荆芥",
+              "鱼香",
+              "佩兰",
+              "香菜",
+              "薰草",
+              "家薄荷",
+              "九重塔",
+              "光阴子",
+              "蒿黑",
+              "兰香",
+              "香草",
+              "家佩兰",
+              "千层塔",
+              "零陵香",
+              "光明子",
+              "薄荷树",
+              "罗勒根",
+              "罗勒子"
+            ]
+          }
+        },
+        {
+          "wikidata_id": "Q65522654",
+          "labels": {
+            "de": "Basilikum",
+            "en": "basil",
+            "es": "albahaca",
+            "fr": "basilic",
+            "hi": "पुदीना",
+            "it": "foglie di basilico",
+            "pt": "manjericão",
+            "ru": "базилик",
+            "tr": "fesleğen"
+          },
+          "aliases": {
+            "hi": [
+              "तुलसी"
+            ],
+            "it": [
+              "basilico"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "alfredo_sauce.usda_fndds_14650160",
+      "canonical_name": "Alfredo sauce",
+      "nutrition_lookup_name": "usda_fndds_14650160",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cocoa_dry_powder_unsweetened.usda_sr_19165",
+      "canonical_name": "Cocoa, dry powder, unsweetened",
+      "nutrition_lookup_name": "usda_sr_19165",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cream_fluid_half_and_half.usda_sr_01049",
+      "canonical_name": "Cream, fluid, half and half",
+      "nutrition_lookup_name": "usda_sr_01049",
+      "wikidata_id": "Q13228",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01049",
+          "wikidata_ids": [
+            "Q13228"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is shared by multiple existing IngredientIDs",
+      "foodon_cross_check": null,
+      "candidate_ingredient_ids": [
+        "cream_fluid_half_and_half.usda_sr_01049",
+        "cream_fluid_heavy_whipping.usda_sr_01053"
+      ],
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q13228",
+          "labels": {
+            "ar": "قشدة",
+            "de": "Rahm",
+            "en": "cream",
+            "es": "crema de leche",
+            "fr": "crème",
+            "hi": "क्रीम",
+            "it": "panna",
+            "ja": "クリーム",
+            "ko": "크림",
+            "pt": "nata",
+            "ru": "сливки",
+            "tr": "krema",
+            "zh": "鮮奶油"
+          },
+          "aliases": {
+            "ar": [
+              "قشطة"
+            ],
+            "de": [
+              "Obers",
+              "Sahne",
+              "Nidel"
+            ],
+            "en": [
+              "dairy cream",
+              "milk cream",
+              "sweet cream",
+              "heavy cream"
+            ],
+            "es": [
+              "nata"
+            ],
+            "it": [
+              "crema di latte"
+            ],
+            "ja": [
+              "生クリーム"
+            ],
+            "ko": [
+              "유크림",
+              "생크림"
+            ],
+            "pt": [
+              "creme de leite"
+            ],
+            "zh": [
+              "鲜奶油",
+              "奶油",
+              "忌廉"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "frankfurter_beef_unheated.usda_sr_07022",
+      "canonical_name": "Frankfurter, beef, unheated",
+      "nutrition_lookup_name": "usda_sr_07022",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "gravy_made_with_soy_sauce.usda_fndds_28520000",
+      "canonical_name": "Gravy, made with soy sauce",
+      "nutrition_lookup_name": "usda_fndds_28520000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "jellies.usda_sr_19300",
+      "canonical_name": "Jellies",
+      "nutrition_lookup_name": "usda_sr_19300",
+      "wikidata_id": "Q74048276",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "19300",
+          "wikidata_ids": [
+            "Q74048276"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "19300",
+          "wikidata_ids": [
+            "Q74048276"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is the broader fruit-preserves category",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q74048276",
+          "labels": {
+            "ar": "فاكهة محفوظة",
+            "de": "Obstkonserve",
+            "en": "fruit preserves",
+            "es": "conservas de frutas",
+            "hi": "फल मुरब्बा",
+            "it": "conserva di frutta",
+            "ja": "フルーツプレザーブ",
+            "ko": "프리저브",
+            "ru": "плодовые консервы",
+            "tr": "Meyve konservesi",
+            "zh": "水果蜜餞"
+          },
+          "aliases": {
+            "en": [
+              "James Welch",
+              "preserve"
+            ],
+            "zh": [
+              "水果酱"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "lamb_composite_of_trimmed_retail_cuts_separable_lean_and.usda_sr_17002",
+      "canonical_name": "Lamb, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/4\" fat, choice, cooked",
+      "nutrition_lookup_name": "usda_sr_17002",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "muffins_english_plain_enriched_with_ca_prop_includes_sou.usda_sr_18258",
+      "canonical_name": "Muffins, English, plain, enriched, with ca prop (includes sourdough)",
+      "nutrition_lookup_name": "usda_sr_18258",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "mushrooms_canned_drained_solids.usda_sr_11264",
+      "canonical_name": "Mushrooms, canned, drained solids",
+      "nutrition_lookup_name": "usda_sr_11264",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "other_vegetables_as_ingredient_in_omelet.usda_fndds_99997804",
+      "canonical_name": "Other vegetables as ingredient in omelet",
+      "nutrition_lookup_name": "usda_fndds_99997804",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pimento_canned.usda_sr_11943",
+      "canonical_name": "Pimento, canned",
+      "nutrition_lookup_name": "usda_sr_11943",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_cured_ham_center_slice_country_style_separable_lean.usda_sr_10141",
+      "canonical_name": "Pork, cured, ham, center slice, country-style, separable lean only, raw",
+      "nutrition_lookup_name": "usda_sr_10141",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_cured_ham_water_added_whole_boneless_separable_lean.usda_sr_10879",
+      "canonical_name": "Pork, cured, ham -- water added, whole, boneless, separable lean only, heated, roasted",
+      "nutrition_lookup_name": "usda_sr_10879",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "seaweed_laver_raw.usda_sr_11446",
+      "canonical_name": "Seaweed, laver, raw",
+      "nutrition_lookup_name": "usda_sr_11446",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tofu_soft_prepared_with_calcium_sulfate_and_magnesium_ch.usda_sr_16127",
+      "canonical_name": "Tofu, soft, prepared with calcium sulfate and magnesium chloride (nigari)",
+      "nutrition_lookup_name": "usda_sr_16127",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "wheat_flour_white_bread_enriched.usda_sr_20083",
+      "canonical_name": "Wheat flour, white, bread, enriched",
+      "nutrition_lookup_name": "usda_sr_20083",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beans_kidney_red_mature_seeds_cooked_boiled_without_salt.usda_sr_16033",
+      "canonical_name": "Beans, kidney, red, mature seeds, cooked, boiled, without salt",
+      "nutrition_lookup_name": "usda_sr_16033",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "bologna_meat_and_poultry.usda_sr_07971",
+      "canonical_name": "Bologna, meat and poultry",
+      "nutrition_lookup_name": "usda_sr_07971",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cake_or_cupcake_white_no_icing.usda_fndds_53121275",
+      "canonical_name": "Cake or cupcake, white, no icing",
+      "nutrition_lookup_name": "usda_fndds_53121275",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_swiss.usda_sr_01040",
+      "canonical_name": "Cheese, swiss",
+      "nutrition_lookup_name": "usda_sr_01040",
+      "wikidata_id": "Q19359994",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01040",
+          "wikidata_ids": [
+            "Q19359994"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents cheeses from Switzerland, not the USDA Swiss-cheese identity",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q19359994",
+          "labels": {
+            "de": "Schweizer Käse",
+            "en": "Swiss cheeses",
+            "es": "queso suizo",
+            "fr": "fromage suisse",
+            "it": "formaggio svizzero",
+            "ja": "スイスのチーズ",
+            "ru": "сорт швейцарского сыра",
+            "zh": "瑞士乾酪"
+          },
+          "aliases": {
+            "en": [
+              "Swiss cheese",
+              "cheese from Switzerland"
+            ],
+            "es": [
+              "queso de Suiza"
+            ],
+            "ru": [
+              "Сыры Швейцарии"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "chicken_breast_baked_broiled_or_roasted_skin_not_eaten_f.usda_fndds_24122131",
+      "canonical_name": "Chicken breast, baked, broiled, or roasted, skin not eaten, from raw",
+      "nutrition_lookup_name": "usda_fndds_24122131",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_salmon_atlantic_farmed_raw.usda_sr_15236",
+      "canonical_name": "Fish, salmon, Atlantic, farmed, raw",
+      "nutrition_lookup_name": "usda_sr_15236",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_salmon_pink_raw.usda_sr_15083",
+      "canonical_name": "Fish, salmon, pink, raw",
+      "nutrition_lookup_name": "usda_sr_15083",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "frostings_chocolate_creamy_ready_to_eat.usda_sr_19226",
+      "canonical_name": "Frostings, chocolate, creamy, ready-to-eat",
+      "nutrition_lookup_name": "usda_sr_19226",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "ice_creams_vanilla.usda_sr_19095",
+      "canonical_name": "Ice creams, vanilla",
+      "nutrition_lookup_name": "usda_sr_19095",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "mollusks_clam_mixed_species_canned_drained_solids.usda_sr_15160",
+      "canonical_name": "Mollusks, clam, mixed species, canned, drained solids",
+      "nutrition_lookup_name": "usda_sr_15160",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peppers_sweet_red_raw.usda_sr_11821",
+      "canonical_name": "Peppers, sweet, red, raw",
+      "nutrition_lookup_name": "usda_sr_11821",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "roast_beef_deli_style_prepackaged_sliced.usda_sr_07043",
+      "canonical_name": "Roast beef, deli style, prepackaged, sliced",
+      "nutrition_lookup_name": "usda_sr_07043",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tomatoes_for_use_on_a_sandwich.usda_fndds_89902070",
+      "canonical_name": "Tomatoes, for use on a sandwich",
+      "nutrition_lookup_name": "usda_fndds_89902070",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "vegetables_as_ingredient_in_stews.usda_fndds_99997820",
+      "canonical_name": "Vegetables as ingredient in stews",
+      "nutrition_lookup_name": "usda_fndds_99997820",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "wheat_bran_crude.usda_sr_20077",
+      "canonical_name": "Wheat bran, crude",
+      "nutrition_lookup_name": "usda_sr_20077",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_ground_raw.usda_fndds_21500000",
+      "canonical_name": "Beef, ground, raw",
+      "nutrition_lookup_name": "usda_fndds_21500000",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_round_top_round_roast_boneless_separable_lean_and_f.usda_sr_23348",
+      "canonical_name": "Beef, round, top round roast, boneless, separable lean and fat, trimmed to 0\" fat, all grades, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_23348",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "candies_semisweet_chocolate.usda_sr_19080",
+      "canonical_name": "Candies, semisweet chocolate",
+      "nutrition_lookup_name": "usda_sr_19080",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "carrots_cooked_as_ingredient.usda_fndds_99997310",
+      "canonical_name": "Carrots, cooked, as ingredient",
+      "nutrition_lookup_name": "usda_fndds_99997310",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cauliflower_frozen_cooked_boiled_drained_without_salt.usda_sr_11138",
+      "canonical_name": "Cauliflower, frozen, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11138",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cheese_american.usda_fndds_14410110",
+      "canonical_name": "Cheese, American",
+      "nutrition_lookup_name": "usda_fndds_14410110",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_breast_grilled_without_sauce_skin_not_eaten.usda_fndds_24123301",
+      "canonical_name": "Chicken breast, grilled without sauce, skin not eaten",
+      "nutrition_lookup_name": "usda_fndds_24123301",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_tenders_breaded_frozen_prepared.usda_sr_22978",
+      "canonical_name": "Chicken tenders, breaded, frozen, prepared",
+      "nutrition_lookup_name": "usda_sr_22978",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_catfish_channel_farmed_raw.usda_sr_15234",
+      "canonical_name": "Fish, catfish, channel, farmed, raw",
+      "nutrition_lookup_name": "usda_sr_15234",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_cod_atlantic_cooked_dry_heat.usda_sr_15016",
+      "canonical_name": "Fish, cod, Atlantic, cooked, dry heat",
+      "nutrition_lookup_name": "usda_sr_15016",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "lettuce_iceberg_includes_crisphead_types_raw.usda_sr_11252",
+      "canonical_name": "Lettuce, iceberg (includes crisphead types), raw",
+      "nutrition_lookup_name": "usda_sr_11252",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "noodles_chinese_chow_mein.usda_sr_20113",
+      "canonical_name": "Noodles, chinese, chow mein",
+      "nutrition_lookup_name": "usda_sr_20113",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "peanut_butter_smooth_style_with_salt_includes_foods_for.usda_sr_16098",
+      "canonical_name": "Peanut butter, smooth style, with salt (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_16098",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "rice_white_cooked_no_added_fat.usda_fndds_56205008",
+      "canonical_name": "Rice, white, cooked, no added fat",
+      "nutrition_lookup_name": "usda_fndds_56205008",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "salami_dry_or_hard_pork_beef.usda_sr_07072",
+      "canonical_name": "Salami, dry or hard, pork, beef",
+      "nutrition_lookup_name": "usda_sr_07072",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "sugars_powdered.usda_sr_19336",
+      "canonical_name": "Sugars, powdered",
+      "nutrition_lookup_name": "usda_sr_19336",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "tomato_products_canned_paste_without_salt_added_includes.usda_sr_11546",
+      "canonical_name": "Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_11546",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "wheat_flour_whole_grain_includes_foods_for_usda_s_food_d.usda_sr_20080",
+      "canonical_name": "Wheat flour, whole-grain (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_20080",
+      "wikidata_id": "Q2249305",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "20080",
+          "wikidata_ids": [
+            "Q2249305"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "20080",
+          "wikidata_ids": [
+            "Q2249305"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is broader wheat flour, not whole-grain wheat flour",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q2249305",
+          "labels": {
+            "ar": "طحين القمح",
+            "de": "Weizenmehl",
+            "en": "wheat flour",
+            "es": "harina de trigo",
+            "fr": "farine de blé",
+            "it": "farina di grano",
+            "ja": "小麦粉",
+            "ko": "밀가루",
+            "pt": "farinha de trigo",
+            "ru": "пшеничная мука",
+            "tr": "buğday unu",
+            "zh": "麵粉"
+          },
+          "aliases": {
+            "fr": [
+              "Farine de froment",
+              "Farine de blé"
+            ],
+            "it": [
+              "farina di frumento"
+            ],
+            "ja": [
+              "メリケン粉",
+              "うどん粉"
+            ],
+            "ko": [
+              "소맥분"
+            ],
+            "ru": [
+              "мука пшеничная"
+            ],
+            "tr": [
+              "beyaz un",
+              "ak un"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "alfredo_sauce_with_added_vegetables.usda_fndds_14650165",
+      "canonical_name": "Alfredo sauce with added vegetables",
+      "nutrition_lookup_name": "usda_fndds_14650165",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_ground_80_lean_meat_20_fat_crumbles_cooked_pan_brow.usda_sr_23575",
+      "canonical_name": "Beef, ground, 80% lean meat / 20% fat, crumbles, cooked, pan-browned",
+      "nutrition_lookup_name": "usda_sr_23575",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beef_ground_85_lean_meat_15_fat_crumbles_cooked_pan_brow.usda_sr_23570",
+      "canonical_name": "Beef, ground, 85% lean meat / 15% fat, crumbles, cooked, pan-browned",
+      "nutrition_lookup_name": "usda_sr_23570",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "blueberries_frozen_unsweetened_includes_foods_for_usda_s.usda_sr_09054",
+      "canonical_name": "Blueberries, frozen, unsweetened (Includes foods for USDA's Food Distribution Program)",
+      "nutrition_lookup_name": "usda_sr_09054",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "cake_or_cupcake_chocolate_no_icing.usda_fndds_53105275",
+      "canonical_name": "Cake or cupcake, chocolate, no icing",
+      "nutrition_lookup_name": "usda_fndds_53105275",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "catsup.usda_sr_11935",
+      "canonical_name": "Catsup",
+      "nutrition_lookup_name": "usda_sr_11935",
+      "wikidata_id": "Q178143",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "11935",
+          "wikidata_ids": [
+            "Q178143"
+          ]
+        },
+        {
+          "property": "P1978",
+          "value": "11935",
+          "wikidata_ids": [
+            "Q178143"
+          ]
+        }
+      ],
+      "reason": "concept overlaps the existing curated ketchup IngredientID",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q178143",
+          "labels": {
+            "ar": "كتشب",
+            "de": "Ketchup",
+            "en": "ketchup",
+            "es": "kétchup",
+            "fr": "ketchup",
+            "hi": "केचप",
+            "it": "ketchup",
+            "ja": "ケチャップ",
+            "ko": "케첩",
+            "pt": "ketchup",
+            "ru": "кетчуп",
+            "tr": "ketçap",
+            "zh": "番茄醬"
+          },
+          "aliases": {
+            "ar": [
+              "كيتشب",
+              "صلصة الطماطم",
+              "الكاتشاب",
+              "كامخ",
+              "الكاتشب",
+              "الكاتيشب",
+              "كاتشب",
+              "صالصة"
+            ],
+            "de": [
+              "Ketschup",
+              "Tomatenketchup"
+            ],
+            "en": [
+              "catsup",
+              "tomato ketchup",
+              "Sos Coch",
+              "Catchup"
+            ],
+            "es": [
+              "catsup",
+              "cátsup",
+              "salsa cátsup",
+              "ketchup",
+              "salsa catsup"
+            ],
+            "fr": [
+              "le ketchup"
+            ],
+            "ja": [
+              "トマトケチャップ"
+            ],
+            "ko": [
+              "토마토 케첩",
+              "케챱",
+              "케찹",
+              "토마토케첩",
+              "토마토 케챱",
+              "토마토 케찹",
+              "케쳡",
+              "케챺"
+            ],
+            "pt": [
+              "catchupe",
+              "catchup"
+            ],
+            "zh": [
+              "茄醬",
+              "蕃茄醬",
+              "柑仔蜜醬",
+              "柑仔得醬"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "chicken_breast_baked_broiled_or_roasted_skin_eaten_from.usda_fndds_24122130",
+      "canonical_name": "Chicken breast, baked, broiled, or roasted, skin eaten, from raw",
+      "nutrition_lookup_name": "usda_fndds_24122130",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "egg_substitute_liquid_or_frozen_fat_free.usda_sr_01226",
+      "canonical_name": "Egg substitute, liquid or frozen, fat free",
+      "nutrition_lookup_name": "usda_sr_01226",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fast_food_pizza_chain_14_pizza_cheese_topping_thick_crus.usda_sr_21300",
+      "canonical_name": "Fast Food, Pizza Chain, 14\" pizza, cheese topping, thick crust",
+      "nutrition_lookup_name": "usda_sr_21300",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "milk_nonfat_fluid_without_added_vitamin_a_and_vitamin_d.usda_sr_01151",
+      "canonical_name": "Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)",
+      "nutrition_lookup_name": "usda_sr_01151",
+      "wikidata_id": "Q10988133",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "01151",
+          "wikidata_ids": [
+            "Q10988133"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is broader cow milk, not nonfat unfortified milk",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q10988133",
+          "labels": {
+            "ar": "حليب بقر",
+            "de": "Kuhmilch",
+            "en": "cow's milk",
+            "es": "leche de vaca",
+            "fr": "lait de vache",
+            "it": "latte vaccino",
+            "ja": "牛乳",
+            "ko": "우유",
+            "pt": "leite de vaca",
+            "ru": "коровье молоко",
+            "zh": "牛奶"
+          },
+          "aliases": {
+            "de": [
+              "Milch"
+            ],
+            "en": [
+              "cow milk",
+              "milk",
+              "whole milk"
+            ],
+            "ko": [
+              "소젖",
+              "쇠젖",
+              "타락"
+            ],
+            "zh": [
+              "牛乳"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "mung_beans_mature_seeds_sprouted_raw.usda_sr_11043",
+      "canonical_name": "Mung beans, mature seeds, sprouted, raw",
+      "nutrition_lookup_name": "usda_sr_11043",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "nuts_walnuts_english.usda_sr_12155",
+      "canonical_name": "Nuts, walnuts, english",
+      "nutrition_lookup_name": "usda_sr_12155",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "okra_frozen_cooked_boiled_drained_without_salt.usda_sr_11281",
+      "canonical_name": "Okra, frozen, cooked, boiled, drained, without salt",
+      "nutrition_lookup_name": "usda_sr_11281",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pickles_cucumber_dill_or_kosher_dill.usda_sr_11937",
+      "canonical_name": "Pickles, cucumber, dill or kosher dill",
+      "nutrition_lookup_name": "usda_sr_11937",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "pork_cured_ham_boneless_regular_approximately_11_fat_roa.usda_sr_10136",
+      "canonical_name": "Pork, cured, ham, boneless, regular (approximately 11% fat), roasted",
+      "nutrition_lookup_name": "usda_sr_10136",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "potatoes_mashed_ready_to_eat.usda_sr_31036",
+      "canonical_name": "Potatoes, mashed, ready-to-eat",
+      "nutrition_lookup_name": "usda_sr_31036",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "puerto_rican_seasoning_with_ham.usda_fndds_74410110",
+      "canonical_name": "Puerto Rican seasoning with ham",
+      "nutrition_lookup_name": "usda_fndds_74410110",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "spaghetti_sauce_with_added_vegetables.usda_fndds_74404020",
+      "canonical_name": "Spaghetti sauce with added vegetables",
+      "nutrition_lookup_name": "usda_fndds_74404020",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "spices_oregano_dried.usda_sr_02027",
+      "canonical_name": "Spices, oregano, dried",
+      "nutrition_lookup_name": "usda_sr_02027",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02027",
+          "wikidata_ids": [
+            "Q134283",
+            "Q92581152"
+          ]
+        }
+      ],
+      "reason": "direct external identifiers resolve to multiple Wikidata entities",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q134283",
+          "labels": {
+            "ar": "مردقوش شائع",
+            "de": "Oregano",
+            "en": "Origanum vulgare",
+            "es": "Origanum vulgare",
+            "fr": "Origanum vulgare",
+            "hi": "ऑरिगेनो",
+            "it": "Origanum vulgare",
+            "ja": "オレガノ",
+            "ko": "오레가노",
+            "pt": "Orégano",
+            "ru": "Душица обыкновенная",
+            "tr": "Keklik Otu",
+            "zh": "牛至"
+          },
+          "aliases": {
+            "ar": [
+              "أوريغانو",
+              "زوباع",
+              "فوذج جبلي",
+              "صعتر",
+              "مردقوش",
+              "بردقوش",
+              "بردقوشة"
+            ],
+            "de": [
+              "Origanum vulgare",
+              "Gemeiner Dost",
+              "Echter Dost",
+              "Dostenkraut",
+              "Origano",
+              "Gewöhnlicher Dost",
+              "Wilder Majoran",
+              "Dost",
+              "origan"
+            ],
+            "en": [
+              "wild marjoram",
+              "oregano"
+            ],
+            "es": [
+              "Origanum creticum",
+              "Origanum purpurescens",
+              "Origanum virens",
+              "Oreganin",
+              "Urégano",
+              "Origanum anglicum",
+              "Origanum pruinosum",
+              "Origanum minus",
+              "Origanum oblongatum",
+              "Origanum loureiroi",
+              "Origanum barcense",
+              "Furiegano",
+              "Origanum humile",
+              "Origanum angustifolium",
+              "Origanum vulgare subsp viride",
+              "Origanum strobilaceum",
+              "Uregano",
+              "orégano",
+              "órgano",
+              "oreganín",
+              "orégano común",
+              "orégano nano",
+              "orégano trenzado",
+              "orégano turco",
+              "orenga",
+              "oriégano",
+              "furiégano",
+              "mejorana silvestre",
+              "perigüel",
+              "uriégano",
+              "uriéganu"
+            ],
+            "fr": [
+              "Origan",
+              "Marjolaine sauvage"
+            ],
+            "it": [
+              "origano"
+            ],
+            "ja": [
+              "花薄荷",
+              "ハナハッカ"
+            ],
+            "ko": [
+              "오레가노 꿀"
+            ],
+            "pt": [
+              "Origanum vulgare",
+              "Orégãos",
+              "Oregano",
+              "Hissopo",
+              "Orégão",
+              "orégano"
+            ],
+            "ru": [
+              "Origanum vulgare",
+              "душница",
+              "мацердушка",
+              "орегано"
+            ],
+            "tr": [
+              "Origanum vulgare"
+            ],
+            "zh": [
+              "香茹草",
+              "猫儿草",
+              "香茹",
+              "俄力岡葉",
+              "苏子草",
+              "随经草",
+              "地藿香",
+              "署草",
+              "野薄荷",
+              "山薄荷",
+              "满天星",
+              "满坡香",
+              "接骨草",
+              "香薷",
+              "糯米条",
+              "满山香",
+              "土香薷",
+              "蘑菇草",
+              "小叶薄荷",
+              "乳香草",
+              "披薩草",
+              "香炉草",
+              "野荆芥",
+              "茵陈",
+              "白花茵陈",
+              "琦香",
+              "五香草",
+              "罗罗香",
+              "牛至叶",
+              "小田草",
+              "玉兰至",
+              "奧勒岡草",
+              "土茵陈"
+            ]
+          }
+        },
+        {
+          "wikidata_id": "Q92581152",
+          "labels": {
+            "de": "Oregano",
+            "en": "oregano",
+            "es": "orégano",
+            "fr": "origan",
+            "it": "origano",
+            "pt": "orégãos",
+            "ru": "орегано"
+          },
+          "aliases": {}
+        }
+      ]
+    },
+    {
+      "ingredient_id": "spices_thyme_dried.usda_sr_02042",
+      "canonical_name": "Spices, thyme, dried",
+      "nutrition_lookup_name": "usda_sr_02042",
+      "wikidata_id": "Q3215980",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02042",
+          "wikidata_ids": [
+            "Q3215980"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity is the broad herb concept, not specifically dried thyme",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q3215980",
+          "labels": {
+            "ar": "الزعتر",
+            "de": "Thymiankraut",
+            "en": "thyme",
+            "es": "tomillo",
+            "fr": "thym",
+            "hi": "फूलदार तुलसी",
+            "it": "timo",
+            "ja": "タイム",
+            "ko": "백리향",
+            "pt": "tomilho",
+            "ru": "Тимьян",
+            "tr": "Kekik",
+            "zh": "百里香"
+          },
+          "aliases": {
+            "ar": [
+              "صعتر"
+            ],
+            "de": [
+              "Thymian"
+            ],
+            "fr": [
+              "thyme"
+            ],
+            "ko": [
+              "타임"
+            ],
+            "zh": [
+              "麝香草"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "squash_summer_zucchini_includes_skin_raw.usda_sr_11477",
+      "canonical_name": "Squash, summer, zucchini, includes skin, raw",
+      "nutrition_lookup_name": "usda_sr_11477",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "beverages_wine_non_alcoholic.usda_sr_14553",
+      "canonical_name": "Beverages, Wine, non-alcoholic",
+      "nutrition_lookup_name": "usda_sr_14553",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "capers_canned.usda_sr_02054",
+      "canonical_name": "Capers, canned",
+      "nutrition_lookup_name": "usda_sr_02054",
+      "wikidata_id": "Q156251",
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [
+        {
+          "property": "P1978",
+          "value": "02054",
+          "wikidata_ids": [
+            "Q156251"
+          ]
+        }
+      ],
+      "reason": "Wikidata entity represents the plant species rather than canned capers",
+      "foodon_cross_check": null,
+      "candidate_external_entities": [
+        {
+          "wikidata_id": "Q156251",
+          "labels": {
+            "ar": "قبار",
+            "de": "Echter Kapernstrauch",
+            "en": "Capparis spinosa",
+            "es": "Capparis spinosa",
+            "fr": "Câprier",
+            "it": "Capparis spinosa",
+            "ja": "ケッパー",
+            "ko": "케이퍼",
+            "pt": "Alcaparra",
+            "ru": "каперсы колючие",
+            "tr": "Gebre otu",
+            "zh": "刺山柑"
+          },
+          "aliases": {
+            "ar": [
+              "الشفلح",
+              "كبر",
+              "لصف",
+              "كبار"
+            ],
+            "de": [
+              "Kapernapfel",
+              "Capparis spinosa",
+              "Kapernfrucht",
+              "Kapernstrauch",
+              "Kapernbeere",
+              "Kapernfrüchte"
+            ],
+            "en": [
+              "caper bush",
+              "Flinders rose"
+            ],
+            "es": [
+              "Tápena",
+              "Capparis leucophylla",
+              "Capparis deserti",
+              "Capparis spinosa subsp rupestris",
+              "Alcaparras",
+              "Capparis rupestris",
+              "Capparis spinosa var inermis",
+              "Capparis spinosa var sicula",
+              "Taperera",
+              "Alcaparro de Europa",
+              "Capparis spinosa var. spinosa",
+              "Capparis sicula",
+              "Capparis ovata subsp. sicula",
+              "Capparis ovata var. canescens",
+              "Tápina",
+              "Alcaparras de Andalucía",
+              "Tapena",
+              "Tapina",
+              "Alcaparras de Andalucia",
+              "alcaparro"
+            ],
+            "fr": [
+              "Câprier épineux",
+              "Capparis spinosa",
+              "Caprier",
+              "câprier Commun"
+            ],
+            "it": [
+              "cappero"
+            ],
+            "ja": [
+              "ケーパー",
+              "トゲフウチョウボク",
+              "セイヨウフウチョウボク",
+              "ケイパー"
+            ],
+            "pt": [
+              "Capparis spinosa"
+            ],
+            "ru": [
+              "Capparis spinosa"
+            ],
+            "tr": [
+              "Kapari",
+              "Kebere",
+              "Capparis spinosa",
+              "Gebreotu"
+            ],
+            "zh": [
+              "山柑",
+              "老鼠瓜"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ingredient_id": "chicken_broiler_rotisserie_bbq_thigh_meat_only.usda_sr_05334",
+      "canonical_name": "Chicken, broiler, rotisserie, BBQ, thigh, meat only",
+      "nutrition_lookup_name": "usda_sr_05334",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "chicken_broilers_or_fryers_wing_meat_and_skin_cooked_roa.usda_sr_05103",
+      "canonical_name": "Chicken, broilers or fryers, wing, meat and skin, cooked, roasted",
+      "nutrition_lookup_name": "usda_sr_05103",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "crustaceans_crab_blue_cooked_moist_heat.usda_sr_15140",
+      "canonical_name": "Crustaceans, crab, blue, cooked, moist heat",
+      "nutrition_lookup_name": "usda_sr_15140",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "fish_flatfish_flounder_and_sole_species_raw.usda_sr_15028",
+      "canonical_name": "Fish, flatfish (flounder and sole species), raw",
+      "nutrition_lookup_name": "usda_sr_15028",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    },
+    {
+      "ingredient_id": "ice_cream_cones_sugar_rolled_type.usda_sr_18272",
+      "canonical_name": "Ice cream cones, sugar, rolled-type",
+      "nutrition_lookup_name": "usda_sr_18272",
+      "wikidata_id": null,
+      "status": "manual_review_required",
+      "confidence": "none",
+      "evidence": [],
+      "reason": "no direct Wikidata P1978/P12917 identity match",
+      "foodon_cross_check": null,
+      "candidate_external_entities": []
+    }
+  ],
+  "cross_ingredient_collisions": [
+    {
+      "alias": "菜花",
+      "normalized_alias": "菜花",
+      "language": "zh",
+      "candidate_ingredient_ids": [
+        "broccoli_raw.usda_sr_11090",
+        "cauliflower_raw.usda_sr_11135"
+      ],
+      "source_entities": [
+        "Q23900272",
+        "Q57544960"
+      ],
+      "reason": "normalized alias is claimed by multiple IngredientIDs"
+    },
+    {
+      "alias": "辣椒粉",
+      "normalized_alias": "辣椒粉",
+      "language": "zh",
+      "candidate_ingredient_ids": [
+        "spices_chili_powder.usda_sr_02009",
+        "spices_paprika.usda_sr_02028"
+      ],
+      "source_entities": [
+        "Q1072946",
+        "Q3127593"
+      ],
+      "reason": "normalized alias is claimed by multiple IngredientIDs"
+    }
+  ],
+  "rejected_aliases": [
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "Blume des Öls",
+      "normalized_alias": "blume des öls",
+      "language_code": "de",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "alias",
+      "reason": "descriptive_or_non_equivalent"
+    },
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "Flor de Aceite",
+      "normalized_alias": "flor de aceite",
+      "language_code": "de",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "alias",
+      "reason": "descriptive_or_non_equivalent"
+    },
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "aceite de oliva virgen",
+      "normalized_alias": "aceite de oliva virgen",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "alias",
+      "reason": "specific_subtype"
+    },
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "Oleicultura",
+      "normalized_alias": "oleicultura",
+      "language_code": "pt",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "alias",
+      "reason": "category_or_process"
+    },
+    {
+      "ingredient_id": "cornstarch.usda_sr_20027",
+      "alias": "Maïzena",
+      "normalized_alias": "maïzena",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q3393961",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "brand_specific"
+    },
+    {
+      "ingredient_id": "lemon_juice_raw.usda_sr_09152",
+      "alias": "15.32.10.130",
+      "normalized_alias": "15 32 10 130",
+      "language_code": "ru",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q1375049",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "numeric_only"
+    },
+    {
+      "ingredient_id": "sugars_brown.usda_sr_19334",
+      "alias": "zucchero greggio",
+      "normalized_alias": "zucchero greggio",
+      "language_code": "it",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q11190742",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "non_equivalent"
+    },
+    {
+      "ingredient_id": "sugars_brown.usda_sr_19334",
+      "alias": "سكر خام",
+      "normalized_alias": "سكر خام",
+      "language_code": "ar",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q11190742",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "non_equivalent"
+    },
+    {
+      "ingredient_id": "sugars_brown.usda_sr_19334",
+      "alias": "الصيغة الكيميائية للسكر",
+      "normalized_alias": "الصيغة الكيميائية للسكر",
+      "language_code": "ar",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q11190742",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "descriptive_or_non_equivalent"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Te de canela",
+      "normalized_alias": "te de canela",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "prepared_dish"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Té de canela",
+      "normalized_alias": "té de canela",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "prepared_dish"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Arbol de la canela",
+      "normalized_alias": "arbol de la canela",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "plant_or_dish_term"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Laurus cinnamomum",
+      "normalized_alias": "laurus cinnamomum",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Cinnamomum zeylanicum",
+      "normalized_alias": "cinnamomum zeylanicum",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Árbol de la Canela",
+      "normalized_alias": "árbol de la canela",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "plant_or_dish_term"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Camphora mauritiana",
+      "normalized_alias": "camphora mauritiana",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Cinnamomum verum",
+      "normalized_alias": "cinnamomum verum",
+      "language_code": "it",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Cinnamomum zeylanicum",
+      "normalized_alias": "cinnamomum zeylanicum",
+      "language_code": "it",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "Cinnamomum zeylanicum",
+      "normalized_alias": "cinnamomum zeylanicum",
+      "language_code": "pt",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "الدارصيني على الحقيقة",
+      "normalized_alias": "الدارصيني على الحقيقة",
+      "language_code": "ar",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "descriptive_or_non_equivalent"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "دارصيني على الحقيقة",
+      "normalized_alias": "دارصيني على الحقيقة",
+      "language_code": "ar",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "descriptive_or_non_equivalent"
+    },
+    {
+      "ingredient_id": "oil_corn_industrial_and_retail_all_purpose_salad_or_cook.usda_sr_04518",
+      "alias": "8001-30-7",
+      "normalized_alias": "8001 30 7",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q856775",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "numeric_only"
+    },
+    {
+      "ingredient_id": "avocados_raw_all_commercial_varieties.usda_sr_09037",
+      "alias": "Persea americana",
+      "normalized_alias": "persea americana",
+      "language_code": "it",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q961769",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    },
+    {
+      "ingredient_id": "oil_sesame_salad_or_cooking.usda_sr_04058",
+      "alias": "8008-74-0",
+      "normalized_alias": "8008 74 0",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q212317",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "numeric_only"
+    },
+    {
+      "ingredient_id": "lard.usda_sr_04002",
+      "alias": "Adeps suillus",
+      "normalized_alias": "adeps suillus",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q72827",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "scientific_taxonomic_name"
+    }
+  ],
+  "duplicate_aliases_skipped": [
+    {
+      "ingredient_id": "egg_whole_cooked_hard_boiled.usda_sr_01129",
+      "alias": "hard-boiled egg",
+      "normalized_alias": "hard boiled egg",
+      "language_code": "en",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q13840832",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "preferred_label",
+      "reason": "existing or repeated normalized alias"
+    },
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "olive oil",
+      "normalized_alias": "olive oil",
+      "language_code": "en",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "preferred_label",
+      "reason": "existing or repeated normalized alias"
+    },
+    {
+      "ingredient_id": "olive_oil",
+      "alias": "huile d'olive",
+      "normalized_alias": "huile d olive",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q93165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "verified",
+      "term_kind": "preferred_label",
+      "reason": "existing or repeated normalized alias"
+    },
+    {
+      "ingredient_id": "spices_chili_powder.usda_sr_02009",
+      "alias": "Chili (mélange d'épices)",
+      "normalized_alias": "chili mélange d épices",
+      "language_code": "fr",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q1072946",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "alias",
+      "reason": "existing or repeated normalized alias"
+    },
+    {
+      "ingredient_id": "spices_cinnamon_ground.usda_sr_02010",
+      "alias": "canela",
+      "normalized_alias": "canela",
+      "language_code": "es",
+      "locale_identifier": null,
+      "source": "Wikidata",
+      "source_entity_id": "Q28165",
+      "source_license": "CC0-1.0",
+      "mapping_confidence": "high_confidence",
+      "term_kind": "preferred_label",
+      "reason": "existing or repeated normalized alias"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
-  "pipeline_version": 1,
-  "generated_on": "2026-09-26",
+  "pipeline_version": 2,
+  "generated_on": "2026-09-27",
   "baseline": {
     "recipes": 16,
     "ingredients": 46,
@@ -12,7 +12,22 @@
     "recipes": 2794,
     "ingredients": 1233,
     "recipe_aliases": 3392,
-    "ingredient_aliases": 11,
+    "ingredient_aliases": 504,
+    "ingredient_alias_languages": {
+      "ar": 40,
+      "de": 48,
+      "en": 58,
+      "es": 59,
+      "fr": 37,
+      "hi": 11,
+      "it": 39,
+      "ja": 54,
+      "ko": 24,
+      "pt": 22,
+      "ru": 52,
+      "tr": 17,
+      "zh": 43
+    },
     "languages": 34,
     "cuisines": [
       "American",
@@ -69,7 +84,8 @@
       "A": 2716,
       "B": 78
     },
-    "database_bytes": 8474624,
+    "database_bytes": 8601600,
+    "database_bytes_before_alias_enrichment": 8478720,
     "sources": {
       "manual_seed": {
         "discovered": 16,
@@ -96,8 +112,35 @@
         "accepted_aliases": 485,
         "rejected": 0,
         "rejection_reasons": {}
+      },
+      "wikidata_ingredient_aliases": {
+        "discovered": 250,
+        "accepted": 0,
+        "accepted_aliases": 493,
+        "rejected": 261,
+        "rejection_reasons": {
+          "brand_specific": 1,
+          "category_or_process": 1,
+          "cross_ingredient_collision": 4,
+          "descriptive_or_non_equivalent": 5,
+          "duplicate": 5,
+          "mapping_manual_review_required": 227,
+          "non_equivalent": 2,
+          "numeric_only": 3,
+          "plant_or_dish_term": 2,
+          "prepared_dish": 2,
+          "scientific_taxonomic_name": 8,
+          "specific_subtype": 1
+        }
       }
     }
+  },
+  "ingredient_alias_enrichment": {
+    "report": "Data/Reports/ingredient_alias_enrichment.json",
+    "review": "Data/Reports/ingredient_alias_review.json",
+    "wikidata_mapped": 23,
+    "foodon_cross_checked": 17,
+    "aliases_added": 493
   },
   "validation": {
     "foreign_keys": 0,
@@ -107,6 +150,8 @@
     "ingredients_without_nutrition": 0,
     "empty_aliases": 0,
     "ambiguous_recipe_aliases": 0,
+    "ambiguous_ingredient_aliases": 0,
+    "ingredient_alias_canonical_collisions": 0,
     "invalid_kcal": 0,
     "duplicate_canonical_ingredient_names": 0
   },
