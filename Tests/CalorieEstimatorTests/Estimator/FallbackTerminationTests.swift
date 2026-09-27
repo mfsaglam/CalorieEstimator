@@ -3,13 +3,21 @@ import Testing
 
 @Suite("Bounded Fallback Termination")
 struct FallbackTerminationTests {
-    @Test("Failed model decomposition falls through once to model nutrition")
-    func decompositionFailureUsesModelNutrition() async throws {
-        let request = unknownRequest(modelCalories: 175)
+    @Test("A trusted miss reaches the bounded model nutrition fallback")
+    func trustedMissUsesModelNutrition() async throws {
+        let request = unknownRequest(modelCalories: nil)
+        let energyEstimator = CountingModelEnergyEstimator(
+            value: ModelEnergyEstimate(
+                caloriesPer100Grams: 175,
+                confidence: .low,
+                validSamples: [170, 175, 180]
+            )
+        )
         let estimator = CalorieEstimator(
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
-            mealParser: StubMealRequestParser(request: request)
+            mealParser: StubMealRequestParser(request: request),
+            modelEnergyEstimator: energyEstimator
         )
 
         let estimate = try await estimator.estimate(phrase: "unknown global dish 200g")
@@ -17,15 +25,18 @@ struct FallbackTerminationTests {
         #expect(estimate.grams == 200)
         #expect(estimate.calories == 350)
         #expect(estimate.provenance == .modelNutrition)
-        #expect(estimate.confidence == .low)
+        #expect(estimate.ingredients?.isEmpty == true)
+        #expect(await energyEstimator.callCount == 1)
     }
 
-    @Test("Failed model decomposition and nutrition terminate with a controlled error")
+    @Test("Exhausted energy samples terminate with a controlled error")
     func exhaustedFallbacksThrow() async {
+        let energyEstimator = CountingModelEnergyEstimator()
         let estimator = CalorieEstimator(
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
-            mealParser: StubMealRequestParser(request: unknownRequest(modelCalories: nil))
+            mealParser: StubMealRequestParser(request: unknownRequest(modelCalories: nil)),
+            modelEnergyEstimator: energyEstimator
         )
 
         await #expect(throws: CalorieEstimatorError.self) {

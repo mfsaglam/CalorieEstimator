@@ -51,25 +51,10 @@ struct FoundationModelMealParser: MealRequestParsing {
             )
         }
 
-        let generated: ParsedMealResponse
-        do {
-            generated = try await Self.respond(
-                input: input,
-                model: model,
-                tools: [RecipeDatabaseTool(database: recipeDatabase)]
-            )
-        } catch {
-            // Some early OS builds expose the Tool API in the SDK but reject its internal
-            // instruction prefix at runtime. Alias validation still happens in Swift, so
-            // retry semantic parsing without tools instead of losing long-tail coverage.
-            let description = String(reflecting: error)
-            guard description.contains("tool_calls_override") else { throw error }
-            generated = try await Self.respond(
-                input: input,
-                model: model,
-                tools: []
-            )
-        }
+        // The trusted database has already missed. This call parses only identity and
+        // quantity; approximate nutrition is handled by the separate bounded sampler.
+        // Avoiding a tool call also removes the old tool-runtime retry from this path.
+        let generated = try await Self.respond(input: input, model: model, tools: [])
         return Self.makeRequest(from: generated)
     }
 
@@ -255,11 +240,9 @@ struct FoundationModelMealParser: MealRequestParsing {
                     estimatedGrams: $0.estimatedGrams > 0 ? $0.estimatedGrams : nil
                 )
             },
-            isCompositeDish: generated.isCompositeDish,
-            proposedIngredients: generated.proposedIngredients.map {
-                ModelIngredientProposal(name: $0.name, nameEnglish: $0.nameEnglish, ratio: $0.ratio)
-            },
-            modelCaloriesPer100g: generated.fallbackCaloriesPer100g
+            isCompositeDish: false,
+            proposedIngredients: [],
+            modelCaloriesPer100g: nil
         )
     }
 
@@ -616,15 +599,12 @@ struct FoundationModelMealParser: MealRequestParsing {
     }
 
     private static let instructions = """
-    Parse food descriptions in the user's language into typed semantic data. Never perform
-    calorie arithmetic. Use lookupLocalRecipe to search trusted local recipes. If it returns
-    a recipe ID, copy that ID exactly and leave proposedIngredients empty. Never add, remove,
+    Parse food descriptions in the user's language into typed semantic data. Never estimate
+    nutrition, generate an ingredient list, or perform calorie arithmetic. Never add, remove,
     or change ingredients of a known recipe unless the user explicitly requested a modifier.
     Preserve meaningful cuisine and regional distinctions instead of translating distinct
     dishes into a generic dish. Return the stated unit rather than converting mass units.
-    For ambiguous portions, provide a reasonable estimated total gram weight. For an unknown
-    composite dish only, propose a compact ingredient-ratio breakdown. The whole-food calorie
-    density is a last-resort estimate and will be ignored whenever local knowledge resolves.
+    For ambiguous portions, provide a reasonable estimated total gram weight.
     Set hasExplicitTotalMass only when a stated mass describes the whole requested food or meal,
     not when it describes a single ingredient modifier.
     """

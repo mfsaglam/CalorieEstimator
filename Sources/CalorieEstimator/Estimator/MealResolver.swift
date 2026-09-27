@@ -19,6 +19,19 @@ struct MealResolver: Sendable {
     }
 
     func resolve(_ request: MealRequest, overridingGrams: Int? = nil) async throws -> MealEstimate {
+        if let estimate = try await resolveKnown(request, overridingGrams: overridingGrams) {
+            return estimate
+        }
+        let name = request.displayName.isEmpty ? request.lookupName : request.displayName
+        throw CalorieEstimatorError.parsingFailed(response: "no trusted nutrition for \(name)")
+    }
+
+    /// Resolves only trusted local recipes and nutrition. A nil result is the single
+    /// boundary at which the caller may invoke approximate model nutrition.
+    func resolveKnown(
+        _ request: MealRequest,
+        overridingGrams: Int? = nil
+    ) async throws -> MealEstimate? {
         let name = request.displayName.isEmpty ? request.lookupName : request.displayName
         guard !name.isEmpty else {
             throw CalorieEstimatorError.parsingFailed(response: "empty normalized food name")
@@ -47,29 +60,7 @@ struct MealResolver: Sendable {
         if let density = nutritionTable.caloriesPer100g(for: lookup) {
             return CalorieEstimator.makeTableEstimate(foodName: name, grams: grams, caloriesPer100g: density)
         }
-
-        if request.isCompositeDish,
-           let estimate = RecipeDecomposer.estimate(
-               proposedIngredients: request.proposedIngredients,
-               grams: grams,
-               displayName: name,
-               nutritionTable: nutritionTable
-           ) {
-            return estimate
-        }
-
-        guard let density = request.modelCaloriesPer100g, density > 0 else {
-            throw CalorieEstimatorError.parsingFailed(response: "no local or model nutrition for \(name)")
-        }
-        return MealEstimate(
-            foodName: name,
-            grams: grams,
-            calories: RecipeDecomposer.calories(density: density, grams: grams),
-            source: .model,
-            confidence: .low,
-            ingredients: nil,
-            provenance: .modelNutrition
-        )
+        return nil
     }
 
     private func uniqueNames(_ names: [String]) -> [String] {
@@ -141,7 +132,7 @@ struct MealResolver: Sendable {
         return estimate
     }
 
-    private func resolveGrams(
+    func resolveGrams(
         _ quantity: MealQuantity,
         defaultServingGrams: Int?,
         override: Int?

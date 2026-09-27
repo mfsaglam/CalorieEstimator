@@ -75,37 +75,25 @@ struct ResolverTrustHierarchyTests {
         #expect(result.provenance == .localNutrition)
     }
 
-    @Test("Unknown composition made entirely of local ingredients is medium trust")
-    func modelAssistedComposition() async throws {
-        let resolver = MealResolver(nutritionTable: LocalNutritionTable(), recipeDatabase: EmptyRecipeDatabase())
-        let proposals = [
-            ModelIngredientProposal(name: "rice", nameEnglish: "rice", ratio: 0.6),
-            ModelIngredientProposal(name: "chicken", nameEnglish: "chicken", ratio: 0.4)
-        ]
-        let result = try await resolver.resolve(request(
-            name: "unknown family dish",
-            quantity: .grams(250),
-            composite: true,
-            proposals: proposals,
-            modelCalories: 800
-        ))
-        #expect(result.provenance == .modelAssistedRecipe)
-        #expect(result.confidence == .medium)
-        #expect(result.ingredients?.reduce(0) { $0 + $1.grams } == 250)
-    }
-
     @Test("Unresolved food uses clearly marked lowest-trust model nutrition")
     func finalModelFallback() async throws {
-        let resolver = MealResolver(nutritionTable: EmptyNutritionTable(), recipeDatabase: EmptyRecipeDatabase())
-        let result = try await resolver.resolve(request(
-            name: "long-tail food",
-            quantity: .grams(200),
-            modelCalories: 175
-        ))
+        let result = try await CalorieEstimator(
+            nutritionTable: EmptyNutritionTable(),
+            recipeDatabase: EmptyRecipeDatabase(),
+            mealParser: FailingMealRequestParser(),
+            modelEnergyEstimator: CountingModelEnergyEstimator(
+                value: ModelEnergyEstimate(
+                    caloriesPer100Grams: 175,
+                    confidence: .low,
+                    validSamples: [175]
+                )
+            )
+        ).estimate(meal: "long-tail food", grams: 200)
         #expect(result.calories == 350)
         #expect(result.source == .model)
         #expect(result.provenance == .modelNutrition)
         #expect(result.confidence == .low)
+        #expect(result.ingredients?.isEmpty == true)
     }
 
     private func request(

@@ -1,5 +1,16 @@
 import FoundationModels
 
+// MARK: - Approximate nutrition fallback
+
+@Generable
+struct GeneratedEnergyEstimate {
+    @Guide(
+        description: "Calories per 100 grams for a typical representative version of the described food or meal",
+        .range(1...900)
+    )
+    var caloriesPer100Grams: Int
+}
+
 // MARK: - Semantic parsing
 
 @Generable
@@ -67,16 +78,6 @@ struct GeneratedKnownIngredientModificationsResponse {
     var modifications: [GeneratedKnownIngredientModification]
 }
 
-@Generable
-struct GeneratedIngredientProposal {
-    @Guide(description: "Ingredient name in the same language as the dish")
-    var name: String
-    @Guide(description: "Common English ingredient name for local nutrition lookup")
-    var nameEnglish: String
-    @Guide(description: "Fraction of total dish mass, greater than zero and at most one", .range(0.001...1.0))
-    var ratio: Double
-}
-
 /// The model describes meaning only. Local databases and Swift decide which
 /// composition and nutritional values are authoritative.
 @Generable
@@ -101,12 +102,6 @@ struct ParsedMealResponse {
     @Guide(description: "True only when the user explicitly states a mass for the whole food or meal, not merely for one ingredient")
     var hasExplicitTotalMass: Bool
     var modifications: [GeneratedMealModification]
-    @Guide(description: "True for a prepared dish made from multiple ingredients")
-    var isCompositeDish: Bool
-    @Guide(description: "Only for an unknown composite recipe: a short ingredient composition whose ratios approximately total one. Empty for simple foods or a recipe found by the tool.")
-    var proposedIngredients: [GeneratedIngredientProposal]
-    @Guide(description: "Lowest-trust calories per 100 grams for the whole food, used only if every local lookup and local-nutrition decomposition fails", .range(1...900))
-    var fallbackCaloriesPer100g: Int
 }
 
 @Generable

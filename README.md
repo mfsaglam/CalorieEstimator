@@ -77,17 +77,16 @@ Canonical recipe resolver  <---->  local SQLite RecipeDatabase tool
    |                              |
    +-- known food ---------------+--> local NutritionTable
    |                              |
-   +-- unknown composite ----> model ratios, locally resolved ingredients
-   |                              |
-   +-- unresolved food ------> lowest-trust model kcal/100 g
+   +-- unresolved food ------> exactly 3 model kcal/100 g samples
+                                  |  validate 1...900, median, agreement
                                   |
                                   v
                          Swift arithmetic --> MealEstimate
 ```
 
-The model can propose meaning, a recipe identity, an unknown-dish composition, or a final
-nutrition fallback. Swift validates every model-proposed recipe ID. Local recipe and
-nutrition values always win and cannot be overwritten by model output.
+The model can propose meaning or provide the final typed energy-density fallback. The
+fallback never generates ingredients. Local recipe and nutrition values always win and
+cannot be overwritten by model output.
 
 ## Trust hierarchy
 
@@ -95,10 +94,12 @@ nutrition values always win and cannot be overwritten by model output.
 
 1. `.localRecipe` — trusted composition plus local nutrition, `high` confidence.
 2. `.localNutrition` — a direct local food match, `high` confidence.
-3. `.modelAssistedRecipe` — model-proposed composition for an unknown dish, with every
-   ingredient resolved by local nutrition, `medium` confidence.
-4. `.modelNutrition` — whole-food kcal/100 g from the model after all local paths fail,
-   `low` confidence.
+3. `.modelNutrition` — the validated median model kcal/100 g after all local paths fail,
+   `medium` confidence when at least two samples agree within 20%, otherwise `low`.
+
+The existing `.modelAssistedRecipe` provenance case remains available for source
+compatibility, but the active unresolved-food path no longer emits model ingredient
+decompositions.
 
 The original `MealEstimate.Source` cases (`database`, `model`, and `decomposed`) remain
 available for source compatibility. `provenance` is the more precise signal.
@@ -217,8 +218,9 @@ public struct MealEstimate: Sendable, Equatable {
 }
 ```
 
-Known and model-assisted composite dishes include their deterministic ingredient calorie
-breakdown. `IngredientEstimate.source` describes the nutrition source for that ingredient.
+Known trusted recipes include their deterministic ingredient calorie breakdown.
+Model-nutrition fallback results carry an empty ingredient array and no recipe ID.
+`IngredientEstimate.source` describes the nutrition source for trusted recipe ingredients.
 
 ## Testing
 
@@ -246,8 +248,9 @@ grow without creating an ML evaluation framework.
 - Portion units such as slices and bowls remain approximate unless a trusted recipe default
   or future portion metadata resolves them.
 - Explicit modifier quantities are approximate when the user does not state an amount.
-- The final model nutrition fallback preserves long-tail coverage but is intentionally
-  marked low-confidence.
+- The final model nutrition fallback preserves long-tail coverage. It is never high
+  confidence: samples agreeing within 20% are medium, and all other accepted estimates
+  are low confidence.
 
 ## License
 

@@ -13,14 +13,15 @@ import FoundationModels
 /// are resolved through a ``NutritionTable`` (the bundled ``LocalNutritionTable`` by
 /// default) and computed in code; the model is only consulted when the food isn't in the
 /// table. Known dishes are resolved through a trusted local recipe database. Unknown
-/// dishes may use a model-proposed composition only when every ingredient resolves through
-/// local nutrition. The caller never needs to select a path.
+/// foods use a bounded three-sample model energy-density estimate without a generated
+/// ingredient decomposition. The caller never needs to select a path.
 public struct CalorieEstimator: Sendable {
 
     /// The nutrition source consulted before (and instead of) model nutrition.
     let nutritionTable: any NutritionTable
     let recipeDatabase: any RecipeDatabase
     private let mealParser: any MealRequestParsing
+    private let modelEnergyEstimator: any ModelEnergyEstimating
     private let modelTimeout: Duration
 
     /// Create an estimator.
@@ -34,6 +35,7 @@ public struct CalorieEstimator: Sendable {
         self.nutritionTable = nutritionTable
         self.recipeDatabase = recipeDatabase
         self.mealParser = FoundationModelMealParser()
+        self.modelEnergyEstimator = ThreeSampleModelEnergyEstimator()
         self.modelTimeout = .seconds(60)
     }
 
@@ -41,11 +43,13 @@ public struct CalorieEstimator: Sendable {
         nutritionTable: any NutritionTable,
         recipeDatabase: any RecipeDatabase,
         mealParser: any MealRequestParsing,
+        modelEnergyEstimator: any ModelEnergyEstimating = ThreeSampleModelEnergyEstimator(),
         modelTimeout: Duration = .seconds(60)
     ) {
         self.nutritionTable = nutritionTable
         self.recipeDatabase = recipeDatabase
         self.mealParser = mealParser
+        self.modelEnergyEstimator = modelEnergyEstimator
         self.modelTimeout = modelTimeout
     }
 
@@ -56,9 +60,9 @@ public struct CalorieEstimator: Sendable {
     /// The phrase may describe the amount as a weight ("200 grams of grilled chicken"),
     /// a volume ("250 ml orange juice"), or a count ("two eggs", "a handful of almonds"),
     /// in a supported language. The model parses the food and amount; nutrition is
-    /// then resolved using trusted recipe and nutrition data. Model-assisted decomposition
-    /// and model nutrition are progressively lower-trust fallbacks. If no amount is stated,
-    /// a single typical serving is assumed.
+    /// then resolved using trusted recipe and nutrition data. On a complete local miss,
+    /// three bounded model energy-density samples provide the final fallback. If no amount
+    /// is stated, a single typical serving is assumed.
     ///
     /// - Parameter phrase: A spoken/typed description of a food and its amount.
     /// - Returns: A ``MealEstimate``; ``MealEstimate/ingredients`` is populated only for
@@ -68,10 +72,20 @@ public struct CalorieEstimator: Sendable {
     ///   the model returns unusable output.
     public func estimate(phrase: String) async throws -> MealEstimate {
         let request = try await parse(phrase)
-        return try await MealResolver(
+        let resolver = MealResolver(
             nutritionTable: nutritionTable,
             recipeDatabase: recipeDatabase
-        ).resolve(request)
+        )
+        if let known = try await resolver.resolveKnown(request) {
+            return known
+        }
+        let grams = try resolver.resolveGrams(
+            request.quantity,
+            defaultServingGrams: nil,
+            override: nil
+        )
+        let name = request.displayName.isEmpty ? request.lookupName : request.displayName
+        return try await makeModelFallback(foodDescription: name, displayName: name, grams: grams)
     }
 
     /// Estimate a meal from a food name plus an explicit weight (the text-field path).
@@ -81,7 +95,7 @@ public struct CalorieEstimator: Sendable {
     ///
     /// The food is looked up in the recipe database and then the nutrition table **before
     /// any model session is created**. On a hit, calories are computed in code. Only a
-    /// complete local miss invokes semantic parsing and lower-trust fallbacks.
+    /// complete local miss invokes the bounded model nutrition fallback.
     ///
     /// - Parameters:
     ///   - meal: The food or dish name in a supported language or local alias.
@@ -107,8 +121,9 @@ public struct CalorieEstimator: Sendable {
             return known
         }
 
-        let request = try await parse(meal)
-        return try await resolver.resolve(request, overridingGrams: grams)
+        // With an explicit weight there is no semantic parsing work left. A complete
+        // trusted miss goes directly to the three-sample density fallback.
+        return try await makeModelFallback(foodDescription: meal, displayName: meal, grams: grams)
     }
 
     /// Convenience overload of ``estimate(meal:weight:)`` taking a gram weight directly.
@@ -126,6 +141,36 @@ public struct CalorieEstimator: Sendable {
         return try await AsyncTimeout.run(after: modelTimeout) {
             try await parser.parse(input, recipeDatabase: database)
         }
+    }
+
+    private func makeModelFallback(
+        foodDescription: String,
+        displayName: String,
+        grams: Int
+    ) async throws -> MealEstimate {
+        let name = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, grams > 0 else {
+            throw CalorieEstimatorError.parsingFailed(
+                response: "foodName=\"\(displayName)\", grams=\(grams)"
+            )
+        }
+
+        let estimator = modelEnergyEstimator
+        let aggregate = try await AsyncTimeout.run(after: modelTimeout) {
+            try await estimator.estimate(foodDescription: foodDescription)
+        }
+        return MealEstimate(
+            foodName: name,
+            grams: grams,
+            calories: RecipeDecomposer.calories(
+                density: aggregate.caloriesPer100Grams,
+                grams: grams
+            ),
+            source: .model,
+            confidence: aggregate.confidence,
+            ingredients: [],
+            provenance: .modelNutrition
+        )
     }
 
     /// The on-device model, or a throw describing why it's unavailable.

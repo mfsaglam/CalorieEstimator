@@ -27,11 +27,12 @@ public struct MealEstimate: Sendable, Equatable {
     public let provenance: EstimateProvenance
     /// The stable local recipe identifier, when a trusted local recipe was used.
     public let recipeID: RecipeID?
-    /// How much to trust the estimate, when a meaningful signal is available:
-    /// ``Confidence/high`` for trusted local data, ``Confidence/medium`` for a model-assisted
-    /// composition resolved through local nutrition, and ``Confidence/low`` for model nutrition.
+    /// How much to trust the estimate, when a meaningful signal is available. Trusted local
+    /// data is high confidence; model nutrition is medium only when samples closely agree,
+    /// otherwise low.
     public let confidence: Confidence?
-    /// The ingredient breakdown — non-`nil` only when ``source`` is ``Source/decomposed``.
+    /// The ingredient breakdown. Trusted decomposed recipes contain their real components;
+    /// model-nutrition fallback results use an empty array and never fabricated ingredients.
     public let ingredients: [IngredientEstimate]?
 
     public init(

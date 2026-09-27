@@ -173,10 +173,7 @@ struct ModifiedRecipeResolutionTests {
                     ingredientNameEnglish: "mushroom",
                     estimatedGrams: 0
                 )
-            ],
-            isCompositeDish: true,
-            proposedIngredients: [],
-            fallbackCaloriesPer100g: 200
+            ]
         )
 
         let request = FoundationModelMealParser.makeRequest(from: generated)
@@ -205,10 +202,7 @@ struct ModifiedRecipeResolutionTests {
             unit: .gram,
             estimatedGrams: 0,
             hasExplicitTotalMass: true,
-            modifications: [],
-            isCompositeDish: true,
-            proposedIngredients: [],
-            fallbackCaloriesPer100g: 200
+            modifications: []
         )
         let generatedModifications = ParsedKnownRecipeModificationsResponse(
             hasExplicitWholeMealGrams: true,
@@ -258,10 +252,7 @@ struct ModifiedRecipeResolutionTests {
             unit: .serving,
             estimatedGrams: 150,
             hasExplicitTotalMass: true,
-            modifications: [],
-            isCompositeDish: true,
-            proposedIngredients: [],
-            fallbackCaloriesPer100g: 1
+            modifications: []
         )
         let details = ParsedKnownRecipeModificationsResponse(
             hasExplicitWholeMealGrams: false,

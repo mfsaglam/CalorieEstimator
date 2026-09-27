@@ -379,10 +379,7 @@ struct CanonicalMealRequestTests {
             unit: .gram,
             estimatedGrams: 0,
             hasExplicitTotalMass: true,
-            modifications: [],
-            isCompositeDish: true,
-            proposedIngredients: [],
-            fallbackCaloriesPer100g: 1
+            modifications: []
         )
     }
 
