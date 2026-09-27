@@ -9,6 +9,19 @@ def normalize_name(value: str) -> str:
     return " ".join("".join(character if character.isalnum() else " " for character in canonical).split())
 
 
+def normalize_ingredient_alias(value: str) -> str:
+    """Mirror Foundation CharacterSet.alphanumerics for multilingual alias lookup."""
+    canonical = unicodedata.normalize("NFC", value).lower()
+    return " ".join(
+        "".join(
+            character
+            if character.isalnum() or unicodedata.category(character).startswith("M")
+            else " "
+            for character in canonical
+        ).split()
+    )
+
+
 def stable_slug(value: str, maximum: int = 56) -> str:
     ascii_value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
     slug = re.sub(r"[^a-z0-9]+", "_", ascii_value.lower()).strip("_")

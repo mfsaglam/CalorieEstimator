@@ -18,6 +18,9 @@ checks = {
     "invalid calories": "SELECT COUNT(*) FROM ingredient_nutrition WHERE kcal_per_100g<0 OR kcal_per_100g>1000",
     "duplicate canonical ingredient names": "SELECT COUNT(*) FROM (SELECT normalized_name FROM ingredients GROUP BY normalized_name HAVING COUNT(*)>1)",
     "ambiguous localized aliases": "SELECT COUNT(*) FROM (SELECT normalized_alias, language_code, locale_identifier FROM recipe_aliases GROUP BY normalized_alias, language_code, locale_identifier HAVING COUNT(DISTINCT recipe_id)>1)",
+    "duplicate ingredient aliases": "SELECT COUNT(*) FROM (SELECT ingredient_id, normalized_alias, ifnull(language_code, ''), ifnull(locale_identifier, '') FROM ingredient_aliases GROUP BY ingredient_id, normalized_alias, ifnull(language_code, ''), ifnull(locale_identifier, '') HAVING COUNT(*)>1)",
+    "ambiguous ingredient aliases": "SELECT COUNT(*) FROM (SELECT normalized_alias FROM ingredient_aliases GROUP BY normalized_alias HAVING COUNT(DISTINCT ingredient_id)>1)",
+    "ingredient alias canonical collisions": "SELECT COUNT(*) FROM ingredient_aliases a JOIN ingredients i ON i.normalized_name=a.normalized_alias AND i.id<>a.ingredient_id",
 }
 failures = []
 for label, query in checks.items():

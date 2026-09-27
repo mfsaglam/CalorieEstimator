@@ -127,6 +127,26 @@ struct LocalRecipeDatabaseTests {
         #expect(partial == nil)
     }
 
+    @Test("Unicode ingredient aliases preserve the existing stable IngredientID")
+    func enrichedUnicodeIngredientAliases() async throws {
+        let cases: [(name: String, language: String)] = [
+            ("Zeytinyağı", "tr"),
+            ("оливковое масло", "ru"),
+            ("زيت الزيتون", "ar"),
+            ("橄欖油", "zh"),
+            ("オリーブ油", "ja"),
+            ("올리브유", "ko"),
+            ("जैतून का तेल", "hi")
+        ]
+
+        for testCase in cases {
+            let ingredient = try await database.ingredient(
+                matching: IngredientQuery(name: testCase.name, languageCode: testCase.language)
+            )
+            #expect(ingredient?.id == "olive_oil", Comment(rawValue: testCase.name))
+        }
+    }
+
     @Test("Compact aliases require non-letter boundaries")
     func compactAliasBoundaries() async throws {
         let quantityAdjacent = try await database.recipeCandidate(

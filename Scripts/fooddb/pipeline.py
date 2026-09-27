@@ -5,10 +5,12 @@ import os
 import sqlite3
 import tempfile
 from collections import Counter, defaultdict
+from dataclasses import asdict
 from pathlib import Path
 
+from fooddb import ingredient_aliases
 from fooddb.models import ImportedAlias, ImportedDataset, ImportedIngredient, ImportedRecipe
-from fooddb.normalize import is_compact_script, normalize_name
+from fooddb.normalize import is_compact_script, normalize_ingredient_alias, normalize_name
 from fooddb.sources import manual, usda, wikidata
 
 
@@ -66,6 +68,12 @@ CREATE TABLE ingredient_aliases (
     UNIQUE (ingredient_id, normalized_alias, language_code, locale_identifier)
 );
 CREATE INDEX ingredient_alias_lookup ON ingredient_aliases(normalized_alias);
+CREATE UNIQUE INDEX ingredient_alias_logical_unique ON ingredient_aliases(
+    ingredient_id,
+    normalized_alias,
+    ifnull(language_code, ''),
+    ifnull(locale_identifier, '')
+);
 
 CREATE TABLE recipe_ingredients (
     recipe_id TEXT NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
@@ -192,7 +200,7 @@ def _insert(database: sqlite3.Connection, ingredients: dict[str, ImportedIngredi
         )
         seen_aliases: set[tuple[str, str | None, str | None]] = set()
         for alias in ingredient.aliases:
-            normalized = normalize_name(alias.alias)
+            normalized = normalize_ingredient_alias(alias.alias)
             key = (normalized, alias.language_code, alias.locale_identifier)
             if not normalized or key in seen_aliases:
                 continue
@@ -260,6 +268,8 @@ def _validate(database: sqlite3.Connection) -> dict:
         "ingredients_without_nutrition": "SELECT COUNT(*) FROM ingredients i WHERE NOT EXISTS (SELECT 1 FROM ingredient_nutrition n WHERE n.ingredient_id=i.id)",
         "empty_aliases": "SELECT (SELECT COUNT(*) FROM recipe_aliases WHERE normalized_alias='') + (SELECT COUNT(*) FROM ingredient_aliases WHERE normalized_alias='')",
         "ambiguous_recipe_aliases": "SELECT COUNT(*) FROM (SELECT normalized_alias, language_code, locale_identifier FROM recipe_aliases GROUP BY normalized_alias, language_code, locale_identifier HAVING COUNT(DISTINCT recipe_id)>1)",
+        "ambiguous_ingredient_aliases": "SELECT COUNT(*) FROM (SELECT normalized_alias FROM ingredient_aliases GROUP BY normalized_alias HAVING COUNT(DISTINCT ingredient_id)>1)",
+        "ingredient_alias_canonical_collisions": "SELECT COUNT(*) FROM ingredient_aliases a JOIN ingredients i ON i.normalized_name=a.normalized_alias AND i.id<>a.ingredient_id",
         "invalid_kcal": "SELECT COUNT(*) FROM ingredient_nutrition WHERE kcal_per_100g<0 OR kcal_per_100g>1000",
         "duplicate_canonical_ingredient_names": "SELECT COUNT(*) FROM (SELECT normalized_name FROM ingredients GROUP BY normalized_name HAVING COUNT(*)>1)",
     }
@@ -277,12 +287,33 @@ def _statistics(database: sqlite3.Connection) -> dict:
         "ingredients": scalar("SELECT COUNT(*) FROM ingredients"),
         "recipe_aliases": scalar("SELECT COUNT(*) FROM recipe_aliases"),
         "ingredient_aliases": scalar("SELECT COUNT(*) FROM ingredient_aliases"),
+        "ingredient_alias_languages": dict(database.execute("SELECT language_code, COUNT(*) FROM ingredient_aliases WHERE language_code IS NOT NULL GROUP BY language_code ORDER BY language_code")),
         "languages": scalar("SELECT COUNT(DISTINCT language_code) FROM recipe_aliases WHERE language_code IS NOT NULL"),
         "cuisines": [row[0] for row in database.execute("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL ORDER BY cuisine")],
         "regions": [row[0] for row in database.execute("SELECT DISTINCT region FROM recipes WHERE region IS NOT NULL ORDER BY region")],
         "nutrition_coverage_percent": round(100.0 * scalar("SELECT COUNT(*) FROM ingredient_nutrition") / scalar("SELECT COUNT(*) FROM ingredients"), 2),
         "quality_tiers": dict(database.execute("SELECT quality_tier, COUNT(*) FROM recipes GROUP BY quality_tier")),
     }
+
+
+def _measure_database_bytes(ingredients: dict[str, ImportedIngredient], recipes: list[ImportedRecipe]) -> int:
+    file_descriptor, temporary_name = tempfile.mkstemp(prefix="calorie-estimator-alias-baseline-", suffix=".sqlite3")
+    os.close(file_descriptor)
+    temporary = Path(temporary_name)
+    try:
+        database = sqlite3.connect(temporary)
+        database.executescript(SCHEMA)
+        with database:
+            _insert(database, ingredients, recipes)
+        _validate(database)
+        database.execute("ANALYZE")
+        database.execute("VACUUM")
+        database.commit()
+        database.close()
+        return temporary.stat().st_size
+    finally:
+        if temporary.exists():
+            temporary.unlink()
 
 
 def build(repository: Path) -> dict:
@@ -317,10 +348,30 @@ def build(repository: Path) -> dict:
         recipe.aliases.extend(aliases)
     datasets = [manual_dataset, usda_dataset, wikidata_dataset]
     ingredients, recipes = _merge(datasets)
+    baseline_aliases = {
+        ingredient_id: list(ingredient.aliases)
+        for ingredient_id, ingredient in ingredients.items()
+    }
+    database_bytes_before = _measure_database_bytes(ingredients, recipes)
+    alias_enrichment = ingredient_aliases.enrich(
+        ingredients,
+        recipes,
+        repository / "DataSources/wikidata/ingredient_mappings.json",
+        repository / "DataSources/wikidata/ingredient_entities.json",
+    )
+    datasets.append(alias_enrichment.dataset)
+    coverage = ingredient_aliases.coverage_metrics(
+        recipes,
+        ingredients,
+        alias_enrichment.selected,
+        baseline_aliases,
+    )
 
     output_database = repository / "Sources/CalorieEstimator/Resources/Recipes.sqlite3"
     output_sql = repository / "Data/recipes.sql"
     output_report = repository / "Data/Reports/food_database_build.json"
+    output_alias_report = repository / "Data/Reports/ingredient_alias_enrichment.json"
+    output_alias_review = repository / "Data/Reports/ingredient_alias_review.json"
     output_database.parent.mkdir(parents=True, exist_ok=True)
     output_sql.parent.mkdir(parents=True, exist_ok=True)
     output_report.parent.mkdir(parents=True, exist_ok=True)
@@ -347,6 +398,7 @@ def build(repository: Path) -> dict:
             temporary.unlink()
 
     statistics["database_bytes"] = output_database.stat().st_size
+    statistics["database_bytes_before_alias_enrichment"] = database_bytes_before
     statistics["sources"] = {
         dataset.source: {
             "discovered": dataset.discovered,
@@ -357,9 +409,117 @@ def build(repository: Path) -> dict:
         }
         for dataset in datasets
     }
+    accepted_mapping_ids = {
+        mapping["ingredient_id"]
+        for mapping in alias_enrichment.mappings
+        if mapping["status"] in ingredient_aliases.ALLOWED_MAPPING_STATUSES
+    }
+    foodon_cross_checked = sum(
+        mapping.get("foodon_cross_check") is not None
+        for mapping in alias_enrichment.mappings
+    )
+    alias_counts_by_language = statistics["ingredient_alias_languages"]
+    new_alias_counts_by_language = dict(sorted(Counter(
+        item["language_code"] for item in alias_enrichment.accepted
+    ).items()))
+    collision_groups: dict[tuple, dict] = {}
+    for collision in alias_enrichment.collisions:
+        key = (
+            collision["normalized_alias"],
+            collision["language_code"],
+            tuple(collision["candidate_ingredient_ids"]),
+        )
+        group = collision_groups.setdefault(key, {
+            "alias": collision["alias"],
+            "normalized_alias": collision["normalized_alias"],
+            "language": collision["language_code"],
+            "candidate_ingredient_ids": collision["candidate_ingredient_ids"],
+            "source_entities": set(),
+            "reason": collision["reason"],
+        })
+        group["source_entities"].add(collision["source_entity_id"])
+    grouped_collisions = [
+        {**group, "source_entities": sorted(group["source_entities"])}
+        for _, group in sorted(collision_groups.items())
+    ]
+    entity_payload = json.loads(
+        (repository / "DataSources/wikidata/ingredient_entities.json").read_text(encoding="utf-8")
+    )
+    entity_snapshot = entity_payload["entities"]
+    manual_review_required = []
+    for mapping in alias_enrichment.mappings:
+        if mapping["status"] in ingredient_aliases.ALLOWED_MAPPING_STATUSES:
+            continue
+        candidate_qids = sorted({
+            qid
+            for evidence in mapping.get("evidence", [])
+            for qid in evidence.get("wikidata_ids", [])
+        })
+        candidate_external_entities = []
+        for qid in candidate_qids:
+            entity = entity_snapshot.get(qid, {})
+            candidate_external_entities.append({
+                "wikidata_id": qid,
+                "labels": {
+                    language: value["value"]
+                    for language, value in sorted(entity.get("labels", {}).items())
+                },
+                "aliases": {
+                    language: [item["value"] for item in values]
+                    for language, values in sorted(entity.get("aliases", {}).items())
+                },
+            })
+        manual_review_required.append(mapping | {
+            "candidate_external_entities": candidate_external_entities,
+        })
+    review_report = {
+        "schema_version": 1,
+        "generated_on": "2026-09-27",
+        "manual_review_required": manual_review_required,
+        "cross_ingredient_collisions": grouped_collisions,
+        "rejected_aliases": alias_enrichment.rejected,
+        "duplicate_aliases_skipped": alias_enrichment.duplicates,
+    }
+    alias_report = {
+        "schema_version": 1,
+        "generated_on": "2026-09-27",
+        "selection": [asdict(item) for item in alias_enrichment.selected],
+        "mapping_summary": {
+            "selected": len(alias_enrichment.selected),
+            "wikidata_mapped": len(accepted_mapping_ids),
+            "foodon_cross_checked": foodon_cross_checked,
+            "skipped_or_quarantined": len(alias_enrichment.selected) - len(accepted_mapping_ids),
+        },
+        "alias_summary": {
+            "before": alias_enrichment.aliases_before,
+            "after": statistics["ingredient_aliases"],
+            "added": statistics["ingredient_aliases"] - alias_enrichment.aliases_before,
+            "accepted_source_terms": len(alias_enrichment.accepted),
+            "duplicates_skipped": len(alias_enrichment.duplicates),
+            "cross_ingredient_collisions": len(grouped_collisions),
+            "collision_source_terms_rejected": len(alias_enrichment.collisions),
+            "counts_by_language": alias_counts_by_language,
+            "new_counts_by_language": new_alias_counts_by_language,
+            "languages_represented": sorted(alias_counts_by_language),
+        },
+        "coverage": coverage,
+        "accepted_aliases": alias_enrichment.accepted,
+        "database_bytes": {
+            "original_bundled_before": ingredient_aliases.PRE_ENRICHMENT_DATABASE_BYTES,
+            "schema_hardened_without_enrichment": database_bytes_before,
+            "after": statistics["database_bytes"],
+        },
+        "source_licenses": {
+            "Wikidata": "CC0-1.0",
+            "FoodOn": "CC-BY-4.0 (identity cross-check only; no FoodOn aliases imported)",
+        },
+    }
+    output_alias_review.write_text(json.dumps(review_report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    output_alias_report.write_text(json.dumps(alias_report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     report = {
-        "pipeline_version": 1,
-        "generated_on": "2026-09-26",
+        "pipeline_version": 2,
+        "generated_on": "2026-09-27",
         "baseline": {
             "recipes": 16,
             "ingredients": 46,
@@ -368,6 +528,13 @@ def build(repository: Path) -> dict:
             "database_bytes": 53248,
         },
         "result": statistics,
+        "ingredient_alias_enrichment": {
+            "report": "Data/Reports/ingredient_alias_enrichment.json",
+            "review": "Data/Reports/ingredient_alias_review.json",
+            "wikidata_mapped": len(accepted_mapping_ids),
+            "foodon_cross_checked": foodon_cross_checked,
+            "aliases_added": statistics["ingredient_aliases"] - alias_enrichment.aliases_before,
+        },
         "validation": validation,
         "commands": ["Scripts/build_recipe_database.sh", "swift test"],
     }
