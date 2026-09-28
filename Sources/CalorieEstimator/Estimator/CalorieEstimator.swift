@@ -22,6 +22,7 @@ public struct CalorieEstimator: Sendable {
     let recipeDatabase: any RecipeDatabase
     private let mealParser: any MealRequestParsing
     private let modelEnergyEstimator: any ModelEnergyEstimating
+    private let modelAvailability: any LanguageModelAvailabilityProviding
     private let modelTimeout: Duration
 
     /// Create an estimator.
@@ -36,6 +37,7 @@ public struct CalorieEstimator: Sendable {
         self.recipeDatabase = recipeDatabase
         self.mealParser = FoundationModelMealParser()
         self.modelEnergyEstimator = ThreeSampleModelEnergyEstimator()
+        self.modelAvailability = SystemLanguageModelAvailabilityProvider()
         self.modelTimeout = .seconds(60)
     }
 
@@ -44,12 +46,14 @@ public struct CalorieEstimator: Sendable {
         recipeDatabase: any RecipeDatabase,
         mealParser: any MealRequestParsing,
         modelEnergyEstimator: any ModelEnergyEstimating = ThreeSampleModelEnergyEstimator(),
+        modelAvailability: any LanguageModelAvailabilityProviding = SystemLanguageModelAvailabilityProvider(),
         modelTimeout: Duration = .seconds(60)
     ) {
         self.nutritionTable = nutritionTable
         self.recipeDatabase = recipeDatabase
         self.mealParser = mealParser
         self.modelEnergyEstimator = modelEnergyEstimator
+        self.modelAvailability = modelAvailability
         self.modelTimeout = modelTimeout
     }
 
@@ -71,6 +75,7 @@ public struct CalorieEstimator: Sendable {
     ///   model can't be used, or ``CalorieEstimatorError/parsingFailed(response:)`` when
     ///   the model returns unusable output.
     public func estimate(phrase: String) async throws -> MealEstimate {
+        try requireAvailableModel()
         let request = try await parse(phrase)
         let resolver = MealResolver(
             nutritionTable: nutritionTable,
@@ -122,7 +127,9 @@ public struct CalorieEstimator: Sendable {
         }
 
         // With an explicit weight there is no semantic parsing work left. A complete
-        // trusted miss goes directly to the three-sample density fallback.
+        // trusted miss uses the three-sample density fallback only when the model is
+        // available. The local lookup above remains usable without Apple Intelligence.
+        try requireAvailableModel()
         return try await makeModelFallback(foodDescription: meal, displayName: meal, grams: grams)
     }
 
@@ -173,13 +180,19 @@ public struct CalorieEstimator: Sendable {
         )
     }
 
+    private func requireAvailableModel() throws {
+        if let reason = modelAvailability.unavailableReason {
+            throw CalorieEstimatorError.modelUnavailable(reason: reason)
+        }
+    }
+
     /// The on-device model, or a throw describing why it's unavailable.
     static func availableModel() throws -> SystemLanguageModel {
         let model = SystemLanguageModel(guardrails: .permissiveContentTransformations)
-        guard case .available = model.availability else {
-            throw CalorieEstimatorError.modelUnavailable(
-                reason: FoundationModelMealParser.description(for: model.availability)
-            )
+        if let reason = SystemLanguageModelAvailabilityProvider.unavailableReason(
+            for: model.availability
+        ) {
+            throw CalorieEstimatorError.modelUnavailable(reason: reason)
         }
         return model
     }

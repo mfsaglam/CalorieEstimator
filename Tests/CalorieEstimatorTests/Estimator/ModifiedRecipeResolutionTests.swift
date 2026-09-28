@@ -113,7 +113,8 @@ struct ModifiedRecipeResolutionTests {
             let estimator = CalorieEstimator(
                 nutritionTable: LocalNutritionTable(),
                 recipeDatabase: database,
-                mealParser: StubMealRequestParser(request: request)
+                mealParser: StubMealRequestParser(request: request),
+                modelAvailability: StubLanguageModelAvailabilityProvider.available
             )
 
             let estimate = try await estimator.estimate(phrase: testCase.input)
@@ -313,7 +314,8 @@ struct ModifiedRecipeResolutionTests {
         let estimator = CalorieEstimator(
             nutritionTable: LocalNutritionTable(),
             recipeDatabase: LocalRecipeDatabase(),
-            mealParser: StubMealRequestParser(request: request)
+            mealParser: StubMealRequestParser(request: request),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
 
         let estimate = try await estimator.estimate(phrase: "200 gram tavuklu pilav")

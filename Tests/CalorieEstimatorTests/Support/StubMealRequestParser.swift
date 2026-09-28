@@ -33,6 +33,16 @@ actor CountingModelEnergyEstimator: ModelEnergyEstimating {
     }
 }
 
+struct StubLanguageModelAvailabilityProvider: LanguageModelAvailabilityProviding {
+    let unavailableReason: String?
+
+    static let available = Self(unavailableReason: nil)
+
+    static func unavailable(_ reason: String = "Apple Intelligence is unavailable in this test") -> Self {
+        Self(unavailableReason: reason)
+    }
+}
+
 actor StubEnergyDensitySampleProvider: EnergyDensitySampleProviding {
     struct SampleFailure: Error {}
 

@@ -12,7 +12,7 @@ and calorie calculation.
 
 - iOS 26+, macOS 26+, or visionOS 26+
 - Swift 6.2+
-- Apple Intelligence enabled for inputs that local data cannot resolve directly
+- Apple Intelligence enabled for natural-language phrases and local-data misses
 
 FoundationModels' on-device `SystemLanguageModel` is unavailable on tvOS and watchOS,
 so those platforms are not declared by this package.
@@ -21,7 +21,7 @@ so those platforms are not declared by this package.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "3.2.1")
+    .package(url: "https://github.com/mfsaglam/CalorieEstimator.git", from: "3.2.2")
 ]
 ```
 
@@ -43,6 +43,9 @@ print(result.calories)
 print(result.provenance)  // .localRecipe when the bundled recipe matched
 ```
 
+This phrase API requires Apple Intelligence / FoundationModels and fails immediately with
+`CalorieEstimatorError.modelUnavailable` when the on-device model cannot be used.
+
 The structured parser supports mass, volume, serving, bowl, cup, slice, piece, and item
 semantics. Explicit mass units are converted in Swift. A known recipe's default serving
 weight is preferred for serving-like quantities; ambiguous long-tail portions can use an
@@ -60,7 +63,9 @@ let carbonara = try await estimator.estimate(meal: "spaghetti carbonara", grams:
 ```
 
 This path checks the local recipe database first, then the nutrition table. A confident
-local hit never creates a model session.
+local hit works fully offline without Apple Intelligence and never creates a model session.
+If local data misses, the model fallback is used only when Apple Intelligence is available;
+otherwise the call throws `CalorieEstimatorError.modelUnavailable`.
 
 ## Architecture
 

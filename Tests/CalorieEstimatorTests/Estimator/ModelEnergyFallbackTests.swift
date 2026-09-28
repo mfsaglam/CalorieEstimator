@@ -83,7 +83,8 @@ struct ModelEnergyFallbackTests {
                     confidence: .medium,
                     validSamples: [225, 230, 235]
                 )
-            )
+            ),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
 
         let result = try await estimator.estimate(phrase: "180g unknown casserole")

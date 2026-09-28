@@ -17,7 +17,8 @@ struct FallbackTerminationTests {
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
             mealParser: StubMealRequestParser(request: request),
-            modelEnergyEstimator: energyEstimator
+            modelEnergyEstimator: energyEstimator,
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
 
         let estimate = try await estimator.estimate(phrase: "unknown global dish 200g")
@@ -36,7 +37,8 @@ struct FallbackTerminationTests {
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
             mealParser: StubMealRequestParser(request: unknownRequest(modelCalories: nil)),
-            modelEnergyEstimator: energyEstimator
+            modelEnergyEstimator: energyEstimator,
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
 
         await #expect(throws: CalorieEstimatorError.self) {
@@ -50,6 +52,7 @@ struct FallbackTerminationTests {
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
             mealParser: SuspendingMealRequestParser(),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available,
             modelTimeout: .milliseconds(20)
         )
 
@@ -69,6 +72,7 @@ struct FallbackTerminationTests {
             nutritionTable: EmptyNutritionTable(),
             recipeDatabase: EmptyRecipeDatabase(),
             mealParser: SuspendingMealRequestParser(),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available,
             modelTimeout: .seconds(60)
         )
         let task = Task {
@@ -115,7 +119,8 @@ struct FallbackTerminationTests {
         let estimator = CalorieEstimator(
             nutritionTable: LocalNutritionTable(),
             recipeDatabase: LocalRecipeDatabase(),
-            mealParser: StubMealRequestParser(request: request)
+            mealParser: StubMealRequestParser(request: request),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
 
         let estimate = try await estimator.estimate(phrase: "200g chicken rice plus 30g mushroom")

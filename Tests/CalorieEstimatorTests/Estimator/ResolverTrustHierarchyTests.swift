@@ -43,7 +43,8 @@ struct ResolverTrustHierarchyTests {
         let estimator = CalorieEstimator(
             nutritionTable: LocalNutritionTable(),
             recipeDatabase: LocalRecipeDatabase(),
-            mealParser: StubMealRequestParser(request: request)
+            mealParser: StubMealRequestParser(request: request),
+            modelAvailability: StubLanguageModelAvailabilityProvider.available
         )
         let result = try await estimator.estimate(phrase: "200 gram tavuklu pilav")
         #expect(result.grams == 200)
